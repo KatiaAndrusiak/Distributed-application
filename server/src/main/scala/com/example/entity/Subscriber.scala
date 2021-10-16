@@ -1,18 +1,30 @@
 package com.example.entity
 
-import javax.persistence.{Column, Entity, GeneratedValue, GenerationType, Id, Table}
+import javax.persistence.{CascadeType, Column, Entity, GeneratedValue, GenerationType, Id, OneToOne, Table}
+import scala.beans.BeanProperty
 
 @Entity
 @Table(name = "subscriber")
-class Subscriber extends Serializable {
+class Subscriber extends Serializable() {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "nsubscriberid")
-    var id: Long = _
+    @BeanProperty
+    var id: Int = _
 
-    @Column(name = "semail")
-    private var name = null
+    @Column(name = "sfirstname")
+    @BeanProperty
+    var fname: String = _
 
-    @Column(name = "price")
-    private var price = 0
+    @Column(name = "slastname")
+    @BeanProperty
+    var lname: String = _
+
+    @OneToOne(
+        cascade = Array(CascadeType.ALL),
+        mappedBy = "subscriber"
+    )
+    var subscriberData: SubscriberData = null
+
+    override def toString: String = s"id: $id, first name: $fname, last name: $lname"
 }
