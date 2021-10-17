@@ -14,8 +14,6 @@ class SubscriberCategory extends Serializable() {
     @BeanProperty
     var id: Int = _
 
-
-
     @ManyToOne(cascade = Array(CascadeType.ALL))
     @JoinColumn(name = "ncategoryid")
     @BeanProperty
