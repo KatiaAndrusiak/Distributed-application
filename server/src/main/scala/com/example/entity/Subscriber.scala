@@ -1,11 +1,13 @@
 package com.example.entity
 
-import javax.persistence.{CascadeType, Column, Entity, GeneratedValue, GenerationType, Id, OneToOne, Table}
+import java.util
+import javax.persistence.{CascadeType, Column, Entity, GeneratedValue, GenerationType, Id, OneToMany, OneToOne, Table}
 import scala.beans.BeanProperty
 
 @Entity
 @Table(name = "subscriber")
 class Subscriber extends Serializable() {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "nsubscriberid")
@@ -24,7 +26,18 @@ class Subscriber extends Serializable() {
         cascade = Array(CascadeType.ALL),
         mappedBy = "subscriber"
     )
+    @BeanProperty
     var subscriberData: SubscriberData = null
+
+    @OneToOne(
+        cascade = Array(CascadeType.ALL),
+        mappedBy = "subscriber"
+    )
+    @BeanProperty
+    var subscriberInfo: SubscriberInfo = null
+
+    @OneToMany(mappedBy = "subscriber")
+    var subscriberCategory: util.Set[SubscriberCategory] = new util.HashSet[SubscriberCategory]
 
     override def toString: String = s"id: $id, first name: $fname, last name: $lname"
 }

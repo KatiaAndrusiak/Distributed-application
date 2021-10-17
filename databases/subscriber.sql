@@ -1,4 +1,3 @@
-
 CREATE SEQUENCE public.subscriber_nsubscriberid_seq;
 
 CREATE TABLE public.subscriber (
@@ -16,8 +15,9 @@ CREATE TABLE public.subscriberInfo (
                 DOB DATE NOT NULL,
                 sPhone VARCHAR(12) NOT NULL,
                 sCountry VARCHAR(30) NOT NULL,
+                sCity VARCHAR(50) NOT NULL,
                 sStreet VARCHAR(30) NOT NULL,
-                sAdress VARCHAR(60) NOT NULL,
+                sBuildingNumber VARCHAR(10) NOT NULL,
                 nLatitude NUMERIC(10,8) NOT NULL,
                 nLongitude NUMERIC(11,8) NOT NULL,
                 CONSTRAINT subscriberinfo_pk PRIMARY KEY (nSubscriberId)
@@ -55,12 +55,17 @@ CREATE TABLE public.problem (
 
 ALTER SEQUENCE public.problem_nproblemid_seq OWNED BY public.problem.nProblemId;
 
+CREATE SEQUENCE public.subscribercategory_nsubscribercategoryid_seq;
+
 CREATE TABLE public.subscriberCategory (
-                nCategoryId INTEGER NOT NULL,
+                nSubscriberCategoryId INTEGER NOT NULL DEFAULT nextval('public.subscribercategory_nsubscribercategoryid_seq'),
                 nSubscriberId INTEGER NOT NULL,
-                CONSTRAINT subscribercategory_pk PRIMARY KEY (nCategoryId, nSubscriberId)
+                nCategoryId INTEGER NOT NULL,
+                CONSTRAINT subscribercategory_pk PRIMARY KEY (nSubscriberCategoryId, nSubscriberId, nCategoryId)
 );
 
+
+ALTER SEQUENCE public.subscribercategory_nsubscribercategoryid_seq OWNED BY public.subscriberCategory.nSubscriberCategoryId;
 
 ALTER TABLE public.subscriberCategory ADD CONSTRAINT subsciber_subscribercategory_fk
 FOREIGN KEY (nSubscriberId)
@@ -96,15 +101,15 @@ REFERENCES public.category (nCategoryId)
 ON DELETE NO ACTION
 ON UPDATE NO ACTION
 NOT DEFERRABLE;
-
 ----------------
+
 insert into subscriber (sFirstName, sLastName) VALUES
     ('test', 'test');
 
 select * from subscriber;
 
-insert into subscriberInfo (nSubscriberId, DOB, sPhone, sCountry, sStreet, sAdress, nLatitude, nLongitude) VALUES
-    (1, '2021-10-13', '+48574450911', 'Polska', 'Dworska', '1A', 50.046006, 19.930139);
+insert into subscriberInfo (nSubscriberId, DOB, sPhone, sCountry, sCity, sStreet, sBuildingNumber, nLatitude, nLongitude) VALUES
+    (1, '2021-10-13', '+48574450911', 'Polska', 'Kraków', 'Dworska', '1A', 50.046006, 19.930139);
 
 select * from subscriberInfo;
 
@@ -112,3 +117,26 @@ insert into subscriberData (nSubscriberId, sEmail, sPassword) values
     (1, 'tester@gmail.com', 'tester123');
 
 select * from subscriberData;
+
+insert into category (sCategoryName) values
+    ('Woda'),
+    ('Ogień'),
+    ('Zniszczenia'),
+    ('Śmiecie i segregacja'),
+    ('Komunikacja publiczna'),
+    ('Sąsiad');
+
+select * from category;
+
+insert into problem (nProblemId, nCategoryId, sProblemName) VALUES
+    (1, 1, 'Brak ciepłej wody'),
+    (2, 1, 'Brak zimnej  wody'),
+    (3, 1, 'Brudna woda na ulicy '),
+    (4, 1, 'Podtopienia');
+
+select * from problem;
+
+insert into subscriberCategory (nSubscriberId, nCategoryId) VALUES
+    (1, 4);
+
+select * from subscriberCategory;

@@ -6,7 +6,7 @@ import scala.beans.BeanProperty
 
 @Entity
 @Table(name = "subscriberdata")
-class SubscriberData {
+class SubscriberData extends Serializable() {
 
     @Id
     @Column(name = "nsubscriberid")

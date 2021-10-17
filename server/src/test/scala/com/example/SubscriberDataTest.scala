@@ -28,20 +28,20 @@ class SubscriberDataTest {
         val id: Int = 1
 
         // when
-        val subscriber: SubscriberData = subscriberDataRepository.findById(id).orElseThrow(() => new NullPointerException)
+        val subscriberData: SubscriberData = subscriberDataRepository.findById(id).orElseThrow(() => new NullPointerException)
         // then
-        Assert.assertEquals(1, subscriber.getId)
-        Assert.assertEquals("tester@gmail.com", subscriber.getEmail)
-        Assert.assertEquals("tester123", subscriber.getPassword)
+        Assert.assertEquals(1, subscriberData.getId)
+        Assert.assertEquals("tester@gmail.com", subscriberData.getEmail)
+        Assert.assertEquals("tester123", subscriberData.getPassword)
     }
 
     @Test(expected = classOf[NullPointerException])
-    def shouldThrowExceptionWhenSubscriberNotExist(): Unit = {
+    def shouldThrowExceptionWhenSubscriberDataNotExist(): Unit = {
         // given
         val id: Int = 2
 
         //when
-        val subscriber: SubscriberData = subscriberDataRepository.findById(id).orElseThrow(() => new NullPointerException)
+        val subscriberData: SubscriberData = subscriberDataRepository.findById(id).orElseThrow(() => new NullPointerException)
 
         //then
     }
