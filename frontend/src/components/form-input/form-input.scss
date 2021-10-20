@@ -1,0 +1,61 @@
+.group {
+    position: relative;
+    margin: 30px 0 0 0;
+}
+
+.pass-wrapper {
+    position: relative;
+    display: flex;
+}
+
+i {
+    position: absolute;
+    top: 40%;
+    right: 5%; 
+}
+
+i:hover {
+    color: #A9A9A9;
+    cursor: pointer;
+  }
+
+input {
+    background: none;
+    background-color: white;
+    color: grey;
+    font-size: 18px;
+    padding: 10px 10px 10px 5px;
+    display: block;
+    width: 90%;
+    border: none;
+    border-radius: 0;
+    border-bottom: 2px solid #64aff5;
+    margin: 25px 0;
+
+    &:focus {
+    outline: none;
+    }
+
+    &:focus ~ .form-input-label {
+        top: 14px;
+        font-size: 16px;
+        color: black;
+      } 
+}
+
+.form-input-label {
+    color: grey;
+    font-size: 16px;
+    font-weight: normal;
+    position: absolute;
+    pointer-events: none;
+    left: 5px;
+    top: 40px;
+    transition: 300ms ease all;
+
+    &.shrink {
+        top: 16px;
+        font-size: 14px;
+        color: black;
+    }
+}

@@ -1,0 +1,11 @@
+.sign-up-wrapper {
+    display: block;
+    width: 600px;
+    margin: 0 auto;
+
+    form {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+
+    }
+}
