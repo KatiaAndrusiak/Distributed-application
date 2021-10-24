@@ -37,33 +37,45 @@ const SignUp = () => {
     const eyeSlash = <FontAwesomeIcon icon={faEyeSlash} />;
 
     const validateFields = () => {
+        let valid = true;
         if (!validateStringFields(firstName)) {
             setErrorFirstName({...errorFirstName, errorState : true});
+            valid = false;
         }
         if (!validateStringFields(lastName)) {
             setErrorLastName({...errorLastName, errorState : true});
+            valid = false;
         }
         if (!validateStringFields(country)) {
             setErrorCountry({...errorCountry, errorState : true});
+            valid = false;
         }
         if (!validateStringFields(city)) {
             setErrorCity({...errorCity, errorState : true});
+            valid = false;
         }
         if (!validateStringFields(street)) {
             setErrorStreet({...errorStreet, errorState : true});
+            valid = false;
         }
         if (!validatePasswordField(password)) {
             setErrorPassword({...errorPassword, errorState : true});
+            valid = false;
         }
         if (!validateEmailField(email)) {
             setErrorEmail({...errorEmail, errorState : true});
+            valid = false;
         }
         if (!validatePhoneField(phone)) {
             setErrorPhone({...errorPhone, errorState : true});
+            valid = false;
         }
         if (!validateBuildingNumberField(buildingNumber)) {
             setErrorBuildingNumber({...errorBuildingNumber, errorState : true});
+            valid = false;
         }
+
+        return valid;
     }
 
     const togglePasswordVisiblity = () => {
@@ -85,17 +97,29 @@ const SignUp = () => {
         event.preventDefault();
 
         const data = {
-            firstName
+            firstName,
+            lastName,
+            dob,
+            phone,
+            email,
+            password,
+            country,
+            city,
+            street,
+            buildingNumber
         }
 
-        postData("http://localhost:8080/subscribers", data)
+        if (validateFields()) {
+            postData("http://localhost:8080/subscribers", JSON.stringify(data))
             .then(res => {
-                validateFields();
                 console.log(res)
             });
             // .finally(() => {
             //     document.getElementById("create-subscriber-form").reset();
             // });
+        }
+
+
     }
 
     return (
