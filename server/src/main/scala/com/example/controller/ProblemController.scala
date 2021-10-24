@@ -3,12 +3,13 @@ package com.example.controller
 import com.example.model.Problem
 import com.example.service.ProblemService
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.web.bind.annotation.{GetMapping, PostMapping, RequestBody, RequestMapping, RequestMethod, ResponseBody, RestController}
+import org.springframework.web.bind.annotation.{CrossOrigin, GetMapping, PostMapping, RequestBody, RequestMapping, RequestMethod, ResponseBody, RestController}
 import org.springframework.web.bind.annotation.RequestMethod.GET
 
 
 
 @RestController
+@CrossOrigin
 class ProblemController(@Autowired val problemService: ProblemService) {
 
     @GetMapping(path = Array("/"))

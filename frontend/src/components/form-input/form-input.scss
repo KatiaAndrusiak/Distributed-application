@@ -11,7 +11,7 @@
 i {
     position: absolute;
     top: 40%;
-    right: 5%; 
+    right: 9%; 
 }
 
 i:hover {
@@ -24,28 +24,40 @@ input {
     background-color: white;
     color: grey;
     font-size: 18px;
-    padding: 10px 10px 10px 5px;
     display: block;
     width: 90%;
+    min-height: 45px;
     border: none;
     border-radius: 0;
-    border-bottom: 2px solid #64aff5;
+    border-bottom: 2px solid rgb(66, 133, 244);
     margin: 25px 0;
 
     &:focus {
-    outline: none;
+        outline: none;
     }
 
     &:focus ~ .form-input-label {
         top: 14px;
-        font-size: 16px;
+        font-size: 14px;
         color: black;
       } 
 }
 
+input.error {
+    border-bottom: 2px solid rgb(224, 31, 31);
+}
+
+input[type=date]:required:invalid::-webkit-datetime-edit {
+    cursor: pointer;
+    color: transparent;
+}
+input[type=date]:focus::-webkit-datetime-edit {
+    color: black !important;
+}
+
 .form-input-label {
     color: grey;
-    font-size: 16px;
+    font-size: 14px;
     font-weight: normal;
     position: absolute;
     pointer-events: none;
@@ -54,8 +66,15 @@ input {
     transition: 300ms ease all;
 
     &.shrink {
-        top: 16px;
+        top: 14px;
         font-size: 14px;
         color: black;
+        &.error {
+            color: rgb(224, 31, 31);
+        }
+    }
+
+    &.error {
+        color: rgb(224, 31, 31);
     }
 }

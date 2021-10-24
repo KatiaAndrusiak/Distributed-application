@@ -1,13 +1,19 @@
 import './form-input.scss'
 
-const FormInput = (props) => {
+const FormInput = ({handleChange, label, i, value, error, clearError, ...otherProps}) => {
 
-    const {handleChange, label, type, name, required, i, value} = props;
+    const inputClasses =  error.errorState  ? 'error' : '';
+    const labelClasses = `${value.length ? 'shrink' : ''} ${error.errorState  ? 'error' : ''} form-input-label`;
+    const lableText = error.errorState ? label + error.messagge : label;
 
     return (
         <div className="group">
-            <input type={type} name={name} onChange={handleChange} required={required}/>
-            <label className={`${value.length ? 'shrink' : ''} form-input-label`}>{label}</label>
+            <input
+                onFocus={clearError} 
+                className={inputClasses}
+                onChange={handleChange} 
+                {...otherProps}/>
+            <label className={labelClasses}>{lableText}</label>
             {i ? i : null}
         </div>
     )

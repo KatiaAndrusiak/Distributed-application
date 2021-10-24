@@ -2,8 +2,10 @@ import './sign-up.scss';
 import { useState } from 'react';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
+import { postData, validateStringFields, validatePasswordField, validateEmailField, validatePhoneField, validateBuildingNumberField } from './../../services/services';
 
 import FormInput from './../form-input/form-input.jsx';
+import CustomButton from './../button/custom-button';
 
 const SignUp = () => {
 
@@ -19,8 +21,50 @@ const SignUp = () => {
     const [street, setStreet] = useState('');
     const [buildingNumber, setBuildingNumber] = useState('');
 
+    const [errorFirstName, setErrorFirstName] = useState({errorState: false, messagge: " (Musi zawierać tylko litery)"});
+    const [errorLastName, setErrorLastName] = useState({errorState: false, messagge: " (Musi zawierać tylko litery)"});
+    const [errorDob, setErrorDob] = useState({errorState: false, messagge: " (Nie określono daty)"});
+    const [errorPhone, setErrorPhone] = useState({errorState: false, messagge: " (Musi zaczynać się od +48...)"});
+    const [errorEmail, setErrorEmail] = useState({errorState: false, messagge: " (Musi być w postaci *@*.*)"});
+    const [errorPassword, setErrorPassword] = useState({errorState: false, messagge: " (Musi zawierać co najmniej 6 znaków)"});
+    const [errorCountry, setErrorCountry] = useState({errorState: false, messagge: " (Musi zawierać tylko litery)"});
+    const [errorCity, setErrorCity] = useState({errorState: false, messagge: " (Musi zawierać tylko litery)"});
+    const [errorStreet, setErrorStreet] = useState({errorState: false, messagge: " (Musi zawierać tylko litery)"});
+    const [errorBuildingNumber, setErrorBuildingNumber] = useState({errorState: false, messagge: " (Musi zawierać tylko cyfry)"});
+
+
     const eye = <FontAwesomeIcon icon={faEye} />;
     const eyeSlash = <FontAwesomeIcon icon={faEyeSlash} />;
+
+    const validateFields = () => {
+        if (!validateStringFields(firstName)) {
+            setErrorFirstName({...errorFirstName, errorState : true});
+        }
+        if (!validateStringFields(lastName)) {
+            setErrorLastName({...errorLastName, errorState : true});
+        }
+        if (!validateStringFields(country)) {
+            setErrorCountry({...errorCountry, errorState : true});
+        }
+        if (!validateStringFields(city)) {
+            setErrorCity({...errorCity, errorState : true});
+        }
+        if (!validateStringFields(street)) {
+            setErrorStreet({...errorStreet, errorState : true});
+        }
+        if (!validatePasswordField(password)) {
+            setErrorPassword({...errorPassword, errorState : true});
+        }
+        if (!validateEmailField(email)) {
+            setErrorEmail({...errorEmail, errorState : true});
+        }
+        if (!validatePhoneField(phone)) {
+            setErrorPhone({...errorPhone, errorState : true});
+        }
+        if (!validateBuildingNumberField(buildingNumber)) {
+            setErrorBuildingNumber({...errorBuildingNumber, errorState : true});
+        }
+    }
 
     const togglePasswordVisiblity = () => {
         setPasswordShown(passwordShown ? false : true);
@@ -31,11 +75,36 @@ const SignUp = () => {
         setter(value);
     }
 
+    const clearErrorAfterFocus = (value, setter) => {
+        setter({...value, errorState: false});
+    }
+
+
+
+    const handleSubmit = (event) => {
+        event.preventDefault();
+
+        const data = {
+            firstName
+        }
+
+        postData("http://localhost:8080/subscribers", data)
+            .then(res => {
+                validateFields();
+                console.log(res)
+            });
+            // .finally(() => {
+            //     document.getElementById("create-subscriber-form").reset();
+            // });
+    }
+
     return (
         <div className="sign-up-wrapper">
-            <form method="post">
+            <form id="create-subscriber-form" method="post" onSubmit={handleSubmit}>
                 <FormInput
                     handleChange={(e) => handleChange(e, setFirstName)}
+                    clearError={() => clearErrorAfterFocus(errorFirstName, setErrorFirstName)}
+                    error={errorFirstName}
                     name="firstName"
                     type="text"
                     label="Imię"
@@ -44,6 +113,8 @@ const SignUp = () => {
                 />
                 <FormInput
                     handleChange={(e) => handleChange(e, setLastName)}
+                    clearError={() => clearErrorAfterFocus(errorLastName ,setErrorLastName)}
+                    error={errorLastName}
                     name="lastName"
                     type="text"
                     label="Nazwisko"
@@ -52,14 +123,18 @@ const SignUp = () => {
                 />
                 <FormInput
                     handleChange={(e) => handleChange(e, setDob)}
+                    clearError={() => clearErrorAfterFocus(errorDob ,setErrorDob)}
+                    error={errorDob}
                     name="dob"
-                    type="text"
+                    type="date"
                     label="Data narodzenia"
                     value={dob}
                     required
                 />
                 <FormInput
                     handleChange={(e) => handleChange(e, setPhone)}
+                    clearError={() => clearErrorAfterFocus(errorPhone ,setErrorPhone)}
+                    error={errorPhone}
                     name="phone"
                     type="text"
                     label="Numer telefonu"
@@ -68,6 +143,8 @@ const SignUp = () => {
                 />
                 <FormInput
                     handleChange={(e) => handleChange(e, setEmail)}
+                    clearError={() => clearErrorAfterFocus(errorEmail , setErrorEmail)}
+                    error={errorEmail}
                     name="email"
                     type="text"
                     label="E-mail"
@@ -76,6 +153,8 @@ const SignUp = () => {
                 />
                 <FormInput
                     handleChange={(e) => handleChange(e, setPassword)}
+                    clearError={() => clearErrorAfterFocus(errorPassword ,setErrorPassword)}
+                    error={errorPassword}
                     name="password"
                     type={passwordShown ? "text" : "password"}
                     label="Hasło"
@@ -85,14 +164,18 @@ const SignUp = () => {
                 />
                 <FormInput
                     handleChange={(e) => handleChange(e, setCountry)}
+                    clearError={() => clearErrorAfterFocus(errorCountry ,setErrorCountry)}
+                    error={errorCountry}
                     name="country"
                     type="text"
-                    label="Państwo"
+                    label="Kraj"
                     value={country}
                     required
                 />
                 <FormInput
                     handleChange={(e) => handleChange(e, setCity)}
+                    clearError={() => clearErrorAfterFocus(errorCity ,setErrorCity)}
+                    error={errorCity}
                     name="city"
                     type="text"
                     label="Miasto"
@@ -101,6 +184,8 @@ const SignUp = () => {
                 />
                 <FormInput
                     handleChange={(e) => handleChange(e, setStreet)}
+                    clearError={() => clearErrorAfterFocus(errorStreet ,setErrorStreet)}
+                    error={errorStreet}
                     name="street"
                     type="text"
                     label="Ulica"
@@ -109,6 +194,8 @@ const SignUp = () => {
                 />
                 <FormInput
                     handleChange={(e) => handleChange(e, setBuildingNumber)}
+                    clearError={() => clearErrorAfterFocus(errorBuildingNumber ,setErrorBuildingNumber)}
+                    error={errorBuildingNumber}
                     name="buildingNumber"
                     type="text"
                     label="Numer budynku"
@@ -116,52 +203,15 @@ const SignUp = () => {
                     required
                 />
 
-                <button type="submit">Stworzyć konto</button>
+                <CustomButton 
+                    type="submit"
+                    additionalClass="submit"
+                >
+                    Stworzyć konto
+                </CustomButton>
             </form>
         </div>
     );
 }
 
 export default SignUp;
-
-{/* <div className="group">
-    <input type="text" name="firstName" onChange={(e) => handleChange(e, setFirstName)}/>
-    <label className="form-input-label" htmlFor="firstName">Imię</label>
-</div>
-<div className="group">
-    <input type="text" name="lastName"/>
-    <label className="form-input-label" htmlFor="lastName">Nazwisko</label>
-</div>
-<div className="group">
-    <input type="text" name="dob"/>
-    <label className="form-input-label" htmlFor="dob">Data narodzenia</label>
-</div>
-<div className="group">
-    <input type="text" name="phone"/>
-    <label className="form-input-label" htmlFor="phone">Numer telefonu</label>
-</div>
-<div className="group">
-    <input type="text" name="email"/>
-    <label className="form-input-label" htmlFor="email">E-mail</label>
-</div>
-<div className="group pass-wrapper"> 
-    <input  type={passwordShown ? "text" : "password"} name="password"/>
-    <label className="form-input-label" htmlFor="password">Hasło</label>
-    <i onClick={togglePasswordVisiblity}>{eye}</i>
-</div>
-<div className="group">
-    <input type="text" name="country"/>
-    <label className="form-input-label" htmlFor="country">Państwo</label>
-</div>
-<div className="group">
-    <input type="text" name="city"/> 
-    <label className="form-input-label" htmlFor="city">Miasto</label>
-</div>
-<div className="group">
-    <input type="text" name="street"/>
-    <label className="form-input-label" htmlFor="street">Ulica</label>
-</div>
-<div className="group">    
-    <input type="text" name="buildingNumber"/>
-    <label className="form-input-label" htmlFor="buildingNumber">Numer budynku</label>
-</div> */}
