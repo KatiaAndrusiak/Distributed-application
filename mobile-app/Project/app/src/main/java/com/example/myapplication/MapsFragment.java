@@ -23,6 +23,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -65,6 +67,8 @@ public class MapsFragment extends Fragment {
             getCurrentLocation();
         }
 
+        TextView addressText = view.findViewById(R.id.addressText);
+
         SupportMapFragment mapFragment =
                 (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.google_map);
 
@@ -74,31 +78,13 @@ public class MapsFragment extends Fragment {
                 googleMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
                     @Override
                     public void onMapLoaded() {
-                        MarkerOptions markerOptions = new MarkerOptions();
-                        markerOptions.position(currentLatLng);
-                        markerOptions.title(getCompleteAddressString(currentLatLng.latitude,currentLatLng.longitude));
-
-                        googleMap.clear();
-                        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
-                                currentLatLng, 15
-                        ));
-
-                        googleMap.addMarker(markerOptions);
-
+                        setAddressInfo(googleMap, addressText, currentLatLng);
                     }
                 });
                 googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
                     @Override
                     public void onMapClick(@NonNull LatLng latLng) {
-                        MarkerOptions markerOptions = new MarkerOptions();
-                        markerOptions.position(latLng);
-                        markerOptions.title(getCompleteAddressString(latLng.latitude,latLng.longitude));
-                        googleMap.clear();
-                        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
-                                latLng, 15
-                        ));
-
-                        googleMap.addMarker(markerOptions);
+                        setAddressInfo(googleMap, addressText, latLng);
                     }
                 });
             }
@@ -176,6 +162,20 @@ public class MapsFragment extends Fragment {
 //        startActivity(ss);
 //
 //    }
+
+    private void setAddressInfo(GoogleMap googleMap, TextView addressText, LatLng latLng){
+        MarkerOptions markerOptions = new MarkerOptions();
+        markerOptions.position(latLng);
+        String addressString = getCompleteAddressString(latLng.latitude,latLng.longitude);
+        markerOptions.title(addressString);
+        addressText.setText(addressString);
+        googleMap.clear();
+        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
+                latLng, 15
+        ));
+
+        googleMap.addMarker(markerOptions);
+    }
     private String getCompleteAddressString(double LATITUDE, double LONGITUDE) {
         String strAdd = "";
         Geocoder geocoder = new Geocoder(getContext(), Locale.getDefault());
