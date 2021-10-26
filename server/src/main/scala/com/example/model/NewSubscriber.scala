@@ -13,8 +13,8 @@ object NewSubscriber {
               password: String,
               country: String,
               city: String,
-              street: String,
-              buildingNumber: String) : NewSubscriber = new NewSubscriber(name, lastName, dob, number, email, password, country,city, street, buildingNumber)
+              address: String,
+              category: String) : NewSubscriber = new NewSubscriber(name, lastName, dob, number, email, password, country,city, address, category)
 }
 
 class NewSubscriber(@BeanProperty val firstName: String,
@@ -25,9 +25,9 @@ class NewSubscriber(@BeanProperty val firstName: String,
                     @BeanProperty val password: String,
                     @BeanProperty val country: String,
                     @BeanProperty val city: String,
-                    @BeanProperty val street: String,
-                    @BeanProperty val buildingNumber: String) {
+                    @BeanProperty val address: String,
+                    @BeanProperty val category: String) {
 
-    override def toString: String = s"$firstName, $lastName, $dob, $phone, $email, $country, $city, $street, $buildingNumber"
+    override def toString: String = s"$firstName, $lastName, $dob, $phone, $email, $country, $city, $address"
 }
 

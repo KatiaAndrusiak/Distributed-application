@@ -7,4 +7,5 @@ import org.springframework.stereotype.Repository
 @Repository
 trait CategoryRepository extends JpaRepository[Category, Int] {
 
+
 }

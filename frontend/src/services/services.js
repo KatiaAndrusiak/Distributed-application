@@ -45,9 +45,11 @@ export const validatePhoneField = (field) => {
     return regex.test(field) ? true : false;
 }
 
-export const validateBuildingNumberField = (field) => {
-    const regex = /^[0-9]+[a-zA-z]?/;
-    if (regex.test(field)  && field.length > 0 && field.length < 10 ) {
+export const validateAdressField = (field) => {
+    const regex = /^[a-zA-Z]+[,| ]+[0-9]+[a-zA-Z]?/;
+    console.log(regex.test(field))
+    if (regex.test(field)  && field.length > 0 && field.length < 30 ) {
+        console.log("jestem tu")
         return true;
     }
     return false;

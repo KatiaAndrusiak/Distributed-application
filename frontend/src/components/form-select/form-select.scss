@@ -1,0 +1,54 @@
+.select-wrapper {
+    position: relative;
+    margin: 30px 0 0 0;
+
+    select {
+        background: none;
+        background-color: white;
+        color: grey;
+        font-size: 18px;
+        display: block;
+        width: 90%;
+        min-height: 45px;
+        border: none;
+        border-radius: 0;
+        border-bottom: 2px solid rgb(66, 133, 244);
+        margin: 25px 0;
+    
+        &:focus {
+            outline: none;
+        }
+    
+        &:focus ~ .form-select-label {
+            top: 14px;
+            font-size: 14px;
+            color: black;
+        } 
+        
+    }
+    
+    .form-select-label {
+        color: grey;
+        font-size: 14px;
+        font-weight: normal;
+        position: absolute;
+        pointer-events: none;
+        left: 5px;
+        top: 40px;
+        transition: 300ms ease all;
+    
+        &.shrink {
+            top: 14px;
+            font-size: 14px;
+            color: black;
+            &.error {
+                color: rgb(224, 31, 31);
+            }
+        }
+    
+        &.error {
+            color: rgb(224, 31, 31);
+        }
+    }
+}
+

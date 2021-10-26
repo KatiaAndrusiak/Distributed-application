@@ -1,10 +1,11 @@
 import './sign-up.scss';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
-import { postData, validateStringFields, validatePasswordField, validateEmailField, validatePhoneField, validateBuildingNumberField } from './../../services/services';
+import { getResource,postData, validateStringFields, validatePasswordField, validateEmailField, validatePhoneField, validateAdressField } from './../../services/services';
 
 import FormInput from './../form-input/form-input.jsx';
+import FormSelect from '../form-select/form-select';
 import CustomButton from './../button/custom-button';
 
 const SignUp = () => {
@@ -18,8 +19,9 @@ const SignUp = () => {
     const [password, setPassword] = useState('');
     const [country, setCountry] = useState('');
     const [city, setCity] = useState('');
-    const [street, setStreet] = useState('');
-    const [buildingNumber, setBuildingNumber] = useState('');
+    const [address, setAddress] = useState('');
+    const [category, setCategory] = useState('');
+    const [categories, setCategories] = useState([]);
 
     const [errorFirstName, setErrorFirstName] = useState({errorState: false, messagge: " (Musi zawierać tylko litery)"});
     const [errorLastName, setErrorLastName] = useState({errorState: false, messagge: " (Musi zawierać tylko litery)"});
@@ -29,12 +31,17 @@ const SignUp = () => {
     const [errorPassword, setErrorPassword] = useState({errorState: false, messagge: " (Musi zawierać co najmniej 6 znaków)"});
     const [errorCountry, setErrorCountry] = useState({errorState: false, messagge: " (Musi zawierać tylko litery)"});
     const [errorCity, setErrorCity] = useState({errorState: false, messagge: " (Musi zawierać tylko litery)"});
-    const [errorStreet, setErrorStreet] = useState({errorState: false, messagge: " (Musi zawierać tylko litery)"});
-    const [errorBuildingNumber, setErrorBuildingNumber] = useState({errorState: false, messagge: " (Musi zawierać tylko cyfry)"});
+    const [errorAddress, setErrorAddress] = useState({errorState: false, messagge: " (Musi byc w postaci ulica, numer)"});
 
 
     const eye = <FontAwesomeIcon icon={faEye} />;
     const eyeSlash = <FontAwesomeIcon icon={faEyeSlash} />;
+
+    useEffect(() => {
+        console.log("get categories")
+        getResource("http://localhost:8080/categories")
+            .then(categories => setCategories(categories));
+    }, []);
 
     const validateFields = () => {
         let valid = true;
@@ -54,10 +61,6 @@ const SignUp = () => {
             setErrorCity({...errorCity, errorState : true});
             valid = false;
         }
-        if (!validateStringFields(street)) {
-            setErrorStreet({...errorStreet, errorState : true});
-            valid = false;
-        }
         if (!validatePasswordField(password)) {
             setErrorPassword({...errorPassword, errorState : true});
             valid = false;
@@ -70,8 +73,8 @@ const SignUp = () => {
             setErrorPhone({...errorPhone, errorState : true});
             valid = false;
         }
-        if (!validateBuildingNumberField(buildingNumber)) {
-            setErrorBuildingNumber({...errorBuildingNumber, errorState : true});
+        if (!validateAdressField(address)) {
+            setAddress({...errorAddress, errorState : true})
             valid = false;
         }
 
@@ -91,6 +94,12 @@ const SignUp = () => {
         setter({...value, errorState: false});
     }
 
+    const renderCategories = () => {
+        return categories.map(({id, name}) => {
+            return <option key={id} name={name} value={name}>{name}</option>
+        })
+    }
+
 
 
     const handleSubmit = (event) => {
@@ -105,8 +114,7 @@ const SignUp = () => {
             password,
             country,
             city,
-            street,
-            buildingNumber
+            address
         }
 
         if (validateFields()) {
@@ -207,25 +215,24 @@ const SignUp = () => {
                     required
                 />
                 <FormInput
-                    handleChange={(e) => handleChange(e, setStreet)}
-                    clearError={() => clearErrorAfterFocus(errorStreet ,setErrorStreet)}
-                    error={errorStreet}
+                    handleChange={(e) => handleChange(e, setAddress)}
+                    clearError={() => clearErrorAfterFocus(errorAddress ,setErrorAddress)}
+                    error={errorAddress}
                     name="street"
                     type="text"
-                    label="Ulica"
-                    value={street}
+                    label="Adres(Ulica, numer budynku)"
+                    value={address}
                     required
                 />
-                <FormInput
-                    handleChange={(e) => handleChange(e, setBuildingNumber)}
-                    clearError={() => clearErrorAfterFocus(errorBuildingNumber ,setErrorBuildingNumber)}
-                    error={errorBuildingNumber}
-                    name="buildingNumber"
-                    type="text"
-                    label="Numer budynku"
-                    value={buildingNumber}
-                    required
-                />
+
+                <FormSelect
+                    handleChange={(e) => handleChange(e, setCategory)}
+                    name={"category"}
+                    label="Kategoria"
+                    value={category}
+                    required>
+                    {renderCategories()}
+                </FormSelect>
 
                 <CustomButton 
                     type="submit"

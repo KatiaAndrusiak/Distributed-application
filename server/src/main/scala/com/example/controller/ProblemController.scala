@@ -17,7 +17,7 @@ class ProblemController(@Autowired val problemService: ProblemService) {
 
     @RequestMapping(value = Array("/problems"), method = Array(GET))
     @ResponseBody
-    def getAllProblems: List[Problem] = problemService.getAllProblems
+    def getAllProblems: java.util.List[Problem] = problemService.getAllProblems
 
     @PostMapping(path = Array("/problems"))
     def addProblem(@RequestBody problem: Problem): Unit = problemService.addProblem(problem)
