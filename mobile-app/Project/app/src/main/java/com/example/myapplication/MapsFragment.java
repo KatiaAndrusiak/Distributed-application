@@ -11,14 +11,18 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.location.LocationRequest;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -32,6 +36,9 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+
+import java.util.List;
+import java.util.Locale;
 
 public class MapsFragment extends Fragment {
     FusedLocationProviderClient client;
@@ -69,6 +76,8 @@ public class MapsFragment extends Fragment {
                     public void onMapLoaded() {
                         MarkerOptions markerOptions = new MarkerOptions();
                         markerOptions.position(currentLatLng);
+                        markerOptions.title(getCompleteAddressString(currentLatLng.latitude,currentLatLng.longitude));
+
                         googleMap.clear();
                         googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
                                 currentLatLng, 15
@@ -83,7 +92,7 @@ public class MapsFragment extends Fragment {
                     public void onMapClick(@NonNull LatLng latLng) {
                         MarkerOptions markerOptions = new MarkerOptions();
                         markerOptions.position(latLng);
-                        markerOptions.title(latLng.latitude + ":" + latLng.longitude);
+                        markerOptions.title(getCompleteAddressString(latLng.latitude,latLng.longitude));
                         googleMap.clear();
                         googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
                                 latLng, 15
@@ -94,6 +103,21 @@ public class MapsFragment extends Fragment {
                 });
             }
         });
+
+        Button confirmButton = view.findViewById(R.id.confirm_button);
+
+        confirmButton.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        getFragmentManager()
+                                .beginTransaction()
+                                .replace(R.id.frame_layout, new ProblemsFragment())
+                                .commit();
+                    }
+                }
+        );
+
         return view;
     }
 
@@ -152,4 +176,27 @@ public class MapsFragment extends Fragment {
 //        startActivity(ss);
 //
 //    }
+    private String getCompleteAddressString(double LATITUDE, double LONGITUDE) {
+        String strAdd = "";
+        Geocoder geocoder = new Geocoder(getContext(), Locale.getDefault());
+        try {
+            List<Address> addresses = geocoder.getFromLocation(LATITUDE, LONGITUDE, 1);
+            if (addresses != null) {
+                Address returnedAddress = addresses.get(0);
+                StringBuilder strReturnedAddress = new StringBuilder("");
+
+                for (int i = 0; i <= returnedAddress.getMaxAddressLineIndex(); i++) {
+                    strReturnedAddress.append(returnedAddress.getAddressLine(i)).append("\n");
+                }
+                strAdd = strReturnedAddress.toString();
+                System.out.println("My Current loction address"+ strReturnedAddress.toString());
+            } else {
+                System.out.println( "No Address returned!");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("Canont get Address!");
+        }
+        return strAdd;
+}
 }

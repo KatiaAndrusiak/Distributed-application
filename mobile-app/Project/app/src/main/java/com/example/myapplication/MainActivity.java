@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -34,23 +35,13 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-//        locationManager.requestLocationUpdates(
-//                LocationManager.GPS_PROVIDER, 10, 1,
-//                new LocationListener() {
-//                    @Override
-//                    public void onLocationChanged(@NonNull Location location) {
-////                        textViewLongitude.setText(String.valueOf(location.getLongitude()));
-////                        textViewLatitude.setText(String.valueOf(location.getLatitude()));
-//                    }
-//                });
-
-
         Fragment fragment = new MapsFragment();
         getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.frame_layout, fragment)
                 .commit();
-//        Button rollButton = findViewById(R.id.button2);
+
+
 //        ImageView diceImage = findViewById(R.id.dice_view);
 //        rollButton.setOnClickListener(
 //                view -> {
