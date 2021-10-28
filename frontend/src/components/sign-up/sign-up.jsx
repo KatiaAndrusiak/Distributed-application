@@ -11,12 +11,14 @@ import CustomButton from './../button/custom-button';
 const SignUp = () => {
 
     const [passwordShown, setPasswordShown] = useState(false);
+    const [confirmPasswordShown, setConfirmPasswordShown] = useState(false);
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
     const [dob, setDob] = useState('');
     const [phone, setPhone] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
     const [country, setCountry] = useState('');
     const [city, setCity] = useState('');
     const [address, setAddress] = useState('');
@@ -29,9 +31,10 @@ const SignUp = () => {
     const [errorPhone, setErrorPhone] = useState({errorState: false, messagge: " (Musi zaczynać się od +48...)"});
     const [errorEmail, setErrorEmail] = useState({errorState: false, messagge: " (Musi być w postaci *@*.*)"});
     const [errorPassword, setErrorPassword] = useState({errorState: false, messagge: " (Musi zawierać co najmniej 6 znaków)"});
+    const [errorConfirmPassword, setErrorConfirmPassword] = useState({errorState: false, messagge: " (Hasło rózni się)"});
     const [errorCountry, setErrorCountry] = useState({errorState: false, messagge: " (Musi zawierać tylko litery)"});
     const [errorCity, setErrorCity] = useState({errorState: false, messagge: " (Musi zawierać tylko litery)"});
-    const [errorAddress, setErrorAddress] = useState({errorState: false, messagge: " (Musi byc w postaci ulica, numer)"});
+    const [errorAddress, setErrorAddress] = useState({errorState: false, messagge: ""});
 
 
     const eye = <FontAwesomeIcon icon={faEye} />;
@@ -74,7 +77,11 @@ const SignUp = () => {
             valid = false;
         }
         if (!validateAdressField(address)) {
-            setAddress({...errorAddress, errorState : true})
+            setErrorAddress({...errorAddress, errorState : true})
+            valid = false;
+        }
+        if (password !== confirmPassword) {
+            setErrorConfirmPassword({...errorConfirmPassword, errorState : true})
             valid = false;
         }
 
@@ -83,6 +90,10 @@ const SignUp = () => {
 
     const togglePasswordVisiblity = () => {
         setPasswordShown(passwordShown ? false : true);
+    };
+
+    const toggleConfirmPasswordVisiblity = () => {
+        setConfirmPasswordShown(confirmPasswordShown ? false : true);
     };
 
     const handleChange = (event, setter) => {
@@ -159,7 +170,7 @@ const SignUp = () => {
                     error={errorDob}
                     name="dob"
                     type="date"
-                    label="Data narodzenia"
+                    label="Data urodzenia"
                     value={dob}
                     required
                 />
@@ -192,6 +203,17 @@ const SignUp = () => {
                     label="Hasło"
                     value={password}
                     i={<i onClick={togglePasswordVisiblity}>{passwordShown ? eyeSlash : eye}</i>}
+                    required
+                />
+                <FormInput
+                    handleChange={(e) => handleChange(e, setConfirmPassword)}
+                    clearError={() => clearErrorAfterFocus(errorConfirmPassword ,setErrorConfirmPassword)}
+                    error={errorConfirmPassword}
+                    name="confirmPassword"
+                    type={confirmPasswordShown ? "text" : "password"}
+                    label="Podaj ponownie hasło"
+                    value={confirmPassword}
+                    i={<i onClick={toggleConfirmPasswordVisiblity}>{confirmPasswordShown ? eyeSlash : eye}</i>}
                     required
                 />
                 <FormInput
