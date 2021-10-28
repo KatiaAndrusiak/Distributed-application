@@ -1,5 +1,6 @@
 package com.example.myapplication;
 
+import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -7,6 +8,13 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -15,6 +23,7 @@ import android.view.ViewGroup;
  */
 public class ProblemsFragment extends Fragment {
 
+    List<String> problems = new ArrayList<>(Arrays.asList("Woda", "Ogień", "Zniszczenia", "Śmiecie i segregacja", "Komunikacja publiczna", "Sąsiad"));
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -53,12 +62,31 @@ public class ProblemsFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_problems, container, false);
+        View view =  inflater.inflate(R.layout.fragment_problems, container, false);
+
+        int mar = (((getResources().getDisplayMetrics().heightPixels)/(problems.size()+1))* 20)/100;
+        for( String button: problems){
+            LinearLayout ll = view.findViewById(R.id.problems_layout);
+
+            Button btn = new Button(view.getContext());
+            btn.setText(button);
+            btn.setBackgroundColor(Color.parseColor("#4285F4"));
+            LinearLayout.LayoutParams params =  new LinearLayout.LayoutParams(
+                    (int)(getResources().getDisplayMetrics().widthPixels * 0.9),
+                    (int)((getResources().getDisplayMetrics().heightPixels * 0.8) / problems.size())-mar);
+            params.setMargins(0,mar/2,0,mar/2);
+            btn.setLayoutParams(
+                   params);
+            ll.addView(btn);
+        }
+
+        return view;
     }
 }
