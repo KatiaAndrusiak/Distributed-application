@@ -10,4 +10,13 @@
     .btn.submit {
         background-color: rgb(66, 133, 244);
     }
+
+    #registration-input-email {
+       grid-column-start: 1;
+       grid-column-end: 3; 
+    }
+
+    #registration-input-email > input {
+        width: 95%;
+    }
 }

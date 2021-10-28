@@ -14,7 +14,8 @@ class SubscriberController(@Autowired val newSubscriberService: NewSubscriberSer
 
     @PostMapping(path = Array("/subscribers"))
     def createSubscriber(@RequestBody newSubscriber: NewSubscriber): Unit = {
-        newSubscriberService.getSubscriberLocation(newSubscriber)
+        val location = newSubscriberService.getSubscriberLocation(newSubscriber)
+        newSubscriberService.registerSubscriber(newSubscriber, location)
         throw new ResponseStatusException(HttpStatus.OK, "Cause description here")
     }
 
