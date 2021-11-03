@@ -18,5 +18,14 @@
         android:id="@+id/problemsFragment"
         android:name="com.example.myapplication.ProblemsFragment"
         android:label="fragment_problems"
-        tools:layout="@layout/fragment_problems" />
+        tools:layout="@layout/fragment_problems" >
+        <action
+            android:id="@+id/action_problemsFragment_to_formFragment"
+            app:destination="@id/formFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/formFragment"
+        android:name="com.example.myapplication.FormFragment"
+        android:label="fragment_form"
+        tools:layout="@layout/fragment_form" />
 </navigation>

@@ -45,6 +45,18 @@ import java.util.Locale;
 public class MapsFragment extends Fragment {
     FusedLocationProviderClient client;
     LatLng currentLatLng;
+    private static final String ARG_PARAM1 = "param1";
+
+    static String addressString;
+
+    public static MapsFragment newInstance() {
+        MapsFragment fragment = new MapsFragment();
+        Bundle args = new Bundle();
+        args.putString(ARG_PARAM1, addressString);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
@@ -166,7 +178,7 @@ public class MapsFragment extends Fragment {
     private void setAddressInfo(GoogleMap googleMap, TextView addressText, LatLng latLng){
         MarkerOptions markerOptions = new MarkerOptions();
         markerOptions.position(latLng);
-        String addressString = getCompleteAddressString(latLng.latitude,latLng.longitude);
+        addressString = getCompleteAddressString(latLng.latitude,latLng.longitude);
         markerOptions.title(addressString);
         addressText.setText(addressString);
         googleMap.clear();

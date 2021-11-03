@@ -84,6 +84,14 @@ public class ProblemsFragment extends Fragment {
             params.setMargins(0,mar/2,0,mar/2);
             btn.setLayoutParams(
                    params);
+            btn.setOnClickListener(
+                    v ->{
+                        getFragmentManager()
+                                .beginTransaction()
+                                .replace(R.id.frame_layout, new FormFragment())
+                                .commit();
+                    }
+            );
             ll.addView(btn);
         }
 
