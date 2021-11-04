@@ -1,6 +1,6 @@
 package com.example.entity
 
-import javax.persistence.{CascadeType, Column, Entity, GeneratedValue, GenerationType, Id, JoinColumn, ManyToOne, Table}
+import javax.persistence.{CascadeType, Column, Entity, FetchType, GeneratedValue, GenerationType, Id, JoinColumn, ManyToOne, Table}
 import scala.beans.BeanProperty
 
 
@@ -14,12 +14,12 @@ class SubscriberCategory extends Serializable() {
     @BeanProperty
     var id: Int = _
 
-    @ManyToOne(cascade = Array(CascadeType.ALL))
+    @ManyToOne(cascade = Array(CascadeType.ALL), fetch = FetchType.LAZY)
     @JoinColumn(name = "ncategoryid")
     @BeanProperty
     var category: Category = null
 
-    @ManyToOne(cascade = Array(CascadeType.ALL))
+    @ManyToOne(cascade = Array(CascadeType.ALL), fetch = FetchType.LAZY)
     @JoinColumn(name = "nsubscriberid")
     @BeanProperty
     var subscriber: Subscriber = null

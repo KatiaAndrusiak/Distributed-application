@@ -1,7 +1,7 @@
 package com.example.entity
 
-import java.util
 import javax.persistence.{CascadeType, Column, Entity, GeneratedValue, GenerationType, Id, OneToMany, OneToOne, Table}
+import javax.validation.constraints.{NotBlank, NotNull, Pattern, Size}
 import scala.beans.BeanProperty
 
 @Entity
@@ -12,14 +12,23 @@ class Subscriber extends Serializable() {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "nsubscriberid")
     @BeanProperty
+    @NotNull
     var id: Int = _
 
     @Column(name = "sfirstname")
     @BeanProperty
+    @NotNull
+    @Size(min = 2, max = 50, message = "Imię - minimalna wymagana długość - 2, maksymalna - 50")
+    @NotBlank(message = "Imię nie może być puste")
+    @Pattern(regexp = "^[a-zA-Z]*$", message = " Imię musi zawierać tylko litery")
     var fname: String = _
 
     @Column(name = "slastname")
     @BeanProperty
+    @NotNull
+    @Size(min = 2, max = 50, message = "Nazwisko - minimalna wymagana długość - 2, maksymalna - 50")
+    @NotBlank(message = "Nazwisko nie może być puste")
+    @Pattern(regexp = "^[a-zA-Z]*$", message = "Nazwisko musi zawierać tylko litery")
     var lname: String = _
 
     @OneToOne(
@@ -35,9 +44,6 @@ class Subscriber extends Serializable() {
     )
     @BeanProperty
     var subscriberInfo: SubscriberInfo = null
-
-    @OneToMany(mappedBy = "subscriber")
-    var subscriberCategory: util.Set[SubscriberCategory] = new util.HashSet[SubscriberCategory]
 
     override def toString: String = s"id: $id, first name: $fname, last name: $lname"
 }

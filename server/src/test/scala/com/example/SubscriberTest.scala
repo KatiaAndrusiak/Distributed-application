@@ -48,22 +48,22 @@ class SubscriberTest {
 
         // then
     }
-
-    @Test
-    @Rollback(false)
-    def createCos(): Unit = {
-        val subscriber = new Subscriber();
-        subscriber.lname = "a"
-        subscriber.fname = "b"
-
-
-        val subscriberData: SubscriberData = new SubscriberData()
-        subscriberData.email="d"
-        subscriberData.password="c"
-
-        subscriber.subscriberData = subscriberData
-
-        subscriberRepository.save(subscriber)
-
-    }
+//
+//    @Test
+//    @Rollback(false)
+//    def createCos(): Unit = {
+//        val subscriber = new Subscriber();
+//        subscriber.lname = "a"
+//        subscriber.fname = "b"
+//
+//
+//        val subscriberData: SubscriberData = new SubscriberData()
+//        subscriberData.email="d"
+//        subscriberData.password="c"
+//
+//        subscriber.subscriberData = subscriberData
+//
+//        subscriberRepository.save(subscriber)
+//
+//    }
 }

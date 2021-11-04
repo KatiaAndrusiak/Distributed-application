@@ -1,7 +1,7 @@
 package com.example.service
 
-import com.example.entity.{Subscriber, SubscriberData, SubscriberInfo}
-import com.example.repository.SubscriberRepository
+import com.example.entity.{Category, Subscriber, SubscriberCategory, SubscriberData, SubscriberInfo}
+import com.example.repository.{CategoryRepository, SubscriberCategoryRepository, SubscriberDataRepository, SubscriberRepository}
 import com.example.model.NewSubscriber
 import org.json4s.DefaultFormats
 import org.json4s.native.JsonMethods.parse
@@ -9,13 +9,18 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import scalaj.http.Http
 
+import java.util
+
 @Service
-class NewSubscriberService(@Autowired subscriberRepository: SubscriberRepository) {
+class NewSubscriberService(@Autowired subscriberRepository: SubscriberRepository,
+                          @Autowired subscriberDataRepository: SubscriberDataRepository,
+                          @Autowired categoryRepository: CategoryRepository,
+                          @Autowired subscriberCategoryRepository: SubscriberCategoryRepository) {
 
     def splitAddress(newSubscriber: NewSubscriber) : (String, String) = {
-        val splittedAddress = newSubscriber.getAddress.split(",")
-        val street = splittedAddress(0).trim
-        val buildingNumber = splittedAddress(1).trim
+        val splitAddress = newSubscriber.getAddress.split(",")
+        val street = splitAddress(0).trim
+        val buildingNumber = splitAddress(1).trim
         (street, buildingNumber)
     }
 
@@ -35,6 +40,9 @@ class NewSubscriberService(@Autowired subscriberRepository: SubscriberRepository
         println(lat)
         println(lng)
         println(newSubscriber)
+        if (!checkIfEmailExistInDataBase(newSubscriber.getEmail)) {
+            throw new IllegalArgumentException
+        }
         Map("latitude" -> lat, "longitude" -> lng)
     }
 
@@ -65,7 +73,24 @@ class NewSubscriberService(@Autowired subscriberRepository: SubscriberRepository
         subscriber.setSubscriberData(subscriberData)
         subscriber.setSubscriberInfo(subscriberInfo)
 
-        //subscriberRepository.save(subscriber)
+        println(subscriber.getId)
+        subscriberRepository.save(subscriber)
+    }
+
+    def saveSubscriberCategory(newSubscriber: NewSubscriber): Unit = {
+        val subscriberId: Int = subscriberDataRepository.findByEmail(newSubscriber.getEmail).get.getId
+        val subscriber: Subscriber = subscriberRepository.findById(subscriberId).get()
+        val category: Category = categoryRepository.findByName(newSubscriber.getCategory)
+
+        val subscriberCategory = new SubscriberCategory
+        subscriberCategory.setCategory(category)
+        subscriberCategory.setSubscriber(subscriber)
+
+        subscriberCategoryRepository.save(subscriberCategory)
+    }
+
+    def checkIfEmailExistInDataBase(email: String): Boolean = {
+        subscriberDataRepository.findByEmail(email).isEmpty
     }
 
 }

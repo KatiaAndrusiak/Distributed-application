@@ -19,7 +19,7 @@ const SignUp = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
-    const [country, setCountry] = useState('');
+    const [country, setCountry] = useState('Polska');
     const [city, setCity] = useState('');
     const [address, setAddress] = useState('');
     const [category, setCategory] = useState('');
@@ -125,14 +125,16 @@ const SignUp = () => {
             password,
             country,
             city,
-            address
+            address,
+            category
         }
 
         if (validateFields()) {
             postData("http://localhost:8080/subscribers", JSON.stringify(data))
             .then(res => {
                 console.log(res)
-            });
+            })
+            .catch(e => console.log("dada" + e));
             // .finally(() => {
             //     document.getElementById("create-subscriber-form").reset();
             // });
@@ -180,7 +182,7 @@ const SignUp = () => {
                     error={errorPhone}
                     name="phone"
                     type="text"
-                    label="Numer telefonu"
+                    label="Numer telefonu (+48)"
                     value={phone}
                     required
                 />
@@ -225,6 +227,7 @@ const SignUp = () => {
                     label="Kraj"
                     value={country}
                     required
+                    disabled
                 />
                 <FormInput
                     handleChange={(e) => handleChange(e, setCity)}

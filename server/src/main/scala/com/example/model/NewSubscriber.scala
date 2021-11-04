@@ -28,6 +28,6 @@ class NewSubscriber(@BeanProperty val firstName: String,
                     @BeanProperty val address: String,
                     @BeanProperty val category: String) {
 
-    override def toString: String = s"$firstName, $lastName, $dob, $phone, $email, $country, $city, $address"
+    override def toString: String = s"$firstName, $lastName, $dob, $phone, $email, $country, $city, $address, $category"
 }
 

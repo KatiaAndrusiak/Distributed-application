@@ -13,7 +13,9 @@ const FormInput = ({handleChange, label, i, value, error, name, clearError, ...o
                 className={inputClasses}
                 onChange={handleChange}
                 name={name} 
-                {...otherProps}/>
+                value={value}
+                {...otherProps}
+                />
             <label className={labelClasses}>{lableText}</label>
             {i ? i : null}
         </div>
