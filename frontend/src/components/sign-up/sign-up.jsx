@@ -2,11 +2,13 @@ import './sign-up.scss';
 import { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
-import { getResource,postData, validateStringFields, validatePasswordField, validateEmailField, validatePhoneField, validateAdressField } from './../../services/services';
+import { getResource,postData, validateStringFields, validatePasswordField, validateEmailField, validatePhoneField, validateAdressField, closeModal, setCalendarDate } from './../../services/services';
 
 import FormInput from './../form-input/form-input.jsx';
 import FormSelect from '../form-select/form-select';
 import CustomButton from './../button/custom-button';
+import Spinner from '../spinner/Spinner';
+import Modal from '../modal/modal';
 
 const SignUp = () => {
 
@@ -25,6 +27,11 @@ const SignUp = () => {
     const [category, setCategory] = useState('');
     const [categories, setCategories] = useState([]);
 
+    const [loading, setLoading] = useState(false);
+    const [isModal, setIsModal] = useState(false);
+    const [modalError, setModalError] = useState(false);
+    const [modalContent, setModalContent] = useState({});
+
     const [errorFirstName, setErrorFirstName] = useState({errorState: false, messagge: " (Musi zawierać tylko litery)"});
     const [errorLastName, setErrorLastName] = useState({errorState: false, messagge: " (Musi zawierać tylko litery)"});
     const [errorDob, setErrorDob] = useState({errorState: false, messagge: " (Nie określono daty)"});
@@ -41,7 +48,6 @@ const SignUp = () => {
     const eyeSlash = <FontAwesomeIcon icon={faEyeSlash} />;
 
     useEffect(() => {
-        console.log("get categories")
         getResource("http://localhost:8080/categories")
             .then(categories => setCategories(categories));
     }, []);
@@ -88,6 +94,18 @@ const SignUp = () => {
         return valid;
     }
 
+    const clearForm = () => {
+        setFirstName('');
+        setLastName('');
+        setDob('');
+        setPhone('');
+        setEmail('');
+        setPassword('');
+        setConfirmPassword('');
+        setCity('');
+        setAddress('');
+    }
+
     const togglePasswordVisiblity = () => {
         setPasswordShown(passwordShown ? false : true);
     };
@@ -111,10 +129,9 @@ const SignUp = () => {
         })
     }
 
-
-
     const handleSubmit = (event) => {
         event.preventDefault();
+        setLoading(true);
 
         const data = {
             firstName,
@@ -132,16 +149,62 @@ const SignUp = () => {
         if (validateFields()) {
             postData("http://localhost:8080/subscribers", JSON.stringify(data))
             .then(res => {
+                const tempModalContent = {};
+                const {status} = res;
+                // eslint-disable-next-line
+                if (status == 200) {
+                    const messages = [];
+                    messages.push("Udało się, teraz możesz zalogować się i korzystać z serwisu."); 
+                    tempModalContent.header = "Użytkownik został zarejestrowany";
+                    tempModalContent.messages = messages;
+                    setModalContent(tempModalContent);
+
+                    clearForm();
+                    document.getElementById("create-subscriber-form").reset();
+                    setIsModal(true);
+                    setModalError(false);
+                    setLoading(false);
+                    // eslint-disable-next-line
+                } else if (status == 400 || status == 404) {
+                    const messages = []; 
+                    for (const key in res) {
+                        if (key !== 'status') {
+                            messages.push(res[key]);
+                        }
+                    }
+                    tempModalContent.header = "Błąd";
+                    tempModalContent.messages = messages;
+                    setModalContent(tempModalContent);
+
+                    setIsModal(true);
+                    setModalError(true);
+                    setLoading(false);
+                }
                 console.log(res)
             })
-            .catch(e => console.log("dada" + e));
-            // .finally(() => {
-            //     document.getElementById("create-subscriber-form").reset();
-            // });
+            .catch(e => console.log(e));
+        } else {
+            setLoading(false);
         }
+        
 
 
     }
+
+    const modal = isModal ? <Modal 
+        modalContent = {modalContent}
+        modalError={modalError}
+        close={() => closeModal(setIsModal)}/> : null
+    
+    const lastElement = loading ?                 
+        <div className="spinner-wrapper">
+            <Spinner/>
+        </div> :
+        <CustomButton 
+            type="submit"
+            additionalClass="submit">
+                Stworzyć konto
+        </CustomButton>
 
     return (
         <div className="sign-up-wrapper">
@@ -174,6 +237,7 @@ const SignUp = () => {
                     type="date"
                     label="Data urodzenia"
                     value={dob}
+                    max={setCalendarDate()}
                     required
                 />
                 <FormInput
@@ -258,14 +322,9 @@ const SignUp = () => {
                     required>
                     {renderCategories()}
                 </FormSelect>
-
-                <CustomButton 
-                    type="submit"
-                    additionalClass="submit"
-                >
-                    Stworzyć konto
-                </CustomButton>
+                {lastElement}
             </form>
+            {modal}
         </div>
     );
 }
