@@ -1,0 +1,31 @@
+.header {
+    background-color: rgb(66, 133, 244);
+    min-height: 100px;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    font-size: 20px;
+
+    .logo-wrapper {
+      display: flex;
+      align-items: center;
+    }
+  
+    .logo {
+      padding-left: 25px;
+      width: 130px;
+      display: inline;
+    }
+  
+    .options {
+      width: 400px;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+
+  
+      .option {
+        padding: 10px 15px;
+      }
+    }
+  }

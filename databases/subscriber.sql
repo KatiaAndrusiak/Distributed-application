@@ -1,3 +1,4 @@
+
 CREATE SEQUENCE public.subscriber_nsubscriberid_seq;
 
 CREATE TABLE public.subscriber (
@@ -12,7 +13,6 @@ ALTER SEQUENCE public.subscriber_nsubscriberid_seq OWNED BY public.subscriber.nS
 
 CREATE TABLE public.subscriberInfo (
                 nSubscriberId INTEGER NOT NULL,
-                DOB DATE NOT NULL,
                 sPhone VARCHAR(12) NOT NULL,
                 sCountry VARCHAR(30) NOT NULL,
                 sCity VARCHAR(50) NOT NULL,
@@ -108,8 +108,8 @@ insert into subscriber (sFirstName, sLastName) VALUES
 
 select * from subscriber;
 
-insert into subscriberInfo (nSubscriberId, DOB, sPhone, sCountry, sCity, sStreet, sBuildingNumber, nLatitude, nLongitude) VALUES
-    (1, '2021-10-13', '+48574450911', 'Polska', 'Kraków', 'Dworska', '1A', 50.046006, 19.930139);
+insert into subscriberInfo (nSubscriberId, sPhone, sCountry, sCity, sStreet, sBuildingNumber, nLatitude, nLongitude) VALUES
+    (1, '+48574450911', 'Polska', 'Kraków', 'Dworska', '1A', 50.046006, 19.930139);
 
 select * from subscriberInfo;
 

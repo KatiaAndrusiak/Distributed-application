@@ -17,11 +17,6 @@ class SubscriberInfo extends Serializable() {
     @BeanProperty
     var id: Int = _
 
-    @Column(name = "dob")
-    @BeanProperty
-    @DateTimeFormat(pattern = "YYYY-MM-dd")
-    var dob: LocalDate = _
-
     @Column(name = "sphone")
     @BeanProperty
     @NotNull
@@ -74,6 +69,6 @@ class SubscriberInfo extends Serializable() {
     @BeanProperty
     var subscriber: Subscriber = null
 
-    override def toString: String = s"id: $id, dob: $dob, phone: $phone, full address: $country, $city, $street, $buildingNumber latitude: $latitude, longitude: $longitude subscriber: ${subscriber.toString}"
+    override def toString: String = s"id: $id, dob: phone: $phone, full address: $country, $city, $street, $buildingNumber latitude: $latitude, longitude: $longitude subscriber: ${subscriber.toString}"
 
 }

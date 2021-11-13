@@ -2,7 +2,7 @@ import './sign-up.scss';
 import { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
-import { getResource,postData, validateStringFields, validatePasswordField, validateEmailField, validatePhoneField, validateAdressField, closeModal, setCalendarDate } from './../../services/services';
+import { getResource,postData, validateStringFields, validatePasswordField, validateEmailField, validatePhoneField, validateAdressField, closeModal, createModalContent } from './../../services/services';
 
 import FormInput from './../form-input/form-input.jsx';
 import FormSelect from '../form-select/form-select';
@@ -16,7 +16,6 @@ const SignUp = () => {
     const [confirmPasswordShown, setConfirmPasswordShown] = useState(false);
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
-    const [dob, setDob] = useState('');
     const [phone, setPhone] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -24,7 +23,7 @@ const SignUp = () => {
     const [country, setCountry] = useState('Polska');
     const [city, setCity] = useState('');
     const [address, setAddress] = useState('');
-    const [category, setCategory] = useState('');
+    const [category, setCategory] = useState([]);
     const [categories, setCategories] = useState([]);
 
     const [loading, setLoading] = useState(false);
@@ -34,7 +33,6 @@ const SignUp = () => {
 
     const [errorFirstName, setErrorFirstName] = useState({errorState: false, messagge: " (Musi zawierać tylko litery)"});
     const [errorLastName, setErrorLastName] = useState({errorState: false, messagge: " (Musi zawierać tylko litery)"});
-    const [errorDob, setErrorDob] = useState({errorState: false, messagge: " (Nie określono daty)"});
     const [errorPhone, setErrorPhone] = useState({errorState: false, messagge: " (Musi zaczynać się od +48...)"});
     const [errorEmail, setErrorEmail] = useState({errorState: false, messagge: " (Musi być w postaci *@*.*)"});
     const [errorPassword, setErrorPassword] = useState({errorState: false, messagge: " (Musi zawierać co najmniej 6 znaków)"});
@@ -42,6 +40,7 @@ const SignUp = () => {
     const [errorCountry, setErrorCountry] = useState({errorState: false, messagge: " (Musi zawierać tylko litery)"});
     const [errorCity, setErrorCity] = useState({errorState: false, messagge: " (Musi zawierać tylko litery)"});
     const [errorAddress, setErrorAddress] = useState({errorState: false, messagge: ""});
+    const [errorCategory, setErrorCategory] = useState({errorState: false, messagge: "Kategoria (Pole nie moze być puste)"});
 
 
     const eye = <FontAwesomeIcon icon={faEye} />;
@@ -83,11 +82,15 @@ const SignUp = () => {
             valid = false;
         }
         if (!validateAdressField(address)) {
-            setErrorAddress({...errorAddress, errorState : true})
+            setErrorAddress({...errorAddress, errorState : true});
             valid = false;
         }
         if (password !== confirmPassword) {
-            setErrorConfirmPassword({...errorConfirmPassword, errorState : true})
+            setErrorConfirmPassword({...errorConfirmPassword, errorState : true});
+            valid = false;
+        }
+        if (category.length === 0) {
+            setErrorCategory({...errorCategory, errorState : true});
             valid = false;
         }
 
@@ -97,13 +100,13 @@ const SignUp = () => {
     const clearForm = () => {
         setFirstName('');
         setLastName('');
-        setDob('');
         setPhone('');
         setEmail('');
         setPassword('');
         setConfirmPassword('');
         setCity('');
         setAddress('');
+        setCategory([]);
     }
 
     const togglePasswordVisiblity = () => {
@@ -124,46 +127,55 @@ const SignUp = () => {
     }
 
     const renderCategories = () => {
-        return categories.map(({id, name}) => {
-            return <option key={id} name={name} value={name}>{name}</option>
+        return categories.map(({name}) => {
+            return { value: name, label: name }
         })
+    }
+
+    const handleCategory = (selectedOptions) => {
+        setCategory(selectedOptions);
+    }
+
+    const setModalAndLoading = (isModal, isError, isLoading) => {
+        setIsModal(isModal);
+        setModalError(isError);
+        setLoading(isLoading);
     }
 
     const handleSubmit = (event) => {
         event.preventDefault();
         setLoading(true);
 
+        const transformCategory = category.map(({value}) => value)
+        console.log(transformCategory)
+
         const data = {
             firstName,
             lastName,
-            dob,
             phone,
             email,
             password,
             country,
             city,
             address,
-            category
+            category: transformCategory
         }
+
+        console.log(data)
 
         if (validateFields()) {
             postData("http://localhost:8080/subscribers", JSON.stringify(data))
             .then(res => {
-                const tempModalContent = {};
                 const {status} = res;
                 // eslint-disable-next-line
                 if (status == 200) {
                     const messages = [];
                     messages.push("Udało się, teraz możesz zalogować się i korzystać z serwisu."); 
-                    tempModalContent.header = "Użytkownik został zarejestrowany";
-                    tempModalContent.messages = messages;
-                    setModalContent(tempModalContent);
+                    setModalContent(createModalContent("Użytkownik został zarejestrowany", messages));
 
                     clearForm();
                     document.getElementById("create-subscriber-form").reset();
-                    setIsModal(true);
-                    setModalError(false);
-                    setLoading(false);
+                    setModalAndLoading(true, false, false);
                     // eslint-disable-next-line
                 } else if (status == 400 || status == 404) {
                     const messages = []; 
@@ -172,13 +184,15 @@ const SignUp = () => {
                             messages.push(res[key]);
                         }
                     }
-                    tempModalContent.header = "Błąd";
-                    tempModalContent.messages = messages;
-                    setModalContent(tempModalContent);
+                    setModalContent(createModalContent("Błąd", messages));
 
-                    setIsModal(true);
-                    setModalError(true);
-                    setLoading(false);
+                    setModalAndLoading(true, true, false);
+                } else if (status === 500) {
+                    const messages = [];
+                    messages.push("Problem z serwerem, proszę spróbować pózniej"); 
+                    setModalContent(createModalContent("Błąd", messages));
+
+                    setModalAndLoading(true, true, false);
                 }
                 console.log(res)
             })
@@ -186,9 +200,6 @@ const SignUp = () => {
         } else {
             setLoading(false);
         }
-        
-
-
     }
 
     const modal = isModal ? <Modal 
@@ -227,17 +238,6 @@ const SignUp = () => {
                     type="text"
                     label="Nazwisko"
                     value={lastName}
-                    required
-                />
-                <FormInput
-                    handleChange={(e) => handleChange(e, setDob)}
-                    clearError={() => clearErrorAfterFocus(errorDob ,setErrorDob)}
-                    error={errorDob}
-                    name="dob"
-                    type="date"
-                    label="Data urodzenia"
-                    value={dob}
-                    max={setCalendarDate()}
                     required
                 />
                 <FormInput
@@ -313,15 +313,23 @@ const SignUp = () => {
                     value={address}
                     required
                 />
-
                 <FormSelect
-                    handleChange={(e) => handleChange(e, setCategory)}
-                    name={"category"}
-                    label="Kategoria"
+                    styles={{
+                        control: (provided, state) => ({
+                            ...provided,
+                            boxShadow: "none",
+                            border: state.isFocused && "none",
+                        })}}
                     value={category}
-                    required>
-                    {renderCategories()}
-                </FormSelect>
+                    onChange={handleCategory}
+                    clearError={() => clearErrorAfterFocus(errorCategory ,setErrorCategory)}
+                    error={errorCategory}
+                    isMulti
+                    placeholder={"Kategoria"}
+                    clearIndicator={false}
+                    dropdownIndicator={false}
+                    options={renderCategories()}/>
+                    
                 {lastElement}
             </form>
             {modal}

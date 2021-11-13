@@ -1,16 +1,14 @@
 package com.example.controller
 
+import com.example.exception.{EmailAlreadyExistException, NoSuchAddressException, NoSuchStreetException}
 import com.example.model.NewSubscriber
 import com.example.service.NewSubscriberService
 import org.json4s.NoTypeHints
-import org.json4s.jackson.JsonMethods.{compact, render}
 import org.json4s.jackson.Serialization
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.{CrossOrigin, ExceptionHandler, PostMapping, RequestBody, RestController}
+import org.springframework.web.bind.annotation.{CrossOrigin, ExceptionHandler, PostMapping, RequestBody, ResponseStatus, RestController}
 import org.springframework.http.HttpStatus
-import org.springframework.validation.BindingResult
-import org.springframework.web.server.ResponseStatusException
 
 import javax.validation.{ConstraintViolationException, Valid}
 
@@ -25,12 +23,13 @@ class SubscriberController(@Autowired val newSubscriberService: NewSubscriberSer
 
         implicit val formats = Serialization.formats(NoTypeHints)
         val location = newSubscriberService.getSubscriberLocation(newSubscriber)
-        newSubscriberService.registerSubscriber(newSubscriber, location)
-        newSubscriberService.saveSubscriberCategory(newSubscriber)
         val messageMap: Map[String, String] = Map[String, String]("status" -> HttpStatus.OK.value.toString)
         val message = Serialization.write(messageMap)
-        new ResponseEntity[AnyRef](message, HttpStatus.OK)
 
+        newSubscriberService.registerSubscriber(newSubscriber, location)
+        newSubscriberService.saveSubscriberCategory(newSubscriber)
+
+        new ResponseEntity[AnyRef](message, HttpStatus.OK)
     }
 
 
@@ -38,20 +37,36 @@ class SubscriberController(@Autowired val newSubscriberService: NewSubscriberSer
     def handleSubscriberException(constraintViolationException : ConstraintViolationException): ResponseEntity[_] = {
         implicit val formats = Serialization.formats(NoTypeHints)
         val violations = constraintViolationException.getConstraintViolations
-        var errorMap: Map[String, String] = Map[String, String]()
+        var errorMap: Map[String, Any] = Map[String, Any]()
         if (!violations.isEmpty) {
             violations.forEach(violation => errorMap = errorMap + (violation.getPropertyPath.toString -> violation.getMessage)
             )
         }
-        errorMap = errorMap + ("status" -> HttpStatus.NOT_FOUND.value().toString)
+        errorMap = errorMap + ("status" -> HttpStatus.NOT_FOUND.value)
         val errorMessage = Serialization.write(errorMap)
         new ResponseEntity[AnyRef](errorMessage, HttpStatus.NOT_FOUND)
     }
 
-    @ExceptionHandler(Array(classOf[IllegalArgumentException]))
-    def handleEmailException():ResponseEntity[_] = {
+    @ExceptionHandler(Array(classOf[EmailAlreadyExistException]))
+    def handleEmailException(exception: EmailAlreadyExistException):ResponseEntity[_] = {
         implicit val formats = Serialization.formats(NoTypeHints)
-        val messageMap: Map[String, String] = Map[String, String]("message" -> "Użytkownik z takim mailem już istnieje", "status" -> HttpStatus.BAD_REQUEST.value.toString)
+        val messageMap: Map[String, Any] = Map[String, Any]("message" -> exception.getMessage, "status" -> HttpStatus.BAD_REQUEST.value)
+        val message = Serialization.write(messageMap)
+        new ResponseEntity[AnyRef](message, HttpStatus.BAD_REQUEST)
+    }
+
+    @ExceptionHandler(Array(classOf[NoSuchAddressException]))
+    def handleAddressException(exception: NoSuchAddressException):ResponseEntity[_] = {
+        implicit val formats = Serialization.formats(NoTypeHints)
+        val messageMap: Map[String, Any] = Map[String, Any]("message" -> exception.getMessage, "status" -> HttpStatus.BAD_REQUEST.value)
+        val message = Serialization.write(messageMap)
+        new ResponseEntity[AnyRef](message, HttpStatus.BAD_REQUEST)
+    }
+
+    @ExceptionHandler(Array(classOf[NoSuchStreetException]))
+    def handleStreetException(exception: NoSuchStreetException):ResponseEntity[_] = {
+        implicit val formats = Serialization.formats(NoTypeHints)
+        val messageMap: Map[String, Any] = Map[String, Any]("message" -> exception.getMessage, "status" -> HttpStatus.BAD_REQUEST.value)
         val message = Serialization.write(messageMap)
         new ResponseEntity[AnyRef](message, HttpStatus.BAD_REQUEST)
     }

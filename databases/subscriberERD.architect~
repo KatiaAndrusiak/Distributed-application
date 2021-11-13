@@ -167,24 +167,24 @@
    </folder>
   </table>
   <relationships>
-   <relationship id="REL45" populated="true" UUID="f10a9312-1562-428a-83bc-e02555640c0a" deferrability="7" deleteRule="3" fk-table-ref="TAB30" fkCardinality="7" identifying="true" name="category_subscriberCategory_fk" physicalName="category_subscriberCategory_fk" pk-table-ref="TAB1" pkCardinality="2" updateRule="3" >
+   <relationship id="REL45" populated="true" UUID="f10a9312-1562-428a-83bc-e02555640c0a" deferrability="7" deleteRule="3" fk-table-ref="TAB30" fkCardinality="7" identifying="true" name="category_subscriberCategory_fk" physicalName="category_subscribercategory_fk" pk-table-ref="TAB1" pkCardinality="2" updateRule="3" >
     <column-mapping id="CMP46" populated="true" UUID="49fdf0db-772a-428e-b6f5-05e61092798a" fk-column-ref="COL33" name="Column Mapping" physicalName="Column Mapping" pk-column-ref="COL2" />
    </relationship>
    <relationship id="REL47" populated="true" UUID="4d324510-7c33-426a-bff0-0d3e1a08babb" deferrability="7" deleteRule="3" fk-table-ref="TAB38" fkCardinality="7" identifying="true" name="category_problem_fk" physicalName="category_problem_fk" pk-table-ref="TAB1" pkCardinality="2" updateRule="3" >
     <column-mapping id="CMP48" populated="true" UUID="2a99f1da-9749-44e0-b8bb-21fb92f55ff8" fk-column-ref="COL40" name="Column Mapping" physicalName="Column Mapping" pk-column-ref="COL2" />
    </relationship>
-   <relationship id="REL49" populated="true" UUID="210ad8b5-01d5-4441-9c7a-0e96b271fc2b" deferrability="7" deleteRule="3" fk-table-ref="TAB30" fkCardinality="7" identifying="true" name="subsciber_subscriberCategory_fk" physicalName="subsciber_subscriberCategory_fk" pk-table-ref="TAB6" pkCardinality="2" updateRule="3" >
+   <relationship id="REL49" populated="true" UUID="210ad8b5-01d5-4441-9c7a-0e96b271fc2b" deferrability="7" deleteRule="3" fk-table-ref="TAB30" fkCardinality="7" identifying="true" name="subsciber_subscriberCategory_fk" physicalName="subsciber_subscribercategory_fk" pk-table-ref="TAB6" pkCardinality="2" updateRule="3" >
     <column-mapping id="CMP50" populated="true" UUID="01c0db0f-5712-45a3-acb8-f4dbc400767c" fk-column-ref="COL32" name="Column Mapping" physicalName="Column Mapping" pk-column-ref="COL7" />
    </relationship>
-   <relationship id="REL51" populated="true" UUID="02582f24-b1cf-4ddc-8ccf-f7ea77f94ab6" deferrability="7" deleteRule="3" fk-table-ref="TAB24" fkCardinality="3" identifying="true" name="subscriber_subscriberData_fk" physicalName="subscriber_subscriberData_fk" pk-table-ref="TAB6" pkCardinality="2" updateRule="3" >
+   <relationship id="REL51" populated="true" UUID="02582f24-b1cf-4ddc-8ccf-f7ea77f94ab6" deferrability="7" deleteRule="3" fk-table-ref="TAB24" fkCardinality="3" identifying="true" name="subscriber_subscriberData_fk" physicalName="subscriber_subscriberdata_fk" pk-table-ref="TAB6" pkCardinality="2" updateRule="3" >
     <column-mapping id="CMP52" populated="true" UUID="73af3cd2-35fa-469b-9492-b8b5a5a68080" fk-column-ref="COL25" name="Column Mapping" physicalName="Column Mapping" pk-column-ref="COL7" />
    </relationship>
-   <relationship id="REL53" populated="true" UUID="25eca20e-9a03-404b-89db-8914093d45a4" deferrability="7" deleteRule="3" fk-table-ref="TAB12" fkCardinality="3" identifying="true" name="subscriber_subscriberInfo_fk" physicalName="subscriber_subscriberInfo_fk" pk-table-ref="TAB6" pkCardinality="2" updateRule="3" >
+   <relationship id="REL53" populated="true" UUID="25eca20e-9a03-404b-89db-8914093d45a4" deferrability="7" deleteRule="3" fk-table-ref="TAB12" fkCardinality="3" identifying="true" name="subscriber_subscriberInfo_fk" physicalName="subscriber_subscriberinfo_fk" pk-table-ref="TAB6" pkCardinality="2" updateRule="3" >
     <column-mapping id="CMP54" populated="true" UUID="f1f2b18c-7a7f-4f6f-a00b-7d305c1375b5" fk-column-ref="COL13" name="Column Mapping" physicalName="Column Mapping" pk-column-ref="COL7" />
    </relationship>
   </relationships>
  </target-database>
- <ddl-generator type="ca.sqlpower.architect.ddl.PostgresDDLGenerator" allow-connection="true" target-schema="public"> </ddl-generator>
+ <ddl-generator type="ca.sqlpower.architect.ddl.PostgresDDLGenerator" allow-connection="false" target-schema="public"> </ddl-generator>
  <liquibase-settings useSeparateChangeSets="false" generateId="false" idStart="1"/>
  <create-kettle-job-settings filePath="" jobName="" schemaName="" kettleJoinType="0" savingToFile="true" />
  <play-pen zoom="1.0" viewportX="0" viewportY="0" relationship-style="rectilinear" names-displayLogicalNames="true" showPrimaryTag="true" showForeignTag="true" showAlternateTag="true" columnVisibility="ALL" relationshipLabelVisibility="true">

@@ -1,54 +1,40 @@
 .select-wrapper {
     position: relative;
     margin: 5px 0 0 0;
+    grid-column-start: 1;
+    grid-column-end: 3;
 
-    select {
+    .react-select__control {
         background: none;
-        background-color: white;
+        background-color: #e8f1ff;
         color: grey;
         font-size: 18px;
         display: block;
-        width: 90%;
+        width: 95%;
         min-height: 45px;
         border: none;
         border-radius: 0;
         border-bottom: 2px solid rgb(66, 133, 244);
         margin: 25px 0;
-    
-        &:focus {
-            outline: none;
+        &.error {
+            border-bottom: 2px solid rgb(224, 31, 31);
         }
-    
-        &:focus ~ .form-select-label {
-            top: 14px;
-            font-size: 14px;
-            color: black;
-        } 
-        
     }
-    
-    .form-select-label {
+
+    .react-select__value-container {
+        padding: 1px 2px;
+    }
+
+    .react-select__placeholder {
         color: grey;
         font-size: 14px;
-        font-weight: normal;
-        position: absolute;
-        pointer-events: none;
-        left: 5px;
-        top: 40px;
-        transition: 300ms ease all;
-    
-        &.shrink {
-            top: 14px;
-            font-size: 14px;
-            color: black;
-            &.error {
-                color: rgb(224, 31, 31);
-            }
-        }
-    
         &.error {
             color: rgb(224, 31, 31);
         }
+
+    }
+
+    .react-select__indicators { 
+        display: none; 
     }
 }
-

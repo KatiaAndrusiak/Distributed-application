@@ -32,7 +32,6 @@ class SubscriberInfoTest {
         println(subscriberInfo)
         // then
         Assert.assertEquals(1, subscriberInfo.getId)
-        Assert.assertEquals("2021-10-13", subscriberInfo.getDob.toString)
         Assert.assertEquals("+48574450911", subscriberInfo.getPhone)
         Assert.assertEquals("Polska", subscriberInfo.getCountry)
         Assert.assertEquals("Kraków", subscriberInfo.getCity)

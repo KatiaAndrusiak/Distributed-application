@@ -57,17 +57,10 @@ export const closeModal = (setter) => {
     setter(false);
 }
 
-export const setCalendarDate = () => {
-    const dtToday = new Date();
+export const createModalContent = (header, messages) => {
+    const tempModalContent = {};
+    tempModalContent.header = header;
+    tempModalContent.messages = messages;
 
-    let month = dtToday.getMonth() + 1;
-    let day = dtToday.getDate();
-    const year = dtToday.getFullYear();
-
-    if(month < 10)
-        month = '0' + month.toString();
-    if(day < 10)
-        day = '0' + day.toString();
-
-    return year + '-' + month + '-' + day;
+    return tempModalContent;
 }

@@ -1,6 +1,16 @@
 .group {
     position: relative;
     margin: 5px 0 0 0;
+    i {
+        position: absolute;
+        top: 40%;
+        right: 9%; 
+    }
+    
+    i:hover {
+        color: #A9A9A9;
+        cursor: pointer;
+    }
 }
 
 .pass-wrapper {
@@ -8,20 +18,9 @@
     display: flex;
 }
 
-i {
-    position: absolute;
-    top: 40%;
-    right: 9%; 
-}
-
-i:hover {
-    color: #A9A9A9;
-    cursor: pointer;
-  }
-
 input {
     background: none;
-    background-color: white;
+    background-color: #e8f1ff;
     color: grey;
     font-size: 18px;
     display: block;
@@ -45,14 +44,6 @@ input {
 
 input.error {
     border-bottom: 2px solid rgb(224, 31, 31);
-}
-
-input[type=date]:required:invalid::-webkit-datetime-edit {
-    cursor: pointer;
-    color: transparent;
-}
-input[type=date]:focus::-webkit-datetime-edit {
-    color: black !important;
 }
 
 .form-input-label {

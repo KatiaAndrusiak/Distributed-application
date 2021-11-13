@@ -1,6 +1,6 @@
 .sign-up-wrapper {
     display: block;
-    width: 600px;
+    width: 700px;
     margin: 0 auto;
 
     form {
@@ -11,17 +11,17 @@
         background-color: rgb(66, 133, 244);
     }
 
-    #registration-input-email {
-       grid-column-start: 1;
-       grid-column-end: 3; 
-    }
-
-    #registration-input-email > input {
-        width: 95%;
-    }
-
     .spinner-wrapper {
         grid-column-start: 1;
         grid-column-end: 3;
+    }
+
+    #registration-input-street {
+        grid-column-start: 1;
+        grid-column-end: 3; 
+     }
+ 
+     #registration-input-street > input {
+         width: 95%;
     }
 }
