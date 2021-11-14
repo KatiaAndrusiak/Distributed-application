@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+<item>
+    <layer-list>
+        <item>
+            <shape android:shape="rectangle">
+                <stroke android:color="@color/black" android:width="1dp"/>
+                <corners android:radius="@dimen/button_round_radius"/>
+                <solid android:color="@color/default_button"/>
+            </shape>
+
+        </item>
+
+        <item
+            android:drawable="@drawable/ic_arrow_down"
+            android:gravity="end"
+            android:paddingRight ="10dp"
+            />
+
+
+    </layer-list>
+
+</item>
+</selector>

@@ -3,15 +3,23 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Android/Sdk/platforms/android-31/data/res/layout/simple_spinner_item.xml" value="0.12239583333333333" />
+        <entry key="..\:/Thesis/Project/app/src/main/res/drawable-v23/blue_outline.xml" value="0.1" />
+        <entry key="..\:/Thesis/Project/app/src/main/res/drawable/arrow_down.xml" value="0.1" />
+        <entry key="..\:/Thesis/Project/app/src/main/res/drawable/blue_outline.xml" value="0.11302083333333333" />
         <entry key="..\:/Thesis/Project/app/src/main/res/drawable/button_shape.xml" value="0.19895833333333332" />
+        <entry key="..\:/Thesis/Project/app/src/main/res/drawable/button_state_list_anim_material.xml" value="0.1" />
         <entry key="..\:/Thesis/Project/app/src/main/res/drawable/dice_5.xml" value="0.1125" />
         <entry key="..\:/Thesis/Project/app/src/main/res/drawable/dice_6.xml" value="0.1125" />
         <entry key="..\:/Thesis/Project/app/src/main/res/drawable/empty_dice.xml" value="0.1125" />
         <entry key="..\:/Thesis/Project/app/src/main/res/drawable/ic_launcher_background.xml" value="0.1125" />
+        <entry key="..\:/Thesis/Project/app/src/main/res/drawable/spinner_item.xml" value="0.1" />
         <entry key="..\:/Thesis/Project/app/src/main/res/layout/activity_main.xml" value="0.2037037037037037" />
-        <entry key="..\:/Thesis/Project/app/src/main/res/layout/fragment_form.xml" value="0.26313405797101447" />
+        <entry key="..\:/Thesis/Project/app/src/main/res/layout/fragment_complete.xml" value="0.12318840579710146" />
+        <entry key="..\:/Thesis/Project/app/src/main/res/layout/fragment_form.xml" value="0.25" />
         <entry key="..\:/Thesis/Project/app/src/main/res/layout/fragment_maps.xml" value="0.2" />
         <entry key="..\:/Thesis/Project/app/src/main/res/layout/fragment_problems.xml" value="0.2786458333333333" />
+        <entry key="..\:/Thesis/Project/app/src/main/res/layout/spinner_item.xml" value="0.12239583333333333" />
       </map>
     </option>
   </component>

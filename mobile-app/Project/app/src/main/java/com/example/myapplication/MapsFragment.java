@@ -19,6 +19,7 @@ import android.location.LocationManager;
 import android.location.LocationRequest;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,7 +48,7 @@ public class MapsFragment extends Fragment {
     LatLng currentLatLng;
     private static final String ARG_PARAM1 = "param1";
 
-    static String addressString;
+    private static String addressString;
 
     public static MapsFragment newInstance() {
         MapsFragment fragment = new MapsFragment();
@@ -65,22 +66,21 @@ public class MapsFragment extends Fragment {
 
         client = LocationServices.getFusedLocationProviderClient(getActivity());
 
-        if(ContextCompat.checkSelfPermission(getActivity(),
+        if (ContextCompat.checkSelfPermission(getActivity(),
                 Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 && ContextCompat.checkSelfPermission(getActivity(),
-                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)
-        {
+                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             requestPermissions(
                     new String[]{
                             Manifest.permission.ACCESS_COARSE_LOCATION,
                             Manifest.permission.ACCESS_FINE_LOCATION},
                     1);
-        }else {
+        } else {
             getCurrentLocation();
         }
 
         TextView addressText = view.findViewById(R.id.addressText);
-
+//        addressText.setHeight((int)(getResources().getDisplayMetrics().heightPixels * 0.1));
         SupportMapFragment mapFragment =
                 (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.google_map);
 
@@ -103,6 +103,8 @@ public class MapsFragment extends Fragment {
         });
 
         Button confirmButton = view.findViewById(R.id.confirm_button);
+        confirmButton.setWidth((int)(getResources().getDisplayMetrics().widthPixels * 0.8));
+        confirmButton.setHeight((int)(getResources().getDisplayMetrics().heightPixels * 0.12));
 
         confirmButton.setOnClickListener(
                 new View.OnClickListener() {
@@ -125,24 +127,24 @@ public class MapsFragment extends Fragment {
         LocationManager locationManager = (LocationManager) getActivity()
                 .getSystemService(Context.LOCATION_SERVICE);
         if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
-        || locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)){
+                || locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
             client.getLastLocation().addOnCompleteListener(
                     new OnCompleteListener<Location>() {
                         @Override
                         public void onComplete(@NonNull Task<Location> task) {
                             Location location = task.getResult();
-                            if(location != null){
-                                currentLatLng = new LatLng(location.getLatitude(),location.getLongitude());
-                            }else{
+                            if (location != null) {
+                                currentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
+                            } else {
 
                                 locationManager.requestLocationUpdates(
-                                    LocationManager.GPS_PROVIDER, 10, 1,
-                                    new LocationListener() {
-                                        @Override
-                                        public void onLocationChanged(@NonNull Location location) {
-                                            currentLatLng = new LatLng(location.getLatitude(),location.getLongitude());
-                                        }
-                                    });
+                                        LocationManager.GPS_PROVIDER, 10, 1,
+                                        new LocationListener() {
+                                            @Override
+                                            public void onLocationChanged(@NonNull Location location) {
+                                                currentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
+                                            }
+                                        });
                             }
                         }
                     }
@@ -154,12 +156,11 @@ public class MapsFragment extends Fragment {
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if(  requestCode == 1 && (grantResults.length > 0) && (grantResults[0] + grantResults[1] == PackageManager.PERMISSION_GRANTED))
-        {
+        if (requestCode == 1 && (grantResults.length > 0) && (grantResults[0] + grantResults[1] == PackageManager.PERMISSION_GRANTED)) {
             getCurrentLocation();
-          //  callNextActivity();
+            //  callNextActivity();
 //            startActivity(new Intent(getActivity(), getActivity().getClass()));
-        }else {
+        } else {
             Toast.makeText(getActivity(), "Permission denied", Toast.LENGTH_SHORT).show();
         }
     }
@@ -175,10 +176,10 @@ public class MapsFragment extends Fragment {
 //
 //    }
 
-    private void setAddressInfo(GoogleMap googleMap, TextView addressText, LatLng latLng){
+    private void setAddressInfo(GoogleMap googleMap, TextView addressText, LatLng latLng) {
         MarkerOptions markerOptions = new MarkerOptions();
         markerOptions.position(latLng);
-        addressString = getCompleteAddressString(latLng.latitude,latLng.longitude);
+        addressString = getCompleteAddressString(latLng.latitude, latLng.longitude);
         markerOptions.title(addressString);
         addressText.setText(addressString);
         googleMap.clear();
@@ -188,6 +189,7 @@ public class MapsFragment extends Fragment {
 
         googleMap.addMarker(markerOptions);
     }
+
     private String getCompleteAddressString(double LATITUDE, double LONGITUDE) {
         String strAdd = "";
         Geocoder geocoder = new Geocoder(getContext(), Locale.getDefault());
@@ -201,14 +203,14 @@ public class MapsFragment extends Fragment {
                     strReturnedAddress.append(returnedAddress.getAddressLine(i)).append("\n");
                 }
                 strAdd = strReturnedAddress.toString();
-                System.out.println("My Current loction address"+ strReturnedAddress.toString());
+                System.out.println("My Current location address" + strReturnedAddress.toString());
             } else {
-                System.out.println( "No Address returned!");
+                System.out.println("No Address returned!");
             }
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("Canont get Address!");
+            System.out.println("Cannot get Address!");
         }
         return strAdd;
-}
+    }
 }

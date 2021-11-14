@@ -1,10 +1,11 @@
 package com.example.myapplication;
 
+import android.graphics.Color;
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
+
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentResultListener;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,13 +13,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -29,13 +26,10 @@ public class FormFragment extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    private static final String  SELECTED_ADDRESS= "param1";
+    private static final String SELECTED_PROBLEM = "selectedProblem";
     TextView addressTextView;
     String [] problems = new String[]{"Woda", "Ogień", "Zniszczenia", "Śmiecie i segregacja", "Komunikacja publiczna", "Sąsiad"};
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
 
     public FormFragment() {
         // Required empty public constructor
@@ -53,8 +47,8 @@ public class FormFragment extends Fragment {
     public static FormFragment newInstance(String param1, String param2) {
         FormFragment fragment = new FormFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+//        args.putString(ARG_PARAM1, param1);
+//        args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
     }
@@ -72,17 +66,20 @@ public class FormFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_form, container, false);
-        mParam1 = MapsFragment.newInstance().getArguments().getString(ARG_PARAM1);
-        addressTextView = view.findViewById(R.id.addressTextView);
-        addressTextView.setText(mParam1);
 
-        Spinner dynamicSpinner = view.findViewById(R.id.dynamic_spinner);
+        Spinner dynamicSpinner = view.findViewById(R.id.category_spinner);
+        // TODO: Rename and change types of parameters
+        String selectedAddress = MapsFragment.newInstance().getArguments().getString(SELECTED_ADDRESS);
+        addressTextView = view.findViewById(R.id.addressTextView);
+        addressTextView.setText(selectedAddress);
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(
-                getActivity(), android.R.layout.simple_spinner_item, problems);
+                getActivity(), R.layout.spinner_item, problems);
+        adapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
 
         dynamicSpinner.setAdapter(adapter);
-
+        String selectedProblem = ProblemsFragment.newInstance().getArguments().getString(SELECTED_PROBLEM);
+        dynamicSpinner.setSelection(getPositionByValue(problems, selectedProblem));
         dynamicSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view,
@@ -98,4 +95,15 @@ public class FormFragment extends Fragment {
 
         return view;
     }
+
+    public static int getPositionByValue(String[] strList, String value){
+        for (int i = 0; i < strList.length; i++){
+            if(strList[i].equals(value)){
+                return i;
+            }
+        }
+        return -1;
+    }
+
+
 }

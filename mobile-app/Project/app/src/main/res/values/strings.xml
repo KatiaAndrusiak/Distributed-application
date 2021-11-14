@@ -2,4 +2,5 @@
 <resources>
     <string name="hello_blank_fragment">hello_blank_fragment</string>
     <string name="potwierd_lokalizacj">Potwierdź lokalizację</string>
+    <string name="zmien">zmień</string>
 </resources>

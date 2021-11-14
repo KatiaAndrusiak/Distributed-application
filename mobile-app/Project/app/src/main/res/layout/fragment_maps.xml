@@ -23,21 +23,23 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="20dp"
-        android:backgroundTint="#4285F4"
-        android:textColor="@color/white"
+        android:backgroundTint="@color/default_button"
+        android:textSize="16sp"
+        android:textColor="@color/black"
         android:text="@string/potwierd_lokalizacj" />
+
 
 
         <TextView
         android:id="@+id/addressText"
         android:text=""
-        android:paddingTop="3pt"
         android:autoSizeTextType="uniform"
         android:textAlignment="center"
+        android:paddingTop="20sp"
+        android:textSize="20sp"
         android:layout_width="match_parent"
-        android:layout_height="20pt"
-        android:background="@color/white"
+        android:layout_height="wrap_content"
+        android:background="@color/default_background"
         android:textColor="@color/black"/>
 
 </RelativeLayout>
