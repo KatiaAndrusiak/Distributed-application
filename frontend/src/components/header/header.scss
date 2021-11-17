@@ -23,7 +23,10 @@
       justify-content: flex-end;
       align-items: center;
 
-  
+      .logout {
+        cursor: pointer;
+      }
+
       .option {
         padding: 10px 15px;
       }

@@ -158,14 +158,16 @@ const SignUp = () => {
             country,
             city,
             address,
-            category: transformCategory
+            category: transformCategory,
+            role: ["user"]
         }
 
         console.log(data)
 
         if (validateFields()) {
-            postData("http://localhost:8080/subscribers", JSON.stringify(data))
+            postData("http://localhost:8080/auth/signup", JSON.stringify(data))
             .then(res => {
+                console.log(res);
                 const {status} = res;
                 // eslint-disable-next-line
                 if (status == 200) {

@@ -1,6 +1,7 @@
 package com.example.entity
 
-import javax.persistence.{Column, Entity, Id, JoinColumn, MapsId, OneToOne, Table}
+import java.util
+import javax.persistence.{Column, Entity, FetchType, Id, JoinColumn, JoinTable, ManyToMany, MapsId, OneToOne, Table}
 import javax.validation.constraints.{Email, NotBlank, NotNull, Pattern, Size}
 import scala.beans.BeanProperty
 
@@ -27,7 +28,7 @@ class SubscriberData extends Serializable() {
     @BeanProperty
     @NotNull
     @NotBlank(message = "Hasło nie może być puste")
-    @Size(min = 6, max = 50, message = "Hasło - minimalna wymagana długość - 6, maksymalna - 40")
+    @Size(min = 6, max = 120, message = "Hasło - minimalna wymagana długość - 6, maksymalna - 40")
     var password: String = _
 
     @OneToOne
@@ -35,6 +36,15 @@ class SubscriberData extends Serializable() {
     @JoinColumn(name = "nsubscriberid")
     @BeanProperty
     var subscriber: Subscriber = null
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+        name = "user_roles",
+        joinColumns = Array(new JoinColumn(name = "nsubscriberid")),
+        inverseJoinColumns = Array(new JoinColumn(name = "role_id"))
+    )
+    @BeanProperty
+    var roles: util.Set[Role] = new util.HashSet[Role]()
 
     override def toString: String = s"id: $id, email: $email, password: $password, subscriber: ${subscriber.toString}"
 }

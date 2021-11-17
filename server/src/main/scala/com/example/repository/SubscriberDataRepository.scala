@@ -7,4 +7,5 @@ import org.springframework.stereotype.Repository
 @Repository
 trait SubscriberDataRepository extends JpaRepository[SubscriberData, Int] {
     def findByEmail(email: String): Option[SubscriberData]
+    def existsByEmail(email: String): Boolean
 }

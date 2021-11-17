@@ -12,7 +12,8 @@ object NewSubscriber {
               country: String,
               city: String,
               address: String,
-              category: java.util.List[String]) : NewSubscriber = new NewSubscriber(name, lastName, number, email, password, country,city, address, category)
+              category: java.util.List[String],
+              role: java.util.Set[String]) : NewSubscriber = new NewSubscriber(name, lastName, number, email, password, country,city, address, category, role)
 }
 
 class NewSubscriber(@BeanProperty val firstName: String,
@@ -23,7 +24,8 @@ class NewSubscriber(@BeanProperty val firstName: String,
                     @BeanProperty val country: String,
                     @BeanProperty val city: String,
                     @BeanProperty val address: String,
-                    @BeanProperty val category: java.util.List[String]) {
+                    @BeanProperty val category: java.util.List[String],
+                    @BeanProperty val role: java.util.Set[String]) {
 
     override def toString: String = s"$firstName, $lastName, $phone, $email, $country, $city, $address, $category"
 }

@@ -1,12 +1,14 @@
 package com.example.service
 
-import com.example.entity.{Category, Subscriber, SubscriberCategory, SubscriberData, SubscriberInfo}
+import java.util
+import com.example.entity.{Category, Role, Subscriber, SubscriberCategory, SubscriberData, SubscriberInfo}
 import com.example.exception.{EmailAlreadyExistException, NoSuchAddressException, NoSuchStreetException}
-import com.example.repository.{CategoryRepository, SubscriberCategoryRepository, SubscriberDataRepository, SubscriberRepository}
-import com.example.model.NewSubscriber
+import com.example.repository.{CategoryRepository, RoleRepository, SubscriberCategoryRepository, SubscriberDataRepository, SubscriberRepository}
+import com.example.model.{ERole, NewSubscriber}
 import org.json4s.{DefaultFormats, JValue}
 import org.json4s.native.JsonMethods.parse
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import scalaj.http.Http
 
@@ -14,7 +16,9 @@ import scalaj.http.Http
 class NewSubscriberService(@Autowired subscriberRepository: SubscriberRepository,
                           @Autowired subscriberDataRepository: SubscriberDataRepository,
                           @Autowired categoryRepository: CategoryRepository,
-                          @Autowired subscriberCategoryRepository: SubscriberCategoryRepository) {
+                          @Autowired subscriberCategoryRepository: SubscriberCategoryRepository,
+                          @Autowired encoder: PasswordEncoder,
+                          @Autowired roleRepository: RoleRepository) {
 
     def getSubscriberLocation(newSubscriber: NewSubscriber): Map[String,Double] = {
         implicit val formats = DefaultFormats
@@ -51,7 +55,7 @@ class NewSubscriberService(@Autowired subscriberRepository: SubscriberRepository
         val subscriberData: SubscriberData = new SubscriberData
         val subscriberInfo: SubscriberInfo = new SubscriberInfo
 
-        subscriberData.setPassword(newSubscriber.getPassword)
+        subscriberData.setPassword(encoder.encode(newSubscriber.getPassword))
         subscriberData.setEmail(newSubscriber.getEmail)
         subscriberData.setSubscriber(subscriber)
 
@@ -70,6 +74,27 @@ class NewSubscriberService(@Autowired subscriberRepository: SubscriberRepository
         subscriber.setSubscriberInfo(subscriberInfo)
 
         subscriberRepository.save(subscriber)
+
+        val strRoles: util.Set[String] = newSubscriber.getRole
+        val roles: util.Set[Role] = new util.HashSet[Role]()
+
+        if (strRoles == null) {
+            val userRole: Role = roleRepository.findByName(ERole.ROLE_USER).getOrElse(throw new RuntimeException("Error: Role is not found."))
+            roles.add(userRole)
+        } else {
+            strRoles.forEach {
+                case "admin" =>
+                    val adminRole: Role = roleRepository.findByName(ERole.ROLE_ADMIN).getOrElse(throw new RuntimeException("Error: Role is not found."))
+                    roles.add(adminRole)
+                case _ =>
+                    val userRole: Role = roleRepository.findByName(ERole.ROLE_USER).getOrElse(throw new RuntimeException("Error: Role is not found."))
+                    roles.add(userRole)
+
+            }
+        }
+        subscriberData.setRoles(roles)
+        subscriberRepository.save(subscriber)
+        subscriberDataRepository.save(subscriberData)
     }
 
     def saveSubscriberCategory(newSubscriber: NewSubscriber): Unit = {
