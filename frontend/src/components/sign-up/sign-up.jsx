@@ -39,7 +39,7 @@ const SignUp = () => {
     const [errorConfirmPassword, setErrorConfirmPassword] = useState({errorState: false, messagge: " (Hasło rózni się)"});
     const [errorCountry, setErrorCountry] = useState({errorState: false, messagge: " (Musi zawierać tylko litery)"});
     const [errorCity, setErrorCity] = useState({errorState: false, messagge: " (Musi zawierać tylko litery)"});
-    const [errorAddress, setErrorAddress] = useState({errorState: false, messagge: ""});
+    const [errorAddress, setErrorAddress] = useState({errorState: false, messagge: " (Wpisz numer domu oddzielony przecinkiem)"});
     const [errorCategory, setErrorCategory] = useState({errorState: false, messagge: "Kategoria (Pole nie moze być puste)"});
 
 

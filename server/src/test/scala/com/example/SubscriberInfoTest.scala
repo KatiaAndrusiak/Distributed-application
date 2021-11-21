@@ -24,14 +24,14 @@ class SubscriberInfoTest {
     @Test
     def shouldReturnSubscriberInfo(): Unit = {
         // given
-        val id: Int = 1
+        val id: Int = 2
 
         // when
         val subscriberInfo: SubscriberInfo = subscriberInfoRepository.findById(id).orElseThrow(() => new NullPointerException)
 
         println(subscriberInfo)
         // then
-        Assert.assertEquals(1, subscriberInfo.getId)
+        Assert.assertEquals(2, subscriberInfo.getId)
         Assert.assertEquals("+48574450910", subscriberInfo.getPhone)
         Assert.assertEquals("Polska", subscriberInfo.getCountry)
         Assert.assertEquals("Krakow", subscriberInfo.getCity)

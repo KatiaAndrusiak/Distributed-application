@@ -26,12 +26,12 @@ class SubscriberDataTest {
     @Test
     def shouldReturnSubscriberData(): Unit = {
         // given
-        val id: Int = 1
+        val id: Int = 2
 
         // when
         val subscriberData: SubscriberData = subscriberDataRepository.findById(id).orElseThrow(() => new NullPointerException)
         // then
-        Assert.assertEquals(1, subscriberData.getId)
+        Assert.assertEquals(2, subscriberData.getId)
         Assert.assertEquals("tester@gmail.com", subscriberData.getEmail)
         Assert.assertEquals(ERole.ROLE_ADMIN, subscriberData.getRoles.iterator.next.name)
     }

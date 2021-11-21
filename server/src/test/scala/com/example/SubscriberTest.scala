@@ -26,13 +26,13 @@ class SubscriberTest {
     @Test
     def shouldReturnSubscriber(): Unit = {
         // given
-        val id: Int = 1
+        val id: Int = 2
 
         // when
         val subscriber: Subscriber = subscriberRepository.findById(id).orElseThrow(() => new NullPointerException)
 
         // then
-        Assert.assertEquals(1, subscriber.getId)
+        Assert.assertEquals(2, subscriber.getId)
         Assert.assertEquals("test", subscriber.getFname)
         Assert.assertEquals("test", subscriber.getLname)
     }

@@ -37,7 +37,7 @@ class SubscriberInfo extends Serializable() {
     @BeanProperty
     @NotNull
     @NotBlank(message = "Miasto nie może być puste")
-    @Pattern(regexp = "^[a-zA-Z -]*$", message = "Miasto musi zawierać tylko litery")
+    @Pattern(regexp = "^[a-zA-ZAaĄąBbCcĆćDdEeĘęFfGgHhIiJjKkLlŁłMmNnŃńOoÓóPpRrSsŚśTtUuWwYyZzŹźŻż -]*$", message = "Miasto musi zawierać tylko litery")
     @Size(min = 2, max = 50, message = "Miasto nie może zawierać więcej niż 50 znaków")
     var city: String = _
 
@@ -45,7 +45,7 @@ class SubscriberInfo extends Serializable() {
     @BeanProperty
     @NotNull
     @NotBlank(message = "Ulica nie może być pusta")
-    @Pattern(regexp = "^[a-zA-Z -]*$", message = "Ulica musi zawierać tylko litery")
+    @Pattern(regexp = "^[a-zA-ZAaĄąBbCcĆćDdEeĘęFfGgHhIiJjKkLlŁłMmNnŃńOoÓóPpRrSsŚśTtUuWwYyZzŹźŻż -]*$", message = "Ulica musi zawierać tylko litery")
     @Size(min = 2, max = 30, message = "Ulica nie może zawierać więcej niż 50 znaków")
     var street: String = _
 

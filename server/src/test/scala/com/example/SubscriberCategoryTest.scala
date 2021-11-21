@@ -24,15 +24,15 @@ class SubscriberCategoryTest {
     @Test
     def shouldReturnSubscriberCategory(): Unit = {
         // given
-        val id: Int = 2
+        val id: Int = 3
 
         //when
         val subscriberCategory: SubscriberCategory = subscriberCategoryRepository.findById(id).orElseThrow(() => new NullPointerException)
 
         //then
-        Assert.assertEquals(2, subscriberCategory.getId)
+        Assert.assertEquals(3, subscriberCategory.getId)
         Assert.assertEquals(4, subscriberCategory.getCategory.getId)
-        Assert.assertEquals(1, subscriberCategory.getSubscriber.getId)
+        Assert.assertEquals(2, subscriberCategory.getSubscriber.getId)
     }
 
     @Test(expected = classOf[NullPointerException])
