@@ -2,32 +2,27 @@ package com.example.myapplication;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.location.LocationRequest;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.myapplication.entity.Problem;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -37,7 +32,6 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 
 import java.util.List;
@@ -48,12 +42,13 @@ public class MapsFragment extends Fragment {
     LatLng currentLatLng;
     private static final String ARG_PARAM1 = "param1";
 
+    private static Problem problem = new Problem();
     private static String addressString;
 
     public static MapsFragment newInstance() {
         MapsFragment fragment = new MapsFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, addressString);
+        args.putParcelable(ARG_PARAM1, problem);
         fragment.setArguments(args);
         return fragment;
     }
@@ -182,6 +177,9 @@ public class MapsFragment extends Fragment {
         addressString = getCompleteAddressString(latLng.latitude, latLng.longitude);
         markerOptions.title(addressString);
         addressText.setText(addressString);
+        problem.setAddress(addressString);
+        problem.setLatitude(latLng.latitude);
+        problem.setLongitude(latLng.longitude);
         googleMap.clear();
         googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
                 latLng, 15

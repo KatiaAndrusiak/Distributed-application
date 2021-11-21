@@ -1,10 +1,8 @@
 package com.example.myapplication;
 
-import android.graphics.Color;
 import android.os.Bundle;
 
 
-import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.Fragment;
 
 import android.util.Log;
@@ -13,8 +11,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
+
+import com.example.myapplication.entity.Problem;
 
 
 /**
@@ -24,9 +25,7 @@ import android.widget.TextView;
  */
 public class FormFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String  SELECTED_ADDRESS= "param1";
+    private static final String  PROBLEM_DATA= "param1";
     private static final String SELECTED_PROBLEM = "selectedProblem";
     TextView addressTextView;
     String [] problems = new String[]{"Woda", "Ogień", "Zniszczenia", "Śmiecie i segregacja", "Komunikacja publiczna", "Sąsiad"};
@@ -43,7 +42,6 @@ public class FormFragment extends Fragment {
      * @param param2 Parameter 2.
      * @return A new instance of fragment FormFragment.
      */
-    // TODO: Rename and change types and number of parameters
     public static FormFragment newInstance(String param1, String param2) {
         FormFragment fragment = new FormFragment();
         Bundle args = new Bundle();
@@ -69,9 +67,9 @@ public class FormFragment extends Fragment {
 
         Spinner dynamicSpinner = view.findViewById(R.id.category_spinner);
         // TODO: Rename and change types of parameters
-        String selectedAddress = MapsFragment.newInstance().getArguments().getString(SELECTED_ADDRESS);
+        Problem problem = MapsFragment.newInstance().getArguments().getParcelable(PROBLEM_DATA);
         addressTextView = view.findViewById(R.id.addressTextView);
-        addressTextView.setText(selectedAddress);
+        addressTextView.setText(problem.getAddress());
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(
                 getActivity(), R.layout.spinner_item, problems);
@@ -92,6 +90,15 @@ public class FormFragment extends Fragment {
                 // TODO Auto-generated method stub
             }
         });
+
+        Button sendButton = view.findViewById(R.id.send_button);
+
+        sendButton.setOnClickListener(
+                v -> getFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.frame_layout, new CompleteFragment())
+                        .commit()
+        );
 
         return view;
     }

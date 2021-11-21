@@ -9,7 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
 import java.util.ArrayList;
@@ -24,14 +23,8 @@ import java.util.List;
 public class ProblemsFragment extends Fragment {
 
     List<String> problems = new ArrayList<>(Arrays.asList("Woda", "Ogień", "Zniszczenia", "Śmiecie i segregacja", "Komunikacja publiczna", "Sąsiad"));
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "selectedProblem";
-    private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
     private static String selectedProblem;
     public ProblemsFragment() {
         // Required empty public constructor
@@ -43,7 +36,6 @@ public class ProblemsFragment extends Fragment {
      *
      * @return A new instance of fragment ProblemsFragment.
      */
-    // TODO: Rename and change types and number of parameters
     public static ProblemsFragment newInstance() {
         ProblemsFragment fragment = new ProblemsFragment();
         Bundle args = new Bundle();
@@ -56,8 +48,8 @@ public class ProblemsFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+//            mParam1 = getArguments().getString(ARG_PARAM1);
+//            mParam2 = getArguments().getString(ARG_PARAM2);
         }
 
     }
@@ -67,7 +59,6 @@ public class ProblemsFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view =  inflater.inflate(R.layout.fragment_problems, container, false);
-
         int mar = (((getResources().getDisplayMetrics().heightPixels)/(problems.size()+1))* 20)/100;
         for( String button: problems){
             LinearLayout ll = view.findViewById(R.id.problems_layout);
@@ -97,4 +88,6 @@ public class ProblemsFragment extends Fragment {
 
         return view;
     }
+
+
 }

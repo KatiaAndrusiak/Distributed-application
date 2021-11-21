@@ -9,10 +9,15 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
+        android:layout_margin="15dp"
         android:orientation="vertical">
 
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Lokalizacja:" />
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -24,7 +29,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:autoSizeTextType="uniform"
-                android:paddingTop="20sp"
                 android:text=""
                 android:layout_gravity="center_vertical"
                 android:textColor="@color/black"
@@ -35,38 +39,69 @@
                 android:id="@+id/button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
                 android:backgroundTint="@color/default_button"
                 android:layout_weight="0"
                 android:maxLines="1"
                 android:textColor="@color/black"
                 android:text="@string/zmien" />
+
         </LinearLayout>
 
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Kategoria" />
 
         <Spinner
             android:id="@+id/category_spinner"
             android:layout_width="match_parent"
-            android:layout_marginTop="20dp"
             android:layout_height="50dp"
             android:spinnerMode="dropdown"
             android:background="@drawable/blue_outline"/>
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="@string/problem" />
 
         <Spinner
             android:id="@+id/problem_spinner"
             android:layout_width="match_parent"
-            android:layout_marginTop="20dp"
             android:layout_height="50dp"
             android:spinnerMode="dropdown"
             android:background="@drawable/blue_outline"/>
 
-<!--        <ImageView-->
-<!--            android:layout_width="16dp"-->
-<!--            android:layout_height="16dp"-->
-<!--            android:layout_alignParentRight="true"-->
-<!--            android:layout_centerVertical="true"-->
-<!--            android:src="@drawable/arrow_down"-->
-<!--            />-->
+
+        <EditText
+            android:id="@+id/editTextTextMultiLine"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:hint="@string/opis_problemu"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
+            android:padding="5dp"
+            android:ems="10"
+            android:gravity="start|top"
+            android:layout_weight="1"
+            android:background="@color/white"
+            android:textSize="20sp"
+            android:textColor="@color/black"
+            android:inputType="textMultiLine" />
+
+        <Button
+            android:id="@+id/send_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0"
+            android:layout_gravity="center"
+            android:backgroundTint="@color/incharge_blue"
+            android:textColor="@color/white"
+            android:text="@string/zatwierdz_i_wyslij" />
+
 
     </LinearLayout>
 
