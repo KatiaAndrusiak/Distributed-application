@@ -49,7 +49,18 @@ class AuthController {
         val roles: util.List[String] = userDetails.getAuthorities().stream()
             .map(item => item.getAuthority)
             .collect(Collectors.toList())
-        ResponseEntity.ok(new JwtResponse(jwt, userDetails.getId, userDetails.getFirstName, userDetails.getLastName, userDetails.getEmail, roles))
+        ResponseEntity.ok(new JwtResponse(
+            jwt,
+            userDetails.getId,
+            userDetails.getPhone,
+            userDetails.getCountry,
+            userDetails.getCity,
+            userDetails.getStreet,
+            userDetails.getBuildingNumber,
+            userDetails.getFirstName,
+            userDetails.getLastName,
+            userDetails.getEmail)
+        )
     }
 
     @PostMapping(Array("/signup"))

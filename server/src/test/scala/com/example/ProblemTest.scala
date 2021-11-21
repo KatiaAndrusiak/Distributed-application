@@ -38,7 +38,7 @@ class ProblemTest {
     @Test(expected = classOf[NullPointerException])
     def shouldThrowExceptionWhenProblemNotExist(): Unit = {
         // given
-        val id: Int = 7
+        val id: Int = 10000
 
         // when
         val problem: Problem = problemRepository.findById(id).orElseThrow(() => new NullPointerException)

@@ -27,7 +27,7 @@ CREATE TABLE public.subscriberInfo (
 CREATE TABLE public.subscriberData (
                 nSubscriberId INTEGER NOT NULL,
                 sEmail VARCHAR(50) NOT NULL,
-                sPassword VARCHAR(40) NOT NULL,
+                sPassword VARCHAR(160) NOT NULL,
                 CONSTRAINT subscriberdata_pk PRIMARY KEY (nSubscriberId)
 );
 
@@ -103,20 +103,20 @@ ON UPDATE NO ACTION
 NOT DEFERRABLE;
 ----------------
 
-insert into subscriber (sFirstName, sLastName) VALUES
-    ('test', 'test');
-
-select * from subscriber;
-
-insert into subscriberInfo (nSubscriberId, sPhone, sCountry, sCity, sStreet, sBuildingNumber, nLatitude, nLongitude) VALUES
-    (1, '+48574450911', 'Polska', 'Kraków', 'Dworska', '1A', 50.046006, 19.930139);
-
-select * from subscriberInfo;
-
-insert into subscriberData (nSubscriberId, sEmail, sPassword) values
-    (1, 'tester@gmail.com', 'tester123');
-
-select * from subscriberData;
+-- insert into subscriber (sFirstName, sLastName) VALUES
+--     ('test', 'test');
+--
+-- select * from subscriber;
+--
+-- insert into subscriberInfo (nSubscriberId, sPhone, sCountry, sCity, sStreet, sBuildingNumber, nLatitude, nLongitude) VALUES
+--     (1, '+48574450910', 'Polska', 'Kraków', 'Dworska', '1A', 50.046006, 19.930139);
+--
+-- select * from subscriberInfo;
+--
+-- insert into subscriberData (nSubscriberId, sEmail, sPassword) values
+--     (1, 'tester@gmail.com', 'tester123');
+--
+-- select * from subscriberData;
 
 insert into category (sCategoryName) values
     ('Woda'),
@@ -131,12 +131,47 @@ select * from category;
 insert into problem (nProblemId, nCategoryId, sProblemName) VALUES
     (1, 1, 'Brak ciepłej wody'),
     (2, 1, 'Brak zimnej  wody'),
-    (3, 1, 'Brudna woda na ulicy '),
+    (3, 1, 'Brudna woda na ulicy'),
     (4, 1, 'Podtopienia');
+
+
+insert into problem (nProblemId, nCategoryId, sProblemName) VALUES
+    (5, 2, 'Płonący kosz na smieci'),
+    (6, 2, 'Czuć spaleniznę'),
+    (7, 2, 'Kopcący komin/piec'),
+
+    (8, 3, 'Uszkodzone zabytki architektury'),
+    (9, 3, 'Dziurawa ulica'),
+    (10, 3, 'Niesprawne światła'),
+    (11, 3, 'Niesprawne auto na drodze'),
+    (12, 3, 'Zablokowany przejazd'),
+    (13, 3, 'Powalone drzewo'),
+
+    (14, 4, 'Przepełniony kontener na śmieci segregowane (Plastik)'),
+    (15, 4, 'Przepełniony kontener na śmieci segregowane (Szkło)'),
+    (16, 4, 'Przepełniony kontener na śmieci segregowane (Papier)'),
+    (17, 4, 'Przepełniony kosz uliczny'),
+    (18, 4, 'Dzikie wysypisko'),
+    (19, 4, 'Śmieci na ulicy'),
+
+
+    (20, 5, 'Niesprawny automat biletowy'),
+    (21, 5, 'Zanieczyszczony tramwaj'),
+    (22, 5, 'Awantura'),
+    (23, 5, 'Problem na trasie (Korek)'),
+    (24, 5, 'Problem na trasie (Awaria)'),
+
+    (25, 6, 'Bijatyka'),
+    (26, 6, 'Awantura domowa');
 
 select * from problem;
 
-insert into subscriberCategory (nSubscriberId, nCategoryId) VALUES
-    (1, 4);
+-- insert into subscriberCategory (nSubscriberId, nCategoryId) VALUES
+--     (1, 4);
+--
+-- select * from subscriberCategory;
 
-select * from subscriberCategory;
+INSERT INTO roles(name) VALUES('ROLE_USER');
+INSERT INTO roles(name) VALUES('ROLE_ADMIN');
+--
+-- insert into user_roles(nsubscriberid, role_id) VALUES (1, 2)

@@ -3,6 +3,7 @@ package com.example
 
 import com.example.repository.SubscriberDataRepository
 import com.example.entity.SubscriberData
+import com.example.model.ERole
 import org.junit.{Assert, Test}
 import org.junit.runner.RunWith
 import org.springframework.beans.factory.annotation.Autowired
@@ -32,13 +33,13 @@ class SubscriberDataTest {
         // then
         Assert.assertEquals(1, subscriberData.getId)
         Assert.assertEquals("tester@gmail.com", subscriberData.getEmail)
-        Assert.assertEquals("tester123", subscriberData.getPassword)
+        Assert.assertEquals(ERole.ROLE_ADMIN, subscriberData.getRoles.iterator.next.name)
     }
 
     @Test(expected = classOf[NullPointerException])
     def shouldThrowExceptionWhenSubscriberDataNotExist(): Unit = {
         // given
-        val id: Int = 2
+        val id: Int = 10000
 
         //when
         val subscriberData: SubscriberData = subscriberDataRepository.findById(id).orElseThrow(() => new NullPointerException)

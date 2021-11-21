@@ -32,9 +32,9 @@ class SubscriberInfoTest {
         println(subscriberInfo)
         // then
         Assert.assertEquals(1, subscriberInfo.getId)
-        Assert.assertEquals("+48574450911", subscriberInfo.getPhone)
+        Assert.assertEquals("+48574450910", subscriberInfo.getPhone)
         Assert.assertEquals("Polska", subscriberInfo.getCountry)
-        Assert.assertEquals("Kraków", subscriberInfo.getCity)
+        Assert.assertEquals("Krakow", subscriberInfo.getCity)
         Assert.assertEquals("Dworska", subscriberInfo.getStreet)
         Assert.assertEquals("1A", subscriberInfo.getBuildingNumber)
         Assert.assertEquals(50.046006, subscriberInfo.getLatitude, 0.1)
@@ -44,7 +44,7 @@ class SubscriberInfoTest {
     @Test(expected = classOf[NullPointerException])
     def shouldThrowExceptionWhenSubscriberInfoNotExist(): Unit = {
         // given
-        val id: Int = 2
+        val id: Int = 10000
 
         //when
         val subscriberInfo: SubscriberInfo = subscriberInfoRepository.findById(id).orElseThrow(() => new NullPointerException)

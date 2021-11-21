@@ -1,22 +1,19 @@
 package com.example.payload.response
 
-import java.util
+import scala.beans.BeanProperty
 
-
-class JwtResponse(var token: String, var id: Long, var firstName: String, var lastName: String, var email: String, var roles: util.List[String]) {
+class JwtResponse(
+                     var token: String,
+                     @BeanProperty var id: Long,
+                     @BeanProperty var phone: String,
+                     @BeanProperty var country: String,
+                     @BeanProperty var city: String,
+                     @BeanProperty var street: String,
+                     @BeanProperty var buildingNumber: String,
+                     @BeanProperty var firstName: String,
+                     @BeanProperty var lastName: String,
+                     @BeanProperty var email: String) {
     private var `type` = "Bearer"
-
-    def getFirstName: String = firstName
-
-    def setFirstNamel(firstName: String): Unit = {
-        this.firstName = firstName
-    }
-
-    def getLastName: String = lastName
-
-    def setLastName(lastName: String): Unit = {
-        this.lastName = lastName
-    }
 
     def getAccessToken: String = token
 
@@ -29,18 +26,4 @@ class JwtResponse(var token: String, var id: Long, var firstName: String, var la
     def setTokenType(tokenType: String): Unit = {
         this.`type` = tokenType
     }
-
-    def getId: Long = id
-
-    def setId(id: Long): Unit = {
-        this.id = id
-    }
-
-    def getEmail: String = email
-
-    def setEmail(email: String): Unit = {
-        this.email = email
-    }
-
-    def getRoles: util.List[String] = roles
 }

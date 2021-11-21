@@ -7,6 +7,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
 
 import java.util
+import scala.beans.BeanProperty
 
 @SerialVersionUID(1L)
 object UserDetailsImpl {
@@ -16,21 +17,39 @@ object UserDetailsImpl {
         while ( {it.hasNext}) {
             authorities.add(new SimpleGrantedAuthority(it.next.getName.name))
         }
-        new UserDetailsImpl(user.getId, user.getSubscriber.getFname, user.getSubscriber.getLname, user.getEmail, user.getPassword, authorities)
+        val subscriber = user.getSubscriber
+        val subscriberInfo = user.getSubscriber.getSubscriberInfo
+        new UserDetailsImpl(
+            user.getId,
+            subscriberInfo.getPhone,
+            subscriberInfo.getCountry,
+            subscriberInfo.getCity,
+            subscriberInfo.getStreet,
+            subscriberInfo.getBuildingNumber,
+            subscriber.getFname,
+            subscriber.getLname,
+            user.getEmail,
+            user.getPassword,
+            authorities
+        )
     }
 }
 
 @SerialVersionUID(1L)
-class UserDetailsImpl(var id: Int, var firstName: String, var lastName: String, var email: String, @JsonIgnore var password: String, var authorities: util.Collection[_ <: GrantedAuthority]) extends UserDetails {
+class UserDetailsImpl(
+                         @BeanProperty var id: Int,
+                         @BeanProperty var phone: String,
+                         @BeanProperty var country: String,
+                         @BeanProperty var city: String,
+                         @BeanProperty var street: String,
+                         @BeanProperty var buildingNumber: String,
+                         @BeanProperty var firstName: String,
+                         @BeanProperty var lastName: String,
+                         @BeanProperty var email: String,
+                         @JsonIgnore var password:
+                         String, var authorities: util.Collection[_ <: GrantedAuthority]
+                     ) extends UserDetails {
     override def getAuthorities: util.Collection[_ <: GrantedAuthority] = authorities
-
-    def getId: Long = id
-
-    def getEmail: String = email
-
-    def getFirstName: String = firstName
-
-    def getLastName: String = lastName
 
     override def getPassword: String = password
 

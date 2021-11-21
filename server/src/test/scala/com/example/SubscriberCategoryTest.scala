@@ -24,13 +24,13 @@ class SubscriberCategoryTest {
     @Test
     def shouldReturnSubscriberCategory(): Unit = {
         // given
-        val id: Int = 1
+        val id: Int = 2
 
         //when
         val subscriberCategory: SubscriberCategory = subscriberCategoryRepository.findById(id).orElseThrow(() => new NullPointerException)
 
         //then
-        Assert.assertEquals(1, subscriberCategory.getId)
+        Assert.assertEquals(2, subscriberCategory.getId)
         Assert.assertEquals(4, subscriberCategory.getCategory.getId)
         Assert.assertEquals(1, subscriberCategory.getSubscriber.getId)
     }
@@ -38,7 +38,7 @@ class SubscriberCategoryTest {
     @Test(expected = classOf[NullPointerException])
     def shouldThrowExceptionWhenSubscriberCategoryNotExist(): Unit = {
         // given
-        val id: Int = 7
+        val id: Int = 100000
 
         // when
         val subscriberCategory: SubscriberCategory = subscriberCategoryRepository.findById(id).orElseThrow(() => new NullPointerException)

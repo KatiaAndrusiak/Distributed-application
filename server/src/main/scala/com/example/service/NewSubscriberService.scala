@@ -7,7 +7,7 @@ import com.example.repository.{CategoryRepository, RoleRepository, SubscriberCat
 import com.example.model.{ERole, NewSubscriber}
 import org.json4s.{DefaultFormats, JValue}
 import org.json4s.native.JsonMethods.parse
-import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.{Autowired, Value}
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import scalaj.http.Http
@@ -20,19 +20,19 @@ class NewSubscriberService(@Autowired subscriberRepository: SubscriberRepository
                           @Autowired encoder: PasswordEncoder,
                           @Autowired roleRepository: RoleRepository) {
 
+    @Value("${jabeda.google.api.link}")
+    private val apiLink: String = null
+
+    @Value("${jabeda.google.api.key}")
+    private val apiKEy: String = null
+
     def getSubscriberLocation(newSubscriber: NewSubscriber): Map[String,Double] = {
         implicit val formats = DefaultFormats
         val street = splitAddress(newSubscriber)._1.trim
         val buildingNumber = splitAddress(newSubscriber)._2.trim
         val fullAddress = newSubscriber.getCountry + "," + newSubscriber.getCity + "," + street + "," + buildingNumber
 
-        val response = Http("https://maps.googleapis.com/maps/api/geocode/json")
-            .params(Seq("address" -> fullAddress, "key" -> "AIzaSyD4bXEAx4F33a2NXFK7akrYWbOExMP_X5k"))
-            .asString
-
-//        println(response.body)
-
-        val jsonObject = parse(response.body)
+        val jsonObject = getLocationDetails(fullAddress)
 
         checkAddressExist(jsonObject)
 
@@ -41,13 +41,14 @@ class NewSubscriberService(@Autowired subscriberRepository: SubscriberRepository
 //        println(lat)
 //        println(lng)
         println(newSubscriber)
-        if (!checkIfEmailExistInDataBase(newSubscriber.getEmail)) {
-            throw EmailAlreadyExistException("Użytkownik z takim mailem już istnieje")
-        }
         Map("latitude" -> lat, "longitude" -> lng)
     }
 
     def registerSubscriber(newSubscriber: NewSubscriber, location: Map[String,Double]): Unit = {
+        if (checkIfEmailExistInDataBase(newSubscriber.getEmail)) {
+            throw EmailAlreadyExistException("Użytkownik z takim mailem już istnieje")
+        }
+
         val street = splitAddress(newSubscriber)._1.trim
         val buildingNumber = splitAddress(newSubscriber)._2.trim
 
@@ -111,8 +112,18 @@ class NewSubscriberService(@Autowired subscriberRepository: SubscriberRepository
         })
     }
 
+    def getLocationDetails(fullAddress: String): JValue = {
+        val response = Http(apiLink)
+            .params(Seq("address" -> fullAddress, "key" -> apiKEy))
+            .asString
+
+        // println(response.body)
+
+        parse(response.body)
+    }
+
     def checkIfEmailExistInDataBase(email: String): Boolean = {
-        subscriberDataRepository.findByEmail(email).isEmpty
+        subscriberDataRepository.existsByEmail(email)
     }
 
     def checkAddressExist(jsonObject: JValue): Unit = {

@@ -23,8 +23,18 @@
       justify-content: flex-end;
       align-items: center;
 
+      a {
+        &:hover {
+          color: #e8f1ff;
+        }
+      }
+
       .logout {
         cursor: pointer;
+
+        &:hover {
+          color: #e8f1ff;
+        }
       }
 
       .option {

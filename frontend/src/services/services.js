@@ -21,7 +21,7 @@ export const getResource = async (url) => {
 };
 
 export const validateStringFields = (field) => {
-    const regex = /^[a-zA-Z]*$/;
+    const regex = /^[a-zA-ZAaĄąBbCcĆćDdEeĘęFfGgHhIiJjKkLlŁłMmNnŃńOoÓóPpRrSsŚśTtUuWwYyZzŹźŻż]*$/;
     if (regex.test(field) && field.length > 0 && field.length < 50) {
         return true;
     }
@@ -46,7 +46,7 @@ export const validatePhoneField = (field) => {
 }
 
 export const validateAdressField = (field) => {
-    const regex = /^[a-zA-Z ]+[,| ]+[0-9]+[a-zA-Z]?/;
+    const regex = /^[a-zA-ZAaĄąBbCcĆćDdEeĘęFfGgHhIiJjKkLlŁłMmNnŃńOoÓóPpRrSsŚśTtUuWwYyZzŹźŻż ]+[,| ]+[0-9]+[a-zA-Z]?/;
     if (regex.test(field)  && field.length > 0) {
         return true;
     }
