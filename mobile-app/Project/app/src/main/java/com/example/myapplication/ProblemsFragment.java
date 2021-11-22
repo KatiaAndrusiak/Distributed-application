@@ -3,6 +3,7 @@ package com.example.myapplication;
 import android.graphics.Color;
 import android.os.Bundle;
 
+
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -11,6 +12,18 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
+
+import com.example.myapplication.manager.DataManagement;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -21,8 +34,8 @@ import java.util.List;
  * create an instance of this fragment.
  */
 public class ProblemsFragment extends Fragment {
-
-    List<String> problems = new ArrayList<>(Arrays.asList("Woda", "Ogień", "Zniszczenia", "Śmiecie i segregacja", "Komunikacja publiczna", "Sąsiad"));
+    List<String> problems = new ArrayList<>();
+//    List<String> problems = new ArrayList<>(Arrays.asList("Woda", "Ogień", "Zniszczenia", "Śmiecie i segregacja", "Komunikacja publiczna", "Sąsiad"));
     private static final String ARG_PARAM1 = "selectedProblem";
 
     private static String selectedProblem;
@@ -44,6 +57,10 @@ public class ProblemsFragment extends Fragment {
         return fragment;
     }
 
+
+
+
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,11 +71,36 @@ public class ProblemsFragment extends Fragment {
 
     }
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view =  inflater.inflate(R.layout.fragment_problems, container, false);
+
+        Thread thread = new Thread(new Runnable() {
+
+            @Override
+            public void run() {
+                try  {
+                    JSONArray arr =DataManagement.getJSONObjectFromURL(
+                            DataManagement.URL+DataManagement.PROBLEMS_PATH
+                    );
+                   problems = DataManagement.getCategoriesFromJsonObject(arr);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        thread.start();
+
+        while (true){
+            if (problems.size() > 0) break;
+        }
+
         int mar = (((getResources().getDisplayMetrics().heightPixels)/(problems.size()+1))* 20)/100;
         for( String button: problems){
             LinearLayout ll = view.findViewById(R.id.problems_layout);

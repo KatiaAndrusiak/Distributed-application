@@ -8,7 +8,6 @@ import androidx.fragment.app.Fragment;
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 
-
 public class MainActivity extends AppCompatActivity {
 
     @SuppressLint("SetTextI18n")
@@ -20,6 +19,7 @@ public class MainActivity extends AppCompatActivity {
 
 //        ActionBar actionBar = getSupportActionBar();
 //        actionBar.setDisplayHomeAsUpEnabled(true);
+
         Fragment fragment = new MapsFragment();
         getSupportFragmentManager()
                 .beginTransaction()

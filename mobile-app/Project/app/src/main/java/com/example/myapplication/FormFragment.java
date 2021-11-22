@@ -16,6 +16,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.example.myapplication.entity.Problem;
+import com.example.myapplication.manager.DataManagement;
 
 
 /**
@@ -72,13 +73,20 @@ public class FormFragment extends Fragment {
         addressTextView.setText(problem.getAddress());
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(
-                getActivity(), R.layout.spinner_item, problems);
+                getActivity(), R.layout.spinner_item, DataManagement.categories);
         adapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
 
         dynamicSpinner.setAdapter(adapter);
         String selectedProblem = ProblemsFragment.newInstance().getArguments().getString(SELECTED_PROBLEM);
-        dynamicSpinner.setSelection(getPositionByValue(problems, selectedProblem));
-        dynamicSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        Spinner dynamicSpinner2 = view.findViewById(R.id.problem_spinner);
+
+        ArrayAdapter<String> adapter2 = new ArrayAdapter<String>(
+                getActivity(), R.layout.spinner_item, DataManagement.problemsByCategories.get(selectedProblem));
+        adapter2.setDropDownViewResource(R.layout.spinner_dropdown_item);
+
+        dynamicSpinner2.setAdapter(adapter2);
+
+        dynamicSpinner2.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view,
                                        int position, long id) {
@@ -90,6 +98,28 @@ public class FormFragment extends Fragment {
                 // TODO Auto-generated method stub
             }
         });
+        dynamicSpinner.setSelection(getPositionByValue(problems, selectedProblem));
+        dynamicSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view,
+                                       int position, long id) {
+                Log.v("item", (String) parent.getItemAtPosition(position));
+                String selItem = (String)parent.getSelectedItem();
+                ArrayAdapter<String> adapter3 = new ArrayAdapter<String>(
+                        getActivity(), R.layout.spinner_item, DataManagement.problemsByCategories.get(selItem));
+                adapter3.setDropDownViewResource(R.layout.spinner_dropdown_item);
+
+                dynamicSpinner2.setAdapter(adapter3);
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                // TODO Auto-generated method stub
+            }
+        });
+
+
 
         Button sendButton = view.findViewById(R.id.send_button);
 
