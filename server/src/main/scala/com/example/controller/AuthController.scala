@@ -6,7 +6,7 @@ import com.example.payload.response.JwtResponse
 import com.example.repository.{RoleRepository, SubscriberDataRepository, SubscriberRepository}
 import com.example.security.jwt.JwtUtils
 import com.example.security.services.UserDetailsImpl
-import com.example.service.NewSubscriberService
+import com.example.service.{NewSubscriberService, SignInService}
 import org.json4s.NoTypeHints
 import org.json4s.jackson.Serialization
 import org.springframework.beans.factory.annotation.Autowired
@@ -16,8 +16,6 @@ import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.web.bind.annotation.{CrossOrigin, ExceptionHandler, PostMapping, RequestBody, RequestMapping, RestController}
 
-import java.util
-import java.util.stream.Collectors
 import javax.validation.{ConstraintViolationException, Valid}
 
 
@@ -29,6 +27,8 @@ class AuthController {
     @Autowired val authenticationManager: AuthenticationManager = null
 
     @Autowired val newSubscriberService: NewSubscriberService = null
+
+    @Autowired val signInService: SignInService = null
 
     @Autowired val userRepository: SubscriberDataRepository = null
 
@@ -46,9 +46,7 @@ class AuthController {
         SecurityContextHolder.getContext.setAuthentication(authentication)
         val jwt = jwtUtils.generateJwtToken(authentication)
         val userDetails = authentication.getPrincipal.asInstanceOf[UserDetailsImpl]
-        val roles: util.List[String] = userDetails.getAuthorities().stream()
-            .map(item => item.getAuthority)
-            .collect(Collectors.toList())
+        val userCategories = signInService.getUserCategory(userDetails.getSubscriber)
         ResponseEntity.ok(new JwtResponse(
             jwt,
             userDetails.getId,
@@ -59,7 +57,8 @@ class AuthController {
             userDetails.getBuildingNumber,
             userDetails.getFirstName,
             userDetails.getLastName,
-            userDetails.getEmail)
+            userDetails.getEmail,
+            userCategories)
         )
     }
 

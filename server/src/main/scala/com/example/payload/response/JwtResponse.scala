@@ -1,6 +1,7 @@
 package com.example.payload.response
 
 import scala.beans.BeanProperty
+import java.util
 
 class JwtResponse(
                      var token: String,
@@ -12,7 +13,8 @@ class JwtResponse(
                      @BeanProperty var buildingNumber: String,
                      @BeanProperty var firstName: String,
                      @BeanProperty var lastName: String,
-                     @BeanProperty var email: String) {
+                     @BeanProperty var email: String,
+                     @BeanProperty var categories: util.List[String]) {
     private var `type` = "Bearer"
 
     def getAccessToken: String = token

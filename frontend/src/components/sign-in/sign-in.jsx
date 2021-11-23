@@ -9,7 +9,7 @@ import CustomButton from './../button/custom-button';
 import Spinner from '../spinner/Spinner';
 import Modal from '../modal/modal';
 import FormInput from './../form-input/form-input.jsx';
-import { postData,  validatePasswordField, validateEmailField, closeModal, createModalContent } from './../../services/services';
+import { postData,  validatePasswordField, validateEmailField, closeModal, createModalContent, setModalAndLoading } from './../../services/services';
 
 
 const SignIn = () => {
@@ -50,12 +50,6 @@ const SignIn = () => {
         setter({...value, errorState: false});
     }
 
-    const setModalAndLoading = (isModal, isError, isLoading) => {
-        setIsModal(isModal);
-        setModalError(isError);
-        setLoading(isLoading);
-    }
-
     const handleSubmit = (event) => {
         event.preventDefault();
         setLoading(true);
@@ -75,7 +69,7 @@ const SignIn = () => {
                     messages.push("Brak użytkownika w bazie, proszę sprawdzic email i hasło i spróbować jeszcze raz lub zalożyć nowe konto"); 
                     setModalContent(createModalContent("Błąd", messages));
 
-                    setModalAndLoading(true, true, false);
+                    setModalAndLoading(true, true, false, setIsModal, setModalError, setLoading);
                 } else {
                     console.log(!user && !isLogged)
                     if (!user && !isLogged) {

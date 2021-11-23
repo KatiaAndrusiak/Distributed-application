@@ -2,7 +2,8 @@ import './problem-page.scss';
 
 import { RenderCellExpand } from '../../services/renderCellExpand';
 import { useState, useEffect } from 'react';
-import {closeModal, getResource, createModalContent} from '../../services/services';
+import {closeModal, createModalContent, getWithAuthorization} from '../../services/services';
+import {useSelector} from 'react-redux';
 
 import { v4 as uuidv4 } from 'uuid';
 
@@ -12,11 +13,18 @@ import { faCheck } from "@fortawesome/free-solid-svg-icons";
 import CustomButton from '../../components/button/custom-button';
 import ProblemList from '../../components/problem-list/problem-list';
 import AcceptedProblemList from '../../components/accepted-problem-list/accepted-problem-list';
+import Spinner from '../../components/spinner/Spinner';
 import Modal from '../../components/modal/modal';
 
 const ProblemPage = () => {
+
+    const {user} = useSelector(state => state);
+    const [loading, setLoading] = useState(false);
     const [isModal, setIsModal] = useState(false);
+    const [modalError, setModalError] = useState(false);
     const [modalContent, setModalContent] = useState({});
+
+
     const [selectedRows, setSelectedRows] = useState([]);
     const [problemRows, setProblemRows] = useState([]);
     const [acceptedRows, setAcceptedRows] = useState([]);
@@ -38,12 +46,21 @@ const ProblemPage = () => {
 
     useEffect(() => {
         console.log("Fetching problems");
-        getResource("http://localhost:8080/problems")
+        setLoading(true);
+        getWithAuthorization("http://localhost:8080/request/problems", user.accessToken)
             .then(problems => {
-                const filteredProblems = problems.map(({date, address, category, problem, description}) => {
-                    return {id: uuidv4(), date, address, category, problem, description}
-                })
-                setProblemRows(filteredProblems)
+                console.log(problems)
+                if (problems.length > 0) {
+                    const filteredProblems = problems.map(({date, address, category, problem, description}) => {
+                        return {id: uuidv4(), date, address, category, problem, description}
+                    })
+                    setLoading(false);
+                    setProblemRows(filteredProblems)
+                } else {
+                    setLoading(false);
+                    setProblemRows([])
+                }
+
             });
     }, [])
 
@@ -201,6 +218,7 @@ const ProblemPage = () => {
     return (
         <div className="problem-page">
             <h2 className="problem-title">Lista problemów</h2>
+            {loading ? <Spinner/> :
             <ProblemList
                 problemRows={problemRows}
                 problemColumns={problemColumns}  
@@ -209,7 +227,7 @@ const ProblemPage = () => {
                 disableColumnSelector
                 hideFooterSelectedRowCount
                 disableColumnMenu
-            />
+            />}
                 {/* <DataGrid
                     rows={problemRows}
                     columns={problemColumns}

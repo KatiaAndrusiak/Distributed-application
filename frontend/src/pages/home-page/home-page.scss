@@ -1,0 +1,25 @@
+.home-page {
+    max-width: 1000px;
+    padding-top: 30px;
+
+    .main-title {
+        font-size: 48px;
+        font-weight: 700;
+        line-height: 64px;  
+    }
+
+    .main-content {
+        margin-top: 20px;
+        font-size: 22px;
+
+        a {
+            color: rgb(66, 133, 244);
+        }
+
+        p {
+            margin-top: 5px;
+        }
+    }
+
+
+}

@@ -14,6 +14,24 @@ export const getResource = async (url) => {
     const res = await fetch(url);
 
     if (!res.ok) {
+        console.log(res)
+        throw prompt(new Error(`Could not fetch ${url}, status: ${res.status}`));
+    }
+
+    return await res.json();
+};
+
+export const getWithAuthorization = async (url, clientToken) => {
+    const res = await fetch(url, {
+        method: "GET",
+        headers: {
+            'Content-type': 'application/json',
+            'Authorization': 'Bearer ' + clientToken
+        },
+    });
+
+    if (!res.ok) {
+        console.log(res)
         throw prompt(new Error(`Could not fetch ${url}, status: ${res.status}`));
     }
 
@@ -63,4 +81,10 @@ export const createModalContent = (header, messages) => {
     tempModalContent.messages = messages;
 
     return tempModalContent;
+}
+
+export const setModalAndLoading = (isModal, isError, isLoading, setIsModal, setModalError, setLoading) => {
+    setIsModal(isModal);
+    setModalError(isError);
+    setLoading(isLoading);
 }

@@ -2,7 +2,7 @@ import './sign-up.scss';
 import { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
-import { getResource,postData, validateStringFields, validatePasswordField, validateEmailField, validatePhoneField, validateAdressField, closeModal, createModalContent } from './../../services/services';
+import { getResource,postData, validateStringFields, validatePasswordField, validateEmailField, validatePhoneField, validateAdressField, closeModal, createModalContent, setModalAndLoading } from './../../services/services';
 
 import FormInput from './../form-input/form-input.jsx';
 import FormSelect from '../form-select/form-select';
@@ -136,12 +136,6 @@ const SignUp = () => {
         setCategory(selectedOptions);
     }
 
-    const setModalAndLoading = (isModal, isError, isLoading) => {
-        setIsModal(isModal);
-        setModalError(isError);
-        setLoading(isLoading);
-    }
-
     const handleSubmit = (event) => {
         event.preventDefault();
         setLoading(true);
@@ -177,9 +171,8 @@ const SignUp = () => {
 
                     clearForm();
                     document.getElementById("create-subscriber-form").reset();
-                    setModalAndLoading(true, false, false);
-                    // eslint-disable-next-line
-                } else if (status == 400 || status == 404) {
+                    setModalAndLoading(true, false, false, setIsModal, setModalError, setLoading);
+                } else if (status === 400 || status === 404) {
                     const messages = []; 
                     for (const key in res) {
                         if (key !== 'status') {
@@ -188,13 +181,13 @@ const SignUp = () => {
                     }
                     setModalContent(createModalContent("Błąd", messages));
 
-                    setModalAndLoading(true, true, false);
+                    setModalAndLoading(true, true, false, setIsModal, setModalError, setLoading);
                 } else if (status === 500) {
                     const messages = [];
                     messages.push("Problem z serwerem, proszę spróbować pózniej"); 
                     setModalContent(createModalContent("Błąd", messages));
 
-                    setModalAndLoading(true, true, false);
+                    setModalAndLoading(true, true, false, setIsModal, setModalError, setLoading);
                 }
                 console.log(res)
             })

@@ -117,7 +117,7 @@ class NewSubscriberService(@Autowired subscriberRepository: SubscriberRepository
             .params(Seq("address" -> fullAddress, "key" -> apiKEy))
             .asString
 
-        // println(response.body)
+         println(response.body)
 
         parse(response.body)
     }

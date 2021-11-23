@@ -1,16 +1,12 @@
 package com.example.security.jwt
 
 import com.example.security.services.UserDetailsServiceImpl
-import org.json4s.NoTypeHints
-import org.json4s.jackson.Serialization
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.http.{HttpStatus, ResponseEntity}
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource
 import org.springframework.util.StringUtils
-import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.filter.OncePerRequestFilter
 
 import java.io.IOException

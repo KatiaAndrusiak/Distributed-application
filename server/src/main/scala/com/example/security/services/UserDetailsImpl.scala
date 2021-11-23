@@ -1,6 +1,6 @@
 package com.example.security.services
 
-import com.example.entity.SubscriberData
+import com.example.entity.{Subscriber, SubscriberData}
 import com.fasterxml.jackson.annotation.JsonIgnore
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.SimpleGrantedAuthority
@@ -30,6 +30,7 @@ object UserDetailsImpl {
             subscriber.getLname,
             user.getEmail,
             user.getPassword,
+            subscriber,
             authorities
         )
     }
@@ -46,8 +47,9 @@ class UserDetailsImpl(
                          @BeanProperty var firstName: String,
                          @BeanProperty var lastName: String,
                          @BeanProperty var email: String,
-                         @JsonIgnore var password:
-                         String, var authorities: util.Collection[_ <: GrantedAuthority]
+                         @JsonIgnore var password: String,
+                         @BeanProperty var subscriber: Subscriber,
+                         var authorities: util.Collection[_ <: GrantedAuthority]
                      ) extends UserDetails {
     override def getAuthorities: util.Collection[_ <: GrantedAuthority] = authorities
 

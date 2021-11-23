@@ -5,6 +5,7 @@ import com.example.security.services.UserDetailsServiceImpl
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.http.HttpMethod
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity
@@ -44,13 +45,13 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @throws[Exception]
     override protected def configure(http: HttpSecurity): Unit = {
-        // usunac /problems po skonczeniu implementacji logowania
         http.cors().and().csrf().disable()
             .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
             .authorizeRequests().antMatchers("/auth/**").permitAll()
-            .antMatchers("/categories").permitAll()
             .antMatchers("/problems").permitAll()
+            .antMatchers("/categories").permitAll()
+            .antMatchers("/request/**").permitAll()
             .anyRequest().authenticated()
 
         http.addFilterBefore(authenticationJwtTokenFilter(), classOf[UsernamePasswordAuthenticationFilter])
