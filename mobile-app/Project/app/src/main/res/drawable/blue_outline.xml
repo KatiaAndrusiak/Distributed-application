@@ -14,8 +14,7 @@
 
         <item
             android:drawable="@drawable/ic_arrow_down"
-            android:gravity="end"
-            android:paddingRight ="10dp"
+            android:gravity="center_vertical|right"
             />
 
 

@@ -3,4 +3,10 @@
     <string name="hello_blank_fragment">hello_blank_fragment</string>
     <string name="potwierd_lokalizacj">Potwierdź lokalizację</string>
     <string name="zmien">zmień</string>
+    <string name="opis_problemu"> Opis Problemu</string>
+    <string name="zatwierdz_i_wyslij">Zatwierdź i wyślij</string>
+    <string name="problem">Problem</string>
+    <string name="complete">DZIĘKUJEMY ZA ZGŁOSZENIE!</string>
+    <string name="zakoncz">Zakończ</string>
+    <string name="nowe_zgloszenie">Nowe zgłoszenie</string>
 </resources>

@@ -3,15 +3,27 @@ package com.example.myapplication;
 import android.graphics.Color;
 import android.os.Bundle;
 
+
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
+
+import com.example.myapplication.manager.DataManagement;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -22,16 +34,10 @@ import java.util.List;
  * create an instance of this fragment.
  */
 public class ProblemsFragment extends Fragment {
-
-    List<String> problems = new ArrayList<>(Arrays.asList("Woda", "Ogień", "Zniszczenia", "Śmiecie i segregacja", "Komunikacja publiczna", "Sąsiad"));
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+    List<String> problems = new ArrayList<>();
+//    List<String> problems = new ArrayList<>(Arrays.asList("Woda", "Ogień", "Zniszczenia", "Śmiecie i segregacja", "Komunikacja publiczna", "Sąsiad"));
     private static final String ARG_PARAM1 = "selectedProblem";
-    private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
     private static String selectedProblem;
     public ProblemsFragment() {
         // Required empty public constructor
@@ -43,7 +49,6 @@ public class ProblemsFragment extends Fragment {
      *
      * @return A new instance of fragment ProblemsFragment.
      */
-    // TODO: Rename and change types and number of parameters
     public static ProblemsFragment newInstance() {
         ProblemsFragment fragment = new ProblemsFragment();
         Bundle args = new Bundle();
@@ -52,21 +57,49 @@ public class ProblemsFragment extends Fragment {
         return fragment;
     }
 
+
+
+
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+//            mParam1 = getArguments().getString(ARG_PARAM1);
+//            mParam2 = getArguments().getString(ARG_PARAM2);
         }
 
     }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view =  inflater.inflate(R.layout.fragment_problems, container, false);
+
+        Thread thread = new Thread(new Runnable() {
+
+            @Override
+            public void run() {
+                try  {
+                    JSONArray arr =DataManagement.getJSONObjectFromURL(
+                            DataManagement.URL+DataManagement.PROBLEMS_PATH
+                    );
+                   problems = DataManagement.getCategoriesFromJsonObject(arr);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        thread.start();
+
+        while (true){
+            if (problems.size() > 0) break;
+        }
 
         int mar = (((getResources().getDisplayMetrics().heightPixels)/(problems.size()+1))* 20)/100;
         for( String button: problems){
@@ -97,4 +130,6 @@ public class ProblemsFragment extends Fragment {
 
         return view;
     }
+
+
 }
