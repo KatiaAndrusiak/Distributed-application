@@ -27,13 +27,26 @@ export const getWithAuthorization = async (url, clientToken) => {
         headers: {
             'Content-type': 'application/json',
             'Authorization': 'Bearer ' + clientToken
-        },
+        }
     });
 
     if (!res.ok) {
         console.log(res)
         throw prompt(new Error(`Could not fetch ${url}, status: ${res.status}`));
     }
+
+    return await res.json();
+};
+
+export const putWithAuthorization = async (url, data, clientToken) => {
+    const res = await fetch(url, {
+        method: "PUT",
+        headers: {
+            'Content-type': 'application/json',
+            'Authorization': 'Bearer ' + clientToken
+        },
+        body: data // info, that we send
+    });
 
     return await res.json();
 };

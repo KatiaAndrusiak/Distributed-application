@@ -4,10 +4,11 @@ import java.util
 import com.example.entity.{Category, Role, Subscriber, SubscriberCategory, SubscriberData, SubscriberInfo}
 import com.example.exception.{EmailAlreadyExistException, NoSuchAddressException, NoSuchStreetException}
 import com.example.repository.{CategoryRepository, RoleRepository, SubscriberCategoryRepository, SubscriberDataRepository, SubscriberRepository}
-import com.example.model.{ERole, NewSubscriber}
+import com.example.model.{ERole, EditSubscriber, NewSubscriber}
 import org.json4s.{DefaultFormats, JValue}
 import org.json4s.native.JsonMethods.parse
 import org.springframework.beans.factory.annotation.{Autowired, Value}
+import org.springframework.security.authentication.{AuthenticationManager, UsernamePasswordAuthenticationToken}
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import scalaj.http.Http
@@ -18,7 +19,8 @@ class NewSubscriberService(@Autowired subscriberRepository: SubscriberRepository
                           @Autowired categoryRepository: CategoryRepository,
                           @Autowired subscriberCategoryRepository: SubscriberCategoryRepository,
                           @Autowired encoder: PasswordEncoder,
-                          @Autowired roleRepository: RoleRepository) {
+                          @Autowired roleRepository: RoleRepository,
+                          @Autowired authenticationManager: AuthenticationManager) {
 
     @Value("${jabeda.google.api.link}")
     private val apiLink: String = null
@@ -28,8 +30,8 @@ class NewSubscriberService(@Autowired subscriberRepository: SubscriberRepository
 
     def getSubscriberLocation(newSubscriber: NewSubscriber): Map[String,Double] = {
         implicit val formats = DefaultFormats
-        val street = splitAddress(newSubscriber)._1.trim
-        val buildingNumber = splitAddress(newSubscriber)._2.trim
+        val street = splitAddress(newSubscriber.getAddress)._1.trim
+        val buildingNumber = splitAddress(newSubscriber.getAddress)._2.trim
         val fullAddress = newSubscriber.getCountry + "," + newSubscriber.getCity + "," + street + "," + buildingNumber
 
         val jsonObject = getLocationDetails(fullAddress)
@@ -49,8 +51,8 @@ class NewSubscriberService(@Autowired subscriberRepository: SubscriberRepository
             throw EmailAlreadyExistException("Użytkownik z takim mailem już istnieje")
         }
 
-        val street = splitAddress(newSubscriber)._1.trim
-        val buildingNumber = splitAddress(newSubscriber)._2.trim
+        val street = splitAddress(newSubscriber.getAddress)._1.trim
+        val buildingNumber = splitAddress(newSubscriber.getAddress)._2.trim
 
         val subscriber: Subscriber = new Subscriber
         val subscriberData: SubscriberData = new SubscriberData
@@ -74,7 +76,7 @@ class NewSubscriberService(@Autowired subscriberRepository: SubscriberRepository
         subscriber.setSubscriberData(subscriberData)
         subscriber.setSubscriberInfo(subscriberInfo)
 
-        subscriberRepository.save(subscriber)
+//        subscriberRepository.save(subscriber)
 
         val strRoles: util.Set[String] = newSubscriber.getRole
         val roles: util.Set[Role] = new util.HashSet[Role]()
@@ -98,12 +100,39 @@ class NewSubscriberService(@Autowired subscriberRepository: SubscriberRepository
         subscriberDataRepository.save(subscriberData)
     }
 
-    def saveSubscriberCategory(newSubscriber: NewSubscriber): Unit = {
-        val subscriberId: Int = subscriberDataRepository.findByEmail(newSubscriber.getEmail).get.getId
+    def editUser(editSubscriber: EditSubscriber, location: Map[String,Double]): Unit = {
+        val authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(editSubscriber.getEmail, editSubscriber.getOldPassword))
+
+        val subscriberEditData = subscriberDataRepository.findByEmail(editSubscriber.getEmail).get
+        val subscriber = subscriberEditData.getSubscriber
+        val subscriberEditInfo = subscriber.getSubscriberInfo
+
+        val street = splitAddress(editSubscriber.getAddress)._1.trim
+        val buildingNumber = splitAddress(editSubscriber.getAddress)._2.trim
+
+        subscriberEditData.setPassword(encoder.encode(editSubscriber.getNewPassword))
+        subscriberEditData.setSubscriber(subscriber)
+
+        subscriberEditInfo.setCity(editSubscriber.getCity)
+        subscriberEditInfo.setStreet(street)
+        subscriberEditInfo.setBuildingNumber(buildingNumber)
+        subscriberEditInfo.setLatitude(location("latitude"))
+        subscriberEditInfo.setLongitude(location("longitude"))
+        subscriberEditInfo.setSubscriber(subscriber)
+
+        subscriber.setSubscriberData(subscriberEditData)
+        subscriber.setSubscriberInfo(subscriberEditInfo)
+
+        subscriberRepository.save(subscriber)
+        subscriberDataRepository.save(subscriberEditData)
+    }
+
+    def saveSubscriberCategory(subscriberId: Int, categories: java.util.List[String]): Unit = {
         val subscriber: Subscriber = subscriberRepository.findById(subscriberId).get()
 
+        subscriberCategoryRepository.deleteSubscriberCategoriesBySubscriber(subscriber)
 
-        newSubscriber.getCategory.forEach(category => {
+        categories.forEach(category => {
             val subscriberCategory = new SubscriberCategory
             val categoryToSet: Category = categoryRepository.findByName(category)
             subscriberCategory.setCategory(categoryToSet)
@@ -141,8 +170,8 @@ class NewSubscriberService(@Autowired subscriberRepository: SubscriberRepository
 
     }
 
-    def splitAddress(newSubscriber: NewSubscriber) : (String, String) = {
-        val splitAddress = newSubscriber.getAddress.split(",")
+    def splitAddress(address: String) : (String, String) = {
+        val splitAddress = address.split(",")
         val street = splitAddress(0).trim
         val buildingNumber = splitAddress(1).trim
         (street, buildingNumber)

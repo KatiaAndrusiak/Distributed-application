@@ -1,0 +1,41 @@
+.profile-page {
+    max-width: 1000px;
+    min-height: 700px;
+    padding-top: 30px;
+    margin: 0 auto;
+
+    .profile-title {
+        font-size: 48px;
+        font-weight: 700;
+        line-height: 64px;  
+    }
+
+    .user-information {
+        margin-top: 20px;
+        columns: 2;
+        -webkit-columns: 2;
+        -moz-columns: 2;
+        padding: 20px;
+        border: 1px solid black;
+
+        .information-item {
+            font-size: 20px;
+            margin-top: 10px;
+
+            :first-child {
+                font-size: 24px;
+            }
+        }
+    }
+
+    a {
+        width: 20%;
+        float: right;
+    }
+
+    .edit { 
+        margin-top: 20px;
+        background-color: #4285f4;
+        width: 100%;
+    }
+}

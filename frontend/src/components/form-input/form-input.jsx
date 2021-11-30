@@ -2,9 +2,15 @@ import './form-input.scss'
 
 const FormInput = ({handleChange, label, i, value, error, name, clearError, ...otherProps}) => {
 
-    const inputClasses =  error.errorState  ? 'error' : '';
-    const labelClasses = `${value.length ? 'shrink' : ''} ${error.errorState  ? 'error' : ''} form-input-label`;
-    const lableText = error.errorState ? label + error.messagge : label;
+    let inputClasses =  '';
+    let labelClasses = `${value.length ? 'shrink' : ''} form-input-label`;
+    let lableText = label;
+    if (error !== null) {
+        inputClasses =  error.errorState  ? 'error' : '';
+        labelClasses = `${value.length ? 'shrink' : ''} ${error.errorState  ? 'error' : ''} form-input-label`;
+        lableText = error.errorState ? label + error.messagge : label;
+    }
+        
 
     return (
         <div className="group" id={`registration-input-${name}`}>

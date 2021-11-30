@@ -62,6 +62,7 @@ const ProblemPage = () => {
                 }
 
             });
+             // eslint-disable-next-line
     }, [])
 
     useEffect(() => {
@@ -81,6 +82,7 @@ const ProblemPage = () => {
         }
 
         setModalContent(createModalContent("Problem został zaakceptowany", messages));
+        // eslint-disable-next-line
     }, [selectedRows]);
 
     const acceptProblem = () => {
@@ -88,9 +90,10 @@ const ProblemPage = () => {
     }
 
     const modal = isModal ? <Modal 
-    modalContent = {modalContent}
-    modalError={false}
-    close={() => closeModal(setIsModal)}/> : null
+                                modalContent = {modalContent}
+                                modalError={modalError}
+                                close={() => closeModal(setIsModal)}/> : 
+                            null
 
     const check = <FontAwesomeIcon icon={faCheck} />;
 
@@ -101,7 +104,8 @@ const ProblemPage = () => {
             width: 175, 
             headerClassName: 'column-header', 
             cellClassName: 'row-cell',
-            headerAlign: 'center', 
+            headerAlign: 'center',
+            flex: 1, 
             align: 'center'
         },
         { 
@@ -111,23 +115,29 @@ const ProblemPage = () => {
             width: 175, 
             headerClassName: 'column-header', 
             cellClassName: 'row-cell', 
-            headerAlign: 'center', 
-            align: 'center'},
+            headerAlign: 'center',
+            flex: 1,  
+            align: 'center'
+        },
         { 
             field: 'category', 
             headerName: 'Kategoria', 
             width: 155, 
             headerClassName: 'column-header', 
-            cellClassName: 'row-cell', 
-            headerAlign: 'center'},
+            cellClassName: 'row-cell',
+            flex: 1,  
+            headerAlign: 'center'
+        },
         { 
             field: 'problem', 
             headerName: 'Problem',
              width: 175, 
             headerClassName: 'column-header', 
             cellClassName: 'row-cell', 
-            renderCell: RenderCellExpand, 
-            headerAlign: 'center'},
+            renderCell: RenderCellExpand,
+            flex: 1,  
+            headerAlign: 'center'
+        },
         { 
             field: 'description', 
             headerName: 'Opis', 
@@ -136,6 +146,7 @@ const ProblemPage = () => {
             headerClassName: 'column-header', 
             cellClassName: 'row-cell', 
             renderCell: RenderCellExpand, 
+            flex: 1, 
             headerAlign: 'center'
         },
         { 
@@ -155,6 +166,7 @@ const ProblemPage = () => {
                 </CustomButton>
                 );
             }, 
+            flex: 1, 
             align: 'center'
         }
       ];
@@ -167,6 +179,7 @@ const ProblemPage = () => {
             headerClassName: 'column-header', 
             cellClassName: 'row-cell',
             headerAlign: 'center', 
+            flex: 1, 
             align: 'center'
         },
         { 
@@ -176,22 +189,28 @@ const ProblemPage = () => {
             width: 197, 
             headerClassName: 'column-header', 
             cellClassName: 'row-cell', 
-            headerAlign: 'center', 
-            align: 'center'},
+            headerAlign: 'center',
+            flex: 1,  
+            align: 'center'
+        },
         { 
             field: 'category', 
             headerName: 'Kategoria', 
             width: 177, 
             headerClassName: 'column-header', 
-            cellClassName: 'row-cell', 
-            headerAlign: 'center'},
+            cellClassName: 'row-cell',
+            flex: 1,  
+            headerAlign: 'center'
+        },
         { 
             field: 'problem', 
             headerName: 'Problem',
              width: 197, 
             headerClassName: 'column-header', 
             cellClassName: 'row-cell', 
-            headerAlign: 'center'},
+            flex: 1, 
+            headerAlign: 'center'
+        },
         { 
             field: 'description', 
             headerName: 'Opis', 
@@ -199,7 +218,8 @@ const ProblemPage = () => {
             width: 222, 
             headerClassName: 'column-header', 
             cellClassName: 'row-cell', 
-            renderCell: RenderCellExpand, 
+            renderCell: RenderCellExpand,
+            flex: 1,  
             headerAlign: 'center'
         },
       ];

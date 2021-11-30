@@ -1,11 +1,19 @@
 import './header.scss';
 import {useSelector, useDispatch} from 'react-redux';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faUser, faUserPlus, faSignInAlt, faSignOutAlt, faTasks } from "@fortawesome/free-solid-svg-icons";
 import { logout } from '../../redux/user/user-action';
 import { Link } from 'react-router-dom';
 
 const Header = () => {
     const {isLogged} = useSelector(state => state);
     const dispatch = useDispatch();
+
+    const userIcon = <FontAwesomeIcon icon={faUser} />;
+    const signUpIcon = <FontAwesomeIcon icon={faUserPlus} />;
+    const signInIcon = <FontAwesomeIcon icon={faSignInAlt} />;
+    const logOutIcon = <FontAwesomeIcon icon={faSignOutAlt} />;
+    const problemIcon = <FontAwesomeIcon icon={faTasks} />;
     
     
 
@@ -17,25 +25,33 @@ const Header = () => {
             <div className='options'>
                 <div className="option">
                     {
+                        isLogged  ?  <Link  to="/profile">
+                                        Profil {userIcon}
+                                    </Link>
+                                  : null
+                    }
+                </div>
+                <div className="option">
+                    {
                         isLogged  ?  <Link  to="/problems">
-                                        Problemy 
+                                        Problemy {problemIcon}
                                     </Link>
                                   : <Link to="/signup">
-                                        Rejestracja 
+                                        Rejestracja {signUpIcon}
                                     </Link>
                     }
                 </div>
                 <div className="option">
                     {
-                        isLogged  ?  <div className="logout option" onClick={() => {
+                        isLogged  ?  <div className="logout" onClick={() => {
                             localStorage.removeItem("user");
                             dispatch(logout());
 
                         }}>
-                            Wyloguj się
+                            Wyloguj się {logOutIcon}
                         </div>
                         : <Link  to="/signin">
-                            Logowanie
+                            Logowanie {signInIcon}
                         </Link>
                     }
                 </div>

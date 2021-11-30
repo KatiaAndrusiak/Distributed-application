@@ -1,0 +1,27 @@
+.edit-page {
+    display: block;
+    width: 700px;
+    margin: 0 auto;
+
+    form {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+    }
+    .btn.edit {
+        background-color: rgb(66, 133, 244);
+    }
+
+    .spinner-wrapper {
+        grid-column-start: 1;
+        grid-column-end: 3;
+    }
+
+    #registration-input-street {
+        grid-column-start: 1;
+        grid-column-end: 3; 
+     }
+ 
+     #registration-input-street > input {
+         width: 95%;
+    }
+}
