@@ -2,7 +2,7 @@ package com.example.controller
 
 import com.example.exception.{BuildExceptionHandler, EmailAlreadyExistException, NoSuchAddressException, NoSuchStreetException}
 import com.example.model.{EditSubscriber, LoginSubscriber, NewSubscriber}
-import com.example.payload.response.JwtResponse
+import com.example.payload.response.{BuildOkResponse, JwtResponse}
 import com.example.repository.{RoleRepository, SubscriberDataRepository, SubscriberRepository}
 import com.example.security.jwt.JwtUtils
 import com.example.security.services.UserDetailsImpl
@@ -65,23 +65,16 @@ class AuthController {
 
     @PostMapping(Array("/signup"))
     def registerUser(@Valid @RequestBody newSubscriber: NewSubscriber): ResponseEntity[_] = {
-        implicit val formats = Serialization.formats(NoTypeHints)
         val location = newSubscriberService.getSubscriberLocation(newSubscriber)
-        val messageMap: Map[String, String] = Map[String, String]("status" -> HttpStatus.OK.value.toString)
-        val message = Serialization.write(messageMap)
-
         newSubscriberService.registerSubscriber(newSubscriber, location)
         val subscriberId: Int = userRepository.findByEmail(newSubscriber.getEmail).get.getId
         newSubscriberService.saveSubscriberCategory(subscriberId, newSubscriber.getCategory)
-
-        new ResponseEntity[AnyRef](message, HttpStatus.OK)
-
+        BuildOkResponse.createOkResponse
     }
 
     @PutMapping(Array("/edit"))
     @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
     def editUser(@Valid @RequestBody editSubscriber: EditSubscriber): ResponseEntity[_] = {
-        implicit val formats = Serialization.formats(NoTypeHints)
         val location = newSubscriberService.getSubscriberLocation(
             NewSubscriber(
                 editSubscriber.getFirstName,
@@ -96,14 +89,11 @@ class AuthController {
                 editSubscriber.getRole
             )
         )
-        val messageMap: Map[String, String] = Map[String, String]("status" -> HttpStatus.OK.value.toString)
-        val message = Serialization.write(messageMap)
-
         newSubscriberService.editUser(editSubscriber, location)
         val subscriberId: Int = userRepository.findByEmail(editSubscriber.getEmail).get.getId
         newSubscriberService.saveSubscriberCategory(subscriberId, editSubscriber.getCategory)
 
-        new ResponseEntity[AnyRef](message, HttpStatus.OK)
+        BuildOkResponse.createOkResponse
     }
 
     @ExceptionHandler(Array(classOf[ConstraintViolationException]))

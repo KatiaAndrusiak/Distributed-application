@@ -151,8 +151,7 @@ const EditPage = () => {
             .then(res => {
                     console.log(res);
                     const {status} = res;
-                    // eslint-disable-next-line
-                    if (status == 200) {
+                    if (status === 200) {
                         setOkStatus(200);
                         const messages = [];
                         messages.push("Udało się, załoguj się ponownie, aby korzystać z serwisu"); 
