@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 
 import com.example.myapplication.manager.DataManagement;
@@ -101,7 +102,10 @@ public class ProblemsFragment extends Fragment {
             if (problems.size() > 0) break;
         }
 
-        int mar = (((getResources().getDisplayMetrics().heightPixels)/(problems.size()+1))* 20)/100;
+        int mar = (((getResources().getDisplayMetrics().heightPixels)/(problems.size()+2))* 20)/100;
+        int width = (int)(getResources().getDisplayMetrics().widthPixels * 0.9);
+        int height = (int)((getResources().getDisplayMetrics().heightPixels * 0.7) / problems.size() + 1)-mar;
+        TextView textView = view.findViewById(R.id.select_text);
         for( String button: problems){
             LinearLayout ll = view.findViewById(R.id.problems_layout);
 
@@ -110,11 +114,9 @@ public class ProblemsFragment extends Fragment {
             btn.setBackgroundColor(Color.parseColor("#ebebeb"));
             btn.setTextColor(Color.parseColor("#FF000000"));
             LinearLayout.LayoutParams params =  new LinearLayout.LayoutParams(
-                    (int)(getResources().getDisplayMetrics().widthPixels * 0.9),
-                    (int)((getResources().getDisplayMetrics().heightPixels * 0.8) / problems.size())-mar);
+                  width, height);
             params.setMargins(0,mar/2,0,mar/2);
-            btn.setLayoutParams(
-                   params);
+            btn.setLayoutParams(params);
             btn.setOnClickListener(
                     v ->{
                         selectedProblem = btn.getText().toString();

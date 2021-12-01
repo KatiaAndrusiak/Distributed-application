@@ -9,4 +9,6 @@
     <string name="complete">DZIĘKUJEMY ZA ZGŁOSZENIE!</string>
     <string name="zakoncz">Zakończ</string>
     <string name="nowe_zgloszenie">Nowe zgłoszenie</string>
+    <string name="category_pick">WYBIERZ KATEGORIĘ ODPOWIEDNIĄ DLA TWOJEGO PROBLEMU</string>
+
 </resources>

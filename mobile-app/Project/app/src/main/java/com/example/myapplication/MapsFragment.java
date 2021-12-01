@@ -19,6 +19,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,10 +31,12 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
@@ -52,6 +55,7 @@ public class MapsFragment extends Fragment {
         fragment.setArguments(args);
         return fragment;
     }
+
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -85,6 +89,11 @@ public class MapsFragment extends Fragment {
                 googleMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
                     @Override
                     public void onMapLoaded() {
+//                        LatLngBounds adelaideBounds = new LatLngBounds(
+//                                new LatLng(-35.0, 138.58), // SW bounds
+//                                new LatLng(-34.9, 138.61)  // NE bounds
+//                        );
+//                        googleMap.setLatLngBoundsForCameraTarget(adelaideBounds);
                         setAddressInfo(googleMap, addressText, currentLatLng);
                     }
                 });
@@ -94,6 +103,42 @@ public class MapsFragment extends Fragment {
                         setAddressInfo(googleMap, addressText, latLng);
                     }
                 });
+            }
+        });
+        SearchView  searchView = view.findViewById(R.id.sv_location);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                String location = searchView.getQuery().toString();
+                List<Address> addressList = null;
+                if(location != null || !location.equals("")){
+                    Geocoder geocoder = new Geocoder(getActivity());
+                    try {
+                        addressList = geocoder.getFromLocationName(location,1);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    Address address = addressList.get(0);
+                    LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
+                    mapFragment.getMapAsync(new OnMapReadyCallback() {
+                        @Override
+                        public void onMapReady(@NonNull GoogleMap googleMap) {
+                            googleMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
+                                @Override
+                                public void onMapLoaded() {
+                                    setAddressInfo(googleMap, addressText, latLng);
+                                }
+                            });
+
+                        }
+                    });
+                }
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
             }
         });
 
@@ -198,7 +243,7 @@ public class MapsFragment extends Fragment {
                 StringBuilder strReturnedAddress = new StringBuilder("");
 
                 for (int i = 0; i <= returnedAddress.getMaxAddressLineIndex(); i++) {
-                    strReturnedAddress.append(returnedAddress.getAddressLine(i)).append("\n");
+                    strReturnedAddress.append(returnedAddress.getAddressLine(i));
                 }
                 strAdd = strReturnedAddress.toString();
                 System.out.println("My Current location address" + strReturnedAddress.toString());

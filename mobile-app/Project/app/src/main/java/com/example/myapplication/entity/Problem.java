@@ -3,6 +3,8 @@ package com.example.myapplication.entity;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.regex.Pattern;
+
 public class Problem implements Parcelable {
     String category;
     String problem;
@@ -84,7 +86,10 @@ public class Problem implements Parcelable {
     }
 
     public void setAddress(String address) {
-        this.address = address;
+        Pattern p = Pattern.compile("\\d{2}-\\d{3}");
+        Pattern p2 = Pattern.compile(",[ a-zA-Z]+$");
+        address =  p.matcher(address).replaceAll("");
+        this.address = p2.matcher(address).replaceAll(" ");
     }
 
     public void setLatitude(Double latitude) {
@@ -99,15 +104,7 @@ public class Problem implements Parcelable {
 
     @Override
     public String toString() {
-        return "{" +
-                "category:'" + category + '\'' +
-                ", problem:'" + problem + '\'' +
-                ", description:'" + description + '\'' +
-                ", date:'" + date + '\'' +
-                ", address:'" + address + '\'' +
-                ", latitude:" + latitude +
-                ", longitude:" + longitude +
-                '}';
+        return String.format("{ \"category\" : \"%s\", \"problem\" : \"%s\", \"description\": \"%s \", \"date\" : \"%s\", \"address\" : \"%s\", \"latitude\" : %f, \"longitude\" : %f}", category, problem, description, date, address, latitude, longitude);
     }
 
 

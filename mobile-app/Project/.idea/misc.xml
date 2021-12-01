@@ -5,6 +5,7 @@
       <map>
         <entry key="..\:/Android/Sdk/platforms/android-31/data/res/layout/simple_spinner_item.xml" value="0.12239583333333333" />
         <entry key="..\:/Thesis/Project/app/src/main/res/drawable-v23/blue_outline.xml" value="0.1" />
+        <entry key="..\:/Thesis/Project/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.24375" />
         <entry key="..\:/Thesis/Project/app/src/main/res/drawable/arrow_down.xml" value="0.1" />
         <entry key="..\:/Thesis/Project/app/src/main/res/drawable/blue_outline.xml" value="0.11302083333333333" />
         <entry key="..\:/Thesis/Project/app/src/main/res/drawable/button_shape.xml" value="0.19895833333333332" />
@@ -12,6 +13,7 @@
         <entry key="..\:/Thesis/Project/app/src/main/res/drawable/dice_5.xml" value="0.1125" />
         <entry key="..\:/Thesis/Project/app/src/main/res/drawable/dice_6.xml" value="0.1125" />
         <entry key="..\:/Thesis/Project/app/src/main/res/drawable/empty_dice.xml" value="0.1125" />
+        <entry key="..\:/Thesis/Project/app/src/main/res/drawable/ic_arrow_down.xml" value="0.24375" />
         <entry key="..\:/Thesis/Project/app/src/main/res/drawable/ic_launcher_background.xml" value="0.1125" />
         <entry key="..\:/Thesis/Project/app/src/main/res/drawable/spinner_item.xml" value="0.1" />
         <entry key="..\:/Thesis/Project/app/src/main/res/layout/activity_main.xml" value="0.2037037037037037" />

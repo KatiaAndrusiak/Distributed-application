@@ -36,7 +36,7 @@
                 android:textSize="20sp" />
 
             <Button
-                android:id="@+id/button"
+                android:id="@+id/change_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:backgroundTint="@color/default_button"
@@ -98,8 +98,9 @@
             android:layout_height="wrap_content"
             android:layout_weight="0"
             android:layout_gravity="center"
-            android:backgroundTint="@color/incharge_blue"
+            android:backgroundTint="@color/disable_button"
             android:textColor="@color/white"
+            android:enabled="false"
             android:text="@string/zatwierdz_i_wyslij" />
 
 

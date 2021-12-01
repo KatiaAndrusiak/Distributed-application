@@ -10,4 +10,5 @@
     <color name="incharge_blue">#FF3700B3</color>
     <color name="default_background">#bce6d1</color>
     <color name="default_button">#ebebeb</color>
+    <color name="disable_button">#b8b8b8</color>
 </resources>

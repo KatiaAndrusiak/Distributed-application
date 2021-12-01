@@ -1,14 +1,30 @@
 package com.example.myapplication.manager;
 
+import com.example.myapplication.entity.Problem;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.SocketTimeoutException;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -19,8 +35,10 @@ public class DataManagement {
 
     public final static String URL = "http://jabeda-env.eba-iqdahc9d.us-east-2.elasticbeanstalk.com";
     public final static String PROBLEMS_PATH = "/problems";
+    public final static String REQUEST_PROBLEMS_PATH = "/request/problems";
     public static List<String> categories;
     public static  HashMap<String, List<String>> problemsByCategories;
+    public static Boolean responseOK = false;
     private DataManagement() {
     }
 
@@ -47,6 +65,26 @@ public class DataManagement {
         System.out.println("JSON: " + jsonString);
 
         return new JSONArray(jsonString);
+    }
+
+    public static int sendProblemPostRequest(String urlString, Problem problem){
+
+        HttpClient httpClient = HttpClientBuilder.create().build();
+        try {
+            HttpPost request = new HttpPost(urlString);
+            StringEntity params = new StringEntity(problem.toString(), "UTF-8");
+            request.addHeader("content-type", "application/json");
+            request.setEntity(params);
+            HttpResponse response = httpClient.execute(request);
+            System.out.println(response.getStatusLine().getStatusCode());
+            return response.getStatusLine().getStatusCode();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        } finally {
+            httpClient.getConnectionManager().shutdown();
+        }
+
+        return 0;
     }
 
 
