@@ -18,7 +18,7 @@ object UserDetailsImpl {
             authorities.add(new SimpleGrantedAuthority(it.next.getName.name))
         }
         val subscriber = user.getSubscriber
-        val subscriberInfo = user.getSubscriber.getSubscriberInfo
+        val subscriberInfo = subscriber.getSubscriberInfo
         new UserDetailsImpl(
             user.getId,
             subscriberInfo.getPhone,
@@ -26,6 +26,8 @@ object UserDetailsImpl {
             subscriberInfo.getCity,
             subscriberInfo.getStreet,
             subscriberInfo.getBuildingNumber,
+            subscriberInfo.getLatitude,
+            subscriberInfo.getLongitude,
             subscriber.getFname,
             subscriber.getLname,
             user.getEmail,
@@ -44,6 +46,8 @@ class UserDetailsImpl(
                          @BeanProperty var city: String,
                          @BeanProperty var street: String,
                          @BeanProperty var buildingNumber: String,
+                         @BeanProperty var latitude: Double,
+                         @BeanProperty var longitude: Double,
                          @BeanProperty var firstName: String,
                          @BeanProperty var lastName: String,
                          @BeanProperty var email: String,

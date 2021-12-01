@@ -8,6 +8,9 @@
 .problem-list {
     font-size: 18px;
     margin-top: 20px;
+    width: 1200px;
+    display: block;
+    margin: 0 auto;
     max-height: 600px;
     height: 500px;
 
@@ -16,7 +19,7 @@
     }
 
     .row-cell {
-        font-size: 16px;
+        font-size: 15px;
     }
 
     .accept {

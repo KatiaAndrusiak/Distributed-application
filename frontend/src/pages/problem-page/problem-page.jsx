@@ -2,7 +2,7 @@ import './problem-page.scss';
 
 import { RenderCellExpand } from '../../services/renderCellExpand';
 import { useState, useEffect } from 'react';
-import {closeModal, createModalContent, getWithAuthorization} from '../../services/services';
+import {closeModal, createModalContent, getWithAuthorization, calcDistance} from '../../services/services';
 import {useSelector} from 'react-redux';
 
 import { v4 as uuidv4 } from 'uuid';
@@ -51,8 +51,9 @@ const ProblemPage = () => {
             .then(problems => {
                 console.log(problems)
                 if (problems.length > 0) {
-                    const filteredProblems = problems.map(({date, address, category, problem, description}) => {
-                        return {id: uuidv4(), date, address, category, problem, description}
+                    const filteredProblems = problems.map(({date, address, category, problem, description, latitude, longitude}) => {
+                        const distance = calcDistance(user.latitude, user.longitude, latitude, longitude).toFixed(2) + ' km'
+                        return {id: uuidv4(), date, address, distance, category, problem, description}
                     })
                     setLoading(false);
                     setProblemRows(filteredProblems)
@@ -101,23 +102,29 @@ const ProblemPage = () => {
         { 
             field: 'date',
             headerName: 'Data', 
-            width: 175, 
+            width: 230, 
             headerClassName: 'column-header', 
             cellClassName: 'row-cell',
             headerAlign: 'center',
-            flex: 1, 
             align: 'center'
         },
         { 
             field: 'address', 
             headerName: 'Lokacja', 
             sortable: false, 
-            width: 175, 
+            width: 185, 
             headerClassName: 'column-header', 
             cellClassName: 'row-cell', 
             headerAlign: 'center',
-            flex: 1,  
             align: 'center'
+        },
+        { 
+            field: 'distance', 
+            headerName: 'Odległość', 
+            width: 140, 
+            headerClassName: 'column-header', 
+            cellClassName: 'row-cell',
+            headerAlign: 'center'
         },
         { 
             field: 'category', 
@@ -125,7 +132,6 @@ const ProblemPage = () => {
             width: 155, 
             headerClassName: 'column-header', 
             cellClassName: 'row-cell',
-            flex: 1,  
             headerAlign: 'center'
         },
         { 
@@ -135,7 +141,6 @@ const ProblemPage = () => {
             headerClassName: 'column-header', 
             cellClassName: 'row-cell', 
             renderCell: RenderCellExpand,
-            flex: 1,  
             headerAlign: 'center'
         },
         { 
@@ -146,13 +151,12 @@ const ProblemPage = () => {
             headerClassName: 'column-header', 
             cellClassName: 'row-cell', 
             renderCell: RenderCellExpand, 
-            flex: 1, 
             headerAlign: 'center'
         },
         { 
             field: 'done', 
             headerName: 'Gotowe', 
-            width: 110, 
+            width: 95, 
             headerClassName: 'column-header', 
             cellClassName: 'row-cell', 
             sortable: false, 
@@ -166,7 +170,6 @@ const ProblemPage = () => {
                 </CustomButton>
                 );
             }, 
-            flex: 1, 
             align: 'center'
         }
       ];
@@ -179,7 +182,6 @@ const ProblemPage = () => {
             headerClassName: 'column-header', 
             cellClassName: 'row-cell',
             headerAlign: 'center', 
-            flex: 1, 
             align: 'center'
         },
         { 
@@ -189,9 +191,16 @@ const ProblemPage = () => {
             width: 197, 
             headerClassName: 'column-header', 
             cellClassName: 'row-cell', 
-            headerAlign: 'center',
-            flex: 1,  
+            headerAlign: 'center', 
             align: 'center'
+        },
+        { 
+            field: 'distance', 
+            headerName: 'Odległość', 
+            width: 140, 
+            headerClassName: 'column-header', 
+            cellClassName: 'row-cell',
+            headerAlign: 'center'
         },
         { 
             field: 'category', 
@@ -199,7 +208,6 @@ const ProblemPage = () => {
             width: 177, 
             headerClassName: 'column-header', 
             cellClassName: 'row-cell',
-            flex: 1,  
             headerAlign: 'center'
         },
         { 
@@ -208,7 +216,6 @@ const ProblemPage = () => {
              width: 197, 
             headerClassName: 'column-header', 
             cellClassName: 'row-cell', 
-            flex: 1, 
             headerAlign: 'center'
         },
         { 
@@ -218,8 +225,7 @@ const ProblemPage = () => {
             width: 222, 
             headerClassName: 'column-header', 
             cellClassName: 'row-cell', 
-            renderCell: RenderCellExpand,
-            flex: 1,  
+            renderCell: RenderCellExpand, 
             headerAlign: 'center'
         },
       ];
@@ -285,3 +291,14 @@ const ProblemPage = () => {
 }
 
 export default ProblemPage;
+
+// const esc = encodeURIComponent;
+// const url = 'maps.googleapis.com/maps/api/geocode/json?';
+// const params = { 
+//     key: "asdkfñlaskdGE",
+//     address: "evergreenavenue",
+//     city: "New York"
+// };
+// // this line takes the params object and builds the query string
+// const query = Object.keys(params).map(k => `${k}=${params[k]}`).join('&')
+// console.log(url+query)

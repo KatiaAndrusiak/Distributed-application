@@ -1,6 +1,6 @@
 package com.example.entity
 
-import javax.persistence.{CascadeType, Column, Entity, GeneratedValue, GenerationType, Id, OneToMany, OneToOne, Table}
+import javax.persistence.{CascadeType, Column, Entity, GeneratedValue, GenerationType, Id, OneToOne, Table}
 import javax.validation.constraints.{NotBlank, NotNull, Pattern, Size}
 import scala.beans.BeanProperty
 
@@ -20,7 +20,7 @@ class Subscriber extends Serializable() {
     @NotNull
     @Size(min = 2, max = 50, message = "Imię - minimalna wymagana długość - 2, maksymalna - 50")
     @NotBlank(message = "Imię nie może być puste")
-    @Pattern(regexp = "^[a-zA-Z]*$", message = " Imię musi zawierać tylko litery")
+    @Pattern(regexp = "^[a-zA-ZAaĄąBbCcĆćDdEeĘęFfGgHhIiJjKkLlŁłMmNnŃńOoÓóPpRrSsŚśTtUuWwYyZzŹźŻż]*$", message = " Imię musi zawierać tylko litery")
     var fname: String = _
 
     @Column(name = "slastname")
@@ -28,7 +28,7 @@ class Subscriber extends Serializable() {
     @NotNull
     @Size(min = 2, max = 50, message = "Nazwisko - minimalna wymagana długość - 2, maksymalna - 50")
     @NotBlank(message = "Nazwisko nie może być puste")
-    @Pattern(regexp = "^[a-zA-Z]*$", message = "Nazwisko musi zawierać tylko litery")
+    @Pattern(regexp = "^[a-zA-ZAaĄąBbCcĆćDdEeĘęFfGgHhIiJjKkLlŁłMmNnŃńOoÓóPpRrSsŚśTtUuWwYyZzŹźŻż]*$", message = "Nazwisko musi zawierać tylko litery")
     var lname: String = _
 
     @OneToOne(

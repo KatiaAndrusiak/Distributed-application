@@ -1,5 +1,7 @@
 package com.example.service
 
+import com.example.exception.{EmptyFieldException, InjectionException}
+
 import scala.collection.JavaConverters._
 import com.example.model.Problem
 import org.springframework.stereotype.Service
@@ -23,7 +25,21 @@ class ProblemService {
     }
 
     def addProblem(problem: Problem): Unit = {
+        if (checkIfStringIsBlank(problem.getAddress) || checkIfStringIsBlank(problem.getCategory) || checkIfStringIsBlank(problem.getDate) || checkIfStringIsBlank(problem.getDescription) || checkIfStringIsBlank(problem.getProblem)) {
+            throw EmptyFieldException("Pole nie może być puste, proszę sprawdzić dane i spróbować jeszcze raz!")
+        }
+        if (checkInjection(problem.getAddress) || checkInjection(problem.getCategory) || checkInjection(problem.getDate) || checkInjection(problem.getDescription) || checkInjection(problem.getProblem)) {
+            throw InjectionException("Używasz nieprawidłowych  znaków, proszę sprawdzić dane i spróbować jeszcze raz!")
+        }
         problems = problem :: problems
+    }
+
+    def checkIfStringIsBlank(value: String): Boolean = {
+        value == null || value.isEmpty || value.isBlank
+    }
+
+    def checkInjection(value: String): Boolean = {
+       value.contains("<") || value.contains(">")
     }
 
 }

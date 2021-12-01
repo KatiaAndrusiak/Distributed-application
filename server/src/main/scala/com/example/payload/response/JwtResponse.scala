@@ -11,6 +11,8 @@ class JwtResponse(
                      @BeanProperty var city: String,
                      @BeanProperty var street: String,
                      @BeanProperty var buildingNumber: String,
+                     @BeanProperty var latitude: Double,
+                     @BeanProperty var longitude: Double,
                      @BeanProperty var firstName: String,
                      @BeanProperty var lastName: String,
                      @BeanProperty var email: String,

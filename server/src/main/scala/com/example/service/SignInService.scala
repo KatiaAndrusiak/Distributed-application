@@ -16,7 +16,6 @@ class SignInService(@Autowired subscriberCategoryRepository: SubscriberCategoryR
         subscriberCategoryRepository.findAllBySubscriber(subscriber).forEach(category => {
             userCategories.add(category.getCategory.getName)
         })
-        println(userCategories)
         userCategories
     }
 

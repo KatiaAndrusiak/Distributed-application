@@ -56,6 +56,8 @@ class AuthController {
             userDetails.getCity,
             userDetails.getStreet,
             userDetails.getBuildingNumber,
+            userDetails.getLatitude,
+            userDetails.getLongitude,
             userDetails.getFirstName,
             userDetails.getLastName,
             userDetails.getEmail,
