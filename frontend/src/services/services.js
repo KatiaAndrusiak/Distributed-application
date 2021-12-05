@@ -38,9 +38,9 @@ export const getWithAuthorization = async (url, clientToken) => {
     return await res.json();
 };
 
-export const putWithAuthorization = async (url, data, clientToken) => {
+export const fetchWithAuthorization = async (url, data, clientToken, method) => {
     const res = await fetch(url, {
-        method: "PUT",
+        method: method,
         headers: {
             'Content-type': 'application/json',
             'Authorization': 'Bearer ' + clientToken
@@ -107,11 +107,11 @@ export const calcDistance = (lat1, lon1, lat2, lon2)  => {
     var R = 6371; // km
     var dLat = toRad(lat2 - lat1);
     var dLon = toRad(lon2 - lon1);
-    var lat1 = toRad(lat1);
-    var lat2 = toRad(lat2);
+    var latToRad1 = toRad(lat1);
+    var latToRad2 = toRad(lat2);
 
     var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-    Math.sin(dLon / 2) * Math.sin(dLon / 2) * Math.cos(lat1) * Math.cos(lat2); 
+    Math.sin(dLon / 2) * Math.sin(dLon / 2) * Math.cos(latToRad1) * Math.cos(latToRad2); 
     var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a)); 
     var d = R * c; // Distance in km
     return d;

@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository
 
 @Repository
 trait ProblemRepository extends JpaRepository[Problem, Int] {
-
+    def existsByName(name: String): Boolean
 }

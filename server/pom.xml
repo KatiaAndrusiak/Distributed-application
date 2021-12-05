@@ -10,7 +10,7 @@
     </parent>
     <groupId>com.example</groupId>
     <artifactId>distributed-app</artifactId>
-    <version>1.0.1-SNAPSHOT</version>
+    <version>1.0.1-AWS</version>
     <name>distributed-app</name>
     <description>Diploma project</description>
     <properties>

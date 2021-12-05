@@ -45,6 +45,7 @@ const Header = () => {
                     {
                         isLogged  ?  <div className="logout" onClick={() => {
                             localStorage.removeItem("user");
+                            localStorage.removeItem("acceptedRows");
                             dispatch(logout());
 
                         }}>

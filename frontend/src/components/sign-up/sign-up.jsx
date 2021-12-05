@@ -47,7 +47,7 @@ const SignUp = () => {
     const eyeSlash = <FontAwesomeIcon icon={faEyeSlash} />;
 
     useEffect(() => {
-        getResource("http://localhost:8080/categories")
+        getResource(`${process.env.REACT_APP_API_ROOT_URL}/categories`)
             .then(categories => setCategories(categories));
     }, []);
 
@@ -159,7 +159,7 @@ const SignUp = () => {
         console.log(data)
 
         if (validateFields()) {
-            postData("http://localhost:8080/auth/signup", JSON.stringify(data))
+            postData(`${process.env.REACT_APP_API_ROOT_URL}/auth/signup`, JSON.stringify(data))
             .then(res => {
                 console.log(res);
                 const {status} = res;

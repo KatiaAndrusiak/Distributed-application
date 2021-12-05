@@ -60,7 +60,7 @@ const SignIn = () => {
         }
         
         if (validateFields()) {
-            postData("http://localhost:8080/auth/signin", JSON.stringify(data))
+            postData(`${process.env.REACT_APP_API_ROOT_URL}/auth/signin`, JSON.stringify(data))
             .then(res => {
                 console.log(res);
                 const {status} = res;

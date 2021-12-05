@@ -7,4 +7,5 @@ import org.springframework.stereotype.Repository
 @Repository
 trait CategoryRepository extends JpaRepository[Category, Int] {
     def findByName(name: String): Category
+    def existsByName(name: String): Boolean
 }

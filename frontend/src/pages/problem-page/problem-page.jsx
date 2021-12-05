@@ -2,8 +2,9 @@ import './problem-page.scss';
 
 import { RenderCellExpand } from '../../services/renderCellExpand';
 import { useState, useEffect } from 'react';
-import {closeModal, createModalContent, getWithAuthorization, calcDistance} from '../../services/services';
-import {useSelector} from 'react-redux';
+import {closeModal, createModalContent, getWithAuthorization, fetchWithAuthorization, calcDistance} from '../../services/services';
+import { updateProblems } from '../../redux/user/user-action';
+import {useSelector, useDispatch} from 'react-redux';
 
 import { v4 as uuidv4 } from 'uuid';
 
@@ -15,10 +16,30 @@ import ProblemList from '../../components/problem-list/problem-list';
 import AcceptedProblemList from '../../components/accepted-problem-list/accepted-problem-list';
 import Spinner from '../../components/spinner/Spinner';
 import Modal from '../../components/modal/modal';
+import RadioButtons from '../../components/radio-group/radio-group';
 
 const ProblemPage = () => {
 
-    const {user} = useSelector(state => state);
+    const radioButtons = {
+        buttons: [
+            {
+                value: 60000,
+                label: "Co minutę"
+            },
+            {
+                value: 9000000,
+                label: "Co 15 minut"
+            },
+            {
+                value: 18000000,
+                label: "Co 30 minut"
+            }
+        ]
+    }
+     
+    const {user, acceptedProblems} = useSelector(state => state);
+    const dispatch = useDispatch();
+
     const [loading, setLoading] = useState(false);
     const [isModal, setIsModal] = useState(false);
     const [modalError, setModalError] = useState(false);
@@ -27,11 +48,13 @@ const ProblemPage = () => {
 
     const [selectedRows, setSelectedRows] = useState([]);
     const [problemRows, setProblemRows] = useState([]);
-    const [acceptedRows, setAcceptedRows] = useState([]);
+    //const [acceptedRows, setAcceptedRows] = useState([]);
+    const [requestTime, setRequestTime] = useState(60000);
 
 
     const handleSelectionModel = (ids) => {
-        console.log("selekcja");
+        // console.log("selekcja");
+        setModalError(false);
         const selectedIDs = new Set(ids);
         const selected = problemRows.filter((row) =>
           selectedIDs.has(row.id),
@@ -39,17 +62,15 @@ const ProblemPage = () => {
 
         if (selected.length !== 0) {
             setSelectedRows(selected);
+            // console.log("tutaj selekcja")
         }
-        
-        console.log(selectedRows);
     }
 
-    useEffect(() => {
-        console.log("Fetching problems");
+    const fetchProblems = () => {
         setLoading(true);
-        getWithAuthorization("http://localhost:8080/request/problems", user.accessToken)
+        const query = user.categories.map(category => `category=${category}`).join('&')
+        getWithAuthorization(`${process.env.REACT_APP_API_ROOT_URL}/request/problems?${query}`, user.accessToken)
             .then(problems => {
-                console.log(problems)
                 if (problems.length > 0) {
                     const filteredProblems = problems.map(({date, address, category, problem, description, latitude, longitude}) => {
                         const distance = calcDistance(user.latitude, user.longitude, latitude, longitude).toFixed(2) + ' km'
@@ -63,32 +84,78 @@ const ProblemPage = () => {
                 }
 
             });
-             // eslint-disable-next-line
+    }
+
+    useEffect(() => {
+       // console.log("Fetching problems");
+        fetchProblems();
+        // eslint-disable-next-line
     }, [])
 
     useEffect(() => {
-        console.log("akceptacja");
-        const messages = [];
-        console.log(selectedRows);
+        const intervalId = setInterval(() => {
+           // console.log("Fetching problems timeout");
+            fetchProblems();
+        }, requestTime);
+        return () => clearInterval(intervalId); //This is important
+        // eslint-disable-next-line
+    }, [problemRows])
 
-        for (const key in selectedRows[0]) {
-            if (key !== 'id') {
-                messages.push(selectedRows[0][key]);
-            }
-        }
+
+    useEffect(() => {
+        //console.log("akceptacja");
+        const messages = [];
 
         if (selectedRows.length !== 0 && isModal) {
             setProblemRows(problemRows.filter(problem => problem.id !== selectedRows[0]['id']));
-            setAcceptedRows(prevRows => [...prevRows, selectedRows[0]])
+            const {address, category, date, description, problem} = selectedRows[0];
+            const data = {
+                category,
+                problem,
+                description,
+                date,
+                address,
+                latitude: null,
+                longitude: null
+            }
+            fetchWithAuthorization(`${process.env.REACT_APP_API_ROOT_URL}/request/problems`, JSON.stringify(data), user.accessToken, "DELETE")
+                .then(res => {
+                    const {status} = res;
+                    if (status === 200) {
+                        //setAcceptedRows(prevRows => [...prevRows, selectedRows[0]])
+                        dispatch(updateProblems(selectedRows[0]))
+                        const newArr = acceptedProblems.concat(selectedRows[0])
+                        localStorage.setItem('acceptedRows', JSON.stringify(newArr))
+                        setModalError(false);
+                    } else if (status === 400) {
+                    //    setAcceptedRows(prevRows => [...prevRows])
+                        setModalError(true);
+                    }
+                })
         }
 
-        setModalContent(createModalContent("Problem został zaakceptowany", messages));
+        if(modalError) {
+            messages.push("Problem został zaakceptowany przez inego użytkownika, wybierz inny problem!");
+            setModalContent(createModalContent("Info", messages));
+        } else {
+            for (const key in selectedRows[0]) {
+                if (key !== 'id') {
+                    messages.push(selectedRows[0][key]);
+                }
+            }
+            setModalContent(createModalContent("Problem został zaakceptowany", messages));
+        } 
+            
         // eslint-disable-next-line
-    }, [selectedRows]);
+    }, [selectedRows, modalError]);
 
     const acceptProblem = () => {
         setIsModal(true);  
     }
+
+    const handleRequestTime = (event) => {
+        setRequestTime(event.target.value);
+    };
 
     const modal = isModal ? <Modal 
                                 modalContent = {modalContent}
@@ -102,7 +169,7 @@ const ProblemPage = () => {
         { 
             field: 'date',
             headerName: 'Data', 
-            width: 230, 
+            width: 163, 
             headerClassName: 'column-header', 
             cellClassName: 'row-cell',
             headerAlign: 'center',
@@ -114,7 +181,8 @@ const ProblemPage = () => {
             sortable: false, 
             width: 185, 
             headerClassName: 'column-header', 
-            cellClassName: 'row-cell', 
+            cellClassName: 'row-cell',
+            renderCell: RenderCellExpand,
             headerAlign: 'center',
             align: 'center'
         },
@@ -129,15 +197,16 @@ const ProblemPage = () => {
         { 
             field: 'category', 
             headerName: 'Kategoria', 
-            width: 155, 
-            headerClassName: 'column-header', 
+            width: 185, 
+            headerClassName: 'column-header',
+            renderCell: RenderCellExpand, 
             cellClassName: 'row-cell',
             headerAlign: 'center'
         },
         { 
             field: 'problem', 
             headerName: 'Problem',
-             width: 175, 
+            width: 243, 
             headerClassName: 'column-header', 
             cellClassName: 'row-cell', 
             renderCell: RenderCellExpand,
@@ -147,7 +216,7 @@ const ProblemPage = () => {
             field: 'description', 
             headerName: 'Opis', 
             sortable: false, 
-            width: 200, 
+            width: 180, 
             headerClassName: 'column-header', 
             cellClassName: 'row-cell', 
             renderCell: RenderCellExpand, 
@@ -178,7 +247,7 @@ const ProblemPage = () => {
         { 
             field: 'date',
             headerName: 'Data', 
-            width: 197, 
+            width: 172, 
             headerClassName: 'column-header', 
             cellClassName: 'row-cell',
             headerAlign: 'center', 
@@ -188,8 +257,9 @@ const ProblemPage = () => {
             field: 'address', 
             headerName: 'Lokacja', 
             sortable: false, 
-            width: 197, 
-            headerClassName: 'column-header', 
+            width: 250, 
+            headerClassName: 'column-header',
+            renderCell: RenderCellExpand, 
             cellClassName: 'row-cell', 
             headerAlign: 'center', 
             align: 'center'
@@ -197,7 +267,7 @@ const ProblemPage = () => {
         { 
             field: 'distance', 
             headerName: 'Odległość', 
-            width: 140, 
+            width: 138, 
             headerClassName: 'column-header', 
             cellClassName: 'row-cell',
             headerAlign: 'center'
@@ -205,16 +275,18 @@ const ProblemPage = () => {
         { 
             field: 'category', 
             headerName: 'Kategoria', 
-            width: 177, 
-            headerClassName: 'column-header', 
+            width: 187, 
+            headerClassName: 'column-header',
+            renderCell: RenderCellExpand, 
             cellClassName: 'row-cell',
             headerAlign: 'center'
         },
         { 
             field: 'problem', 
             headerName: 'Problem',
-             width: 197, 
+            width: 247, 
             headerClassName: 'column-header', 
+            renderCell: RenderCellExpand,
             cellClassName: 'row-cell', 
             headerAlign: 'center'
         },
@@ -222,24 +294,13 @@ const ProblemPage = () => {
             field: 'description', 
             headerName: 'Opis', 
             sortable: false, 
-            width: 222, 
+            width: 204, 
             headerClassName: 'column-header', 
             cellClassName: 'row-cell', 
             renderCell: RenderCellExpand, 
             headerAlign: 'center'
         },
       ];
-      
-    // const Rows = [
-    //     {id: 1, date: "13.10.2021", address: "Reymonta, 17", category: "Woda", problem: "Brak ciepłej wody", description: "help me please!!!!!help me please!!!!!help me please!!!!!help me please!!!!!help me please!!!!!help me please!!!!!help me please!!!!!help me please!!!!!help me please!!!!!help me please!!!!!"},
-    //     {id: 2, date: "15.10.2021", address: "Reymonta, 17", category: "Woda", problem: "Brak ciepłej wody", description: "help me please!!!!!"},
-    //     {id: 3, date: "15.10.2021", address: "Reymonta, 17", category: "Woda", problem: "Brak ciepłej wody", description: "help me please!!!!!"},
-    //     {id: 4, date: "15.10.2021", address: "Reymonta, 17", category: "Woda", problem: "Brak ciepłej wody", description: "help me please!!!!!"},
-    //     {id: 5, date: "15.10.2021", address: "Reymonta, 17", category: "Woda", problem: "Brak ciepłej wody", description: "help me please!!!!!"},
-    //     {id: 6, date: "15.10.2021", address: "Reymonta, 17", category: "Woda", problem: "Brak ciepłej wody", description: "help me please!!!!!"},
-    //     {id: 7, date: "15.10.2021", address: "Reymonta, 17", category: "Woda", problem: "Brak ciepłej wody", description: "help me please!!!!!"},
-    //     {id: 8, date: "15.10.2021", address: "Reymonta, 17", category: "Woda", problem: "Brak ciepłej wody", description: "help me please!!!!!"}
-    // ];
 
     return (
         <div className="problem-page">
@@ -254,36 +315,22 @@ const ProblemPage = () => {
                 hideFooterSelectedRowCount
                 disableColumnMenu
             />}
-                {/* <DataGrid
-                    rows={problemRows}
-                    columns={problemColumns}
-                    pageSize={7}
-                    rowsPerPageOptions={[7]}
-                    onSelectionModelChange={handleSelectionModel}
-                    disableColumnSelector
-                    hideFooterSelectedRowCount
-                    disableColumnMenu
-                /> */}
+            {loading ? null :
+            <RadioButtons 
+                legend="Wyświetlenie nowych zgłoszeń:"
+                ariaLabel="request-time"
+                value={requestTime}
+                handle={handleRequestTime}
+                radioButtons={radioButtons}/> }
             <h2 className="problem-title">Lista zaakceptowanych problemów</h2>
             <AcceptedProblemList
-                acceptedRows={acceptedRows}
+                acceptedRows={acceptedProblems}
                 acceptedProblemColumns={acceptedProblemColumns}
                 pageSize={7}
                 disableColumnSelector
                 hideFooterSelectedRowCount
                 disableColumnMenu
             />
-            {/* <DataGrid
-                    rows={acceptedRows}
-                    columns={acceptedProblemColumns}
-                    pageSize={7}
-                    rowsPerPageOptions={[7]}
-                    onSelectionModelChange={handleSelectionModel}
-                    disableColumnSelector
-                    hideFooterSelectedRowCount
-                    disableColumnMenu
-                />*/}
-
             {modal}
         </div>
 
@@ -291,14 +338,3 @@ const ProblemPage = () => {
 }
 
 export default ProblemPage;
-
-// const esc = encodeURIComponent;
-// const url = 'maps.googleapis.com/maps/api/geocode/json?';
-// const params = { 
-//     key: "asdkfñlaskdGE",
-//     address: "evergreenavenue",
-//     city: "New York"
-// };
-// // this line takes the params object and builds the query string
-// const query = Object.keys(params).map(k => `${k}=${params[k]}`).join('&')
-// console.log(url+query)

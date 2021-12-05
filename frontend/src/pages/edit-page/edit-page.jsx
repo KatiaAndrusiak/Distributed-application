@@ -4,7 +4,7 @@ import {useSelector, useDispatch} from 'react-redux';
 import { logout } from '../../redux/user/user-action';
 
 
-import { getResource, putWithAuthorization, validateStringFields, validatePasswordField, validatePhoneField, validateAdressField, closeModal, createModalContent, setModalAndLoading } from './../../services/services';
+import { getResource, fetchWithAuthorization, validateStringFields, validatePasswordField, validatePhoneField, validateAdressField, closeModal, createModalContent, setModalAndLoading } from './../../services/services';
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
@@ -53,7 +53,8 @@ const EditPage = () => {
                 return { value: category, label: category }
             })
         })
-        getResource("http://localhost:8080/categories")
+        console.log(`${process.env.REACT_APP_API_ROOT_URL}/categories`)
+        getResource(`${process.env.REACT_APP_API_ROOT_URL}/categories`)
             .then(categories => setNewCategories(categories));
             // eslint-disable-next-line
     }, []);
@@ -147,7 +148,7 @@ const EditPage = () => {
         console.log(data)
 
         if (validateFields()) {
-            putWithAuthorization("http://localhost:8080/auth/edit", JSON.stringify(data), accessToken)
+            fetchWithAuthorization(`${process.env.REACT_APP_API_ROOT_URL}/auth/edit`, JSON.stringify(data), accessToken, "PUT")
             .then(res => {
                     console.log(res);
                     const {status} = res;

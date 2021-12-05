@@ -12,3 +12,10 @@ export const logout = () => {
         type: UserActionTypes.LOGOUT,
     }
 }
+
+export const updateProblems = (problem) => {
+    return {
+        type: UserActionTypes.UPDATE_PROBLEMS,
+        payload: problem
+    }
+}
