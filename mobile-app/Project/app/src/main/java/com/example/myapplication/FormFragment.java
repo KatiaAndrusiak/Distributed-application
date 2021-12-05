@@ -34,6 +34,7 @@ import org.json.JSONException;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 
 /**
@@ -46,8 +47,6 @@ public class FormFragment extends Fragment {
     private static final String PROBLEM_DATA = "param1";
     private static final String SELECTED_PROBLEM = "selectedProblem";
     TextView addressTextView;
-    String[] problems = new String[]{"Woda", "Ogień", "Zniszczenia", "Śmiecie i segregacja", "Komunikacja publiczna", "Sąsiad"};
-
     public FormFragment() {
         // Required empty public constructor
     }
@@ -125,7 +124,7 @@ public class FormFragment extends Fragment {
                 // TODO Auto-generated method stub
             }
         });
-        dynamicSpinner.setSelection(getPositionByValue(problems, selectedProblem));
+        dynamicSpinner.setSelection(getPositionByValue(DataManagement.categories, selectedProblem));
         dynamicSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view,
@@ -249,9 +248,9 @@ public class FormFragment extends Fragment {
         return view;
     }
 
-    public static int getPositionByValue(String[] strList, String value) {
-        for (int i = 0; i < strList.length; i++) {
-            if (strList[i].equals(value)) {
+    public static int getPositionByValue(List<String> strList, String value) {
+        for (int i = 0; i < strList.size(); i++) {
+            if (strList.get(i).equals(value)) {
                 return i;
             }
         }
