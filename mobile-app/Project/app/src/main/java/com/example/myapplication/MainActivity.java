@@ -14,11 +14,17 @@ import android.annotation.SuppressLint;
 import android.app.ActivityManager;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.Settings;
+import android.view.View;
+import android.widget.ProgressBar;
 
 
-
+import com.github.ybq.android.spinkit.sprite.Sprite;
+import com.github.ybq.android.spinkit.style.DoubleBounce;
 import com.sdsmdg.tastytoast.TastyToast;
 
 public class MainActivity extends AppCompatActivity {
@@ -91,7 +97,7 @@ public class MainActivity extends AppCompatActivity {
     public void showAlertDialogButtonClicked() {
         TastyToast.makeText(
                 getApplicationContext(),
-                "Please grant permissions !",
+                "Przydziel dostęp do położenia!",
                 TastyToast.LENGTH_LONG,
                 TastyToast.INFO
         );
@@ -103,11 +109,10 @@ public class MainActivity extends AppCompatActivity {
         builder.setPositiveButton("Przydziel dostęp", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                requestPermissions(
-                        new String[]{
-                                Manifest.permission.ACCESS_COARSE_LOCATION,
-                                Manifest.permission.ACCESS_FINE_LOCATION},
-                        1);
+                Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                Uri uri = Uri.fromParts("package", getPackageName(), null);
+                intent.setData(uri);
+                startActivity(intent);
             }
         });
         builder.setNegativeButton("Zakończ", new DialogInterface.OnClickListener() {

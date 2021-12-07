@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -16,10 +17,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.SearchView;
 import android.widget.TextView;
 
 import com.example.myapplication.entity.Problem;
+import com.github.ybq.android.spinkit.sprite.Sprite;
+import com.github.ybq.android.spinkit.style.CubeGrid;
+import com.github.ybq.android.spinkit.style.DoubleBounce;
+import com.github.ybq.android.spinkit.style.RotatingCircle;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -62,6 +69,12 @@ public class MapsFragment extends Fragment {
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_maps, container, false);
+        Button confirmButton = view.findViewById(R.id.confirm_button);
+        ProgressBar progressBar = (ProgressBar)view.findViewById(R.id.progress);
+        Sprite doubleBounce = new DoubleBounce();
+        doubleBounce.setColor(Color.parseColor("#bce6d1"));
+        progressBar.setIndeterminateDrawable(doubleBounce);
+        progressBar.setVisibility(View.VISIBLE);
 
 
         client = LocationServices.getFusedLocationProviderClient(getActivity());
@@ -83,6 +96,9 @@ public class MapsFragment extends Fragment {
 //                        );
 //                        googleMap.setLatLngBoundsForCameraTarget(adelaideBounds);
                             setAddressInfo(googleMap, addressText, currentLatLng);
+                            confirmButton.setEnabled(true);
+                            progressBar.setVisibility(View.GONE);
+
                         }
                     });
                     googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
@@ -130,7 +146,7 @@ public class MapsFragment extends Fragment {
                 }
             });
 
-            Button confirmButton = view.findViewById(R.id.confirm_button);
+
             confirmButton.setWidth((int) (getResources().getDisplayMetrics().widthPixels * 0.8));
             confirmButton.setHeight((int) (getResources().getDisplayMetrics().heightPixels * 0.12));
 
@@ -192,9 +208,10 @@ public class MapsFragment extends Fragment {
         problem.setLatitude(latLng.latitude);
         problem.setLongitude(latLng.longitude);
         googleMap.clear();
+
         googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
                 latLng, 15
-        ));
+        ),1000, null);
 
         googleMap.addMarker(markerOptions);
     }

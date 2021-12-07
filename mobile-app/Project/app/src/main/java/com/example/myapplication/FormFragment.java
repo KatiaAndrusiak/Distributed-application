@@ -158,7 +158,7 @@ public class FormFragment extends Fragment {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if(description.getText().toString().length() < 2) {
-                    sendButton.setEnabled(true);
+                    sendButton.setEnabled(false);
                     sendButton.setBackgroundColor(Color.parseColor("#b8b8b8"));
 
                 }
@@ -198,7 +198,7 @@ public class FormFragment extends Fragment {
                                                     50,
                                                     TastyToast.SUCCESS
                                             );
-                                            new CountDownTimer(1900, 1000) {
+                                            new CountDownTimer(2000, 1000) {
 
                                                 public void onTick(long millisUntilFinished) {
 

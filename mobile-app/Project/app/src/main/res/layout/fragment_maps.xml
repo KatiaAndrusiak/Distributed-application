@@ -17,11 +17,19 @@
 
         />
 
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
+        <ProgressBar
+            android:id="@+id/progress"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:progressTint="@color/white"
+
+            />
 
         <TextView
             android:id="@+id/addressText"
@@ -53,6 +61,7 @@
         android:layout_centerHorizontal="true"
         android:backgroundTint="@color/default_button"
         android:textSize="16sp"
+        android:enabled="false"
         android:textColor="@color/black"
         android:text="@string/potwierd_lokalizacj" />
 
