@@ -15,10 +15,13 @@
         <entry key="..\:/Thesis/Project/app/src/main/res/drawable/empty_dice.xml" value="0.1125" />
         <entry key="..\:/Thesis/Project/app/src/main/res/drawable/ic_arrow_down.xml" value="0.24375" />
         <entry key="..\:/Thesis/Project/app/src/main/res/drawable/ic_launcher_background.xml" value="0.1125" />
+        <entry key="..\:/Thesis/Project/app/src/main/res/drawable/ic_spinner_1s_200px.xml" value="0.2203125" />
+        <entry key="..\:/Thesis/Project/app/src/main/res/drawable/loading.xml" value="0.2203125" />
         <entry key="..\:/Thesis/Project/app/src/main/res/drawable/spinner_item.xml" value="0.1" />
         <entry key="..\:/Thesis/Project/app/src/main/res/layout/activity_main.xml" value="0.2037037037037037" />
         <entry key="..\:/Thesis/Project/app/src/main/res/layout/fragment_complete.xml" value="0.12318840579710146" />
         <entry key="..\:/Thesis/Project/app/src/main/res/layout/fragment_form.xml" value="0.25" />
+        <entry key="..\:/Thesis/Project/app/src/main/res/layout/fragment_loading.xml" value="0.17708333333333334" />
         <entry key="..\:/Thesis/Project/app/src/main/res/layout/fragment_maps.xml" value="0.2" />
         <entry key="..\:/Thesis/Project/app/src/main/res/layout/fragment_problems.xml" value="0.2786458333333333" />
         <entry key="..\:/Thesis/Project/app/src/main/res/layout/spinner_item.xml" value="0.12239583333333333" />

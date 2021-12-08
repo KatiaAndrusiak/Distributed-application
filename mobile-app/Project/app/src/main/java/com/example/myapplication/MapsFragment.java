@@ -2,13 +2,11 @@ package com.example.myapplication;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -19,11 +17,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.SearchView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.myapplication.entity.Problem;
+import com.github.ybq.android.spinkit.sprite.Sprite;
+import com.github.ybq.android.spinkit.style.CubeGrid;
+import com.github.ybq.android.spinkit.style.DoubleBounce;
+import com.github.ybq.android.spinkit.style.RotatingCircle;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -36,6 +39,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
+
 import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
@@ -45,8 +49,7 @@ public class MapsFragment extends Fragment {
     LatLng currentLatLng;
     private static final String ARG_PARAM1 = "param1";
 
-    private static Problem problem = new Problem();
-    private static String addressString;
+    private static final Problem problem = new Problem();
 
     public static MapsFragment newInstance() {
         MapsFragment fragment = new MapsFragment();
@@ -55,6 +58,10 @@ public class MapsFragment extends Fragment {
         fragment.setArguments(args);
         return fragment;
     }
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
 
 
     @Override
@@ -62,101 +69,98 @@ public class MapsFragment extends Fragment {
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_maps, container, false);
+        Button confirmButton = view.findViewById(R.id.confirm_button);
+        ProgressBar progressBar = (ProgressBar)view.findViewById(R.id.progress);
+        Sprite doubleBounce = new DoubleBounce();
+        doubleBounce.setColor(Color.parseColor("#bce6d1"));
+        progressBar.setIndeterminateDrawable(doubleBounce);
+        progressBar.setVisibility(View.VISIBLE);
+
 
         client = LocationServices.getFusedLocationProviderClient(getActivity());
 
-        if (ContextCompat.checkSelfPermission(getActivity(),
-                Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                && ContextCompat.checkSelfPermission(getActivity(),
-                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            requestPermissions(
-                    new String[]{
-                            Manifest.permission.ACCESS_COARSE_LOCATION,
-                            Manifest.permission.ACCESS_FINE_LOCATION},
-                    1);
-        } else {
             getCurrentLocation();
-        }
+            TextView addressText = view.findViewById(R.id.addressText);
+            SupportMapFragment mapFragment =
+                    (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.google_map);
 
-        TextView addressText = view.findViewById(R.id.addressText);
-//        addressText.setHeight((int)(getResources().getDisplayMetrics().heightPixels * 0.1));
-        SupportMapFragment mapFragment =
-                (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.google_map);
-
-        mapFragment.getMapAsync(new OnMapReadyCallback() {
-            @Override
-            public void onMapReady(@NonNull GoogleMap googleMap) {
-                googleMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
-                    @Override
-                    public void onMapLoaded() {
+            mapFragment.getMapAsync(new OnMapReadyCallback() {
+                @Override
+                public void onMapReady(@NonNull GoogleMap googleMap) {
+                    googleMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
+                        @Override
+                        public void onMapLoaded() {
 //                        LatLngBounds adelaideBounds = new LatLngBounds(
 //                                new LatLng(-35.0, 138.58), // SW bounds
 //                                new LatLng(-34.9, 138.61)  // NE bounds
 //                        );
 //                        googleMap.setLatLngBoundsForCameraTarget(adelaideBounds);
-                        setAddressInfo(googleMap, addressText, currentLatLng);
-                    }
-                });
-                googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
-                    @Override
-                    public void onMapClick(@NonNull LatLng latLng) {
-                        setAddressInfo(googleMap, addressText, latLng);
-                    }
-                });
-            }
-        });
-        SearchView  searchView = view.findViewById(R.id.sv_location);
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                String location = searchView.getQuery().toString();
-                List<Address> addressList = null;
-                if(location != null || !location.equals("")){
-                    Geocoder geocoder = new Geocoder(getActivity());
-                    try {
-                        addressList = geocoder.getFromLocationName(location,1);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    Address address = addressList.get(0);
-                    LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
-                    mapFragment.getMapAsync(new OnMapReadyCallback() {
-                        @Override
-                        public void onMapReady(@NonNull GoogleMap googleMap) {
-                            googleMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
-                                @Override
-                                public void onMapLoaded() {
-                                    setAddressInfo(googleMap, addressText, latLng);
-                                }
-                            });
+                            setAddressInfo(googleMap, addressText, currentLatLng);
+                            confirmButton.setEnabled(true);
+                            progressBar.setVisibility(View.GONE);
 
                         }
                     });
+                    googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+                        @Override
+                        public void onMapClick(@NonNull LatLng latLng) {
+                            setAddressInfo(googleMap, addressText, latLng);
+                        }
+                    });
                 }
-                return false;
-            }
+            });
+            SearchView searchView = view.findViewById(R.id.sv_location);
+            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                @Override
+                public boolean onQueryTextSubmit(String query) {
+                    String location = searchView.getQuery().toString();
+                    List<Address> addressList = null;
+                    if (location != null || !location.equals("")) {
+                        Geocoder geocoder = new Geocoder(getActivity());
+                        try {
+                            addressList = geocoder.getFromLocationName(location, 1);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        Address address = addressList.get(0);
+                        LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
+                        mapFragment.getMapAsync(new OnMapReadyCallback() {
+                            @Override
+                            public void onMapReady(@NonNull GoogleMap googleMap) {
+                                googleMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
+                                    @Override
+                                    public void onMapLoaded() {
+                                        setAddressInfo(googleMap, addressText, latLng);
+                                    }
+                                });
 
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                return false;
-            }
-        });
-
-        Button confirmButton = view.findViewById(R.id.confirm_button);
-        confirmButton.setWidth((int)(getResources().getDisplayMetrics().widthPixels * 0.8));
-        confirmButton.setHeight((int)(getResources().getDisplayMetrics().heightPixels * 0.12));
-
-        confirmButton.setOnClickListener(
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        getFragmentManager()
-                                .beginTransaction()
-                                .replace(R.id.frame_layout, new ProblemsFragment())
-                                .commit();
+                            }
+                        });
                     }
+                    return false;
                 }
-        );
+
+                @Override
+                public boolean onQueryTextChange(String newText) {
+                    return false;
+                }
+            });
+
+
+            confirmButton.setWidth((int) (getResources().getDisplayMetrics().widthPixels * 0.8));
+            confirmButton.setHeight((int) (getResources().getDisplayMetrics().heightPixels * 0.12));
+
+            confirmButton.setOnClickListener(
+                    new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            getFragmentManager()
+                                    .beginTransaction()
+                                    .replace(R.id.frame_layout, new ProblemsFragment())
+                                    .commit();
+                        }
+                    }
+            );
 
         return view;
     }
@@ -194,41 +198,20 @@ public class MapsFragment extends Fragment {
     }
 
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if (requestCode == 1 && (grantResults.length > 0) && (grantResults[0] + grantResults[1] == PackageManager.PERMISSION_GRANTED)) {
-            getCurrentLocation();
-            //  callNextActivity();
-//            startActivity(new Intent(getActivity(), getActivity().getClass()));
-        } else {
-            Toast.makeText(getActivity(), "Permission denied", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-//    public void callNextActivity()
-//    {
-//        Intent ss = new Intent(getActivity(), this.getClass());
-//        ss.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-//        ss.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//        ss.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-//        ss.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-//        startActivity(ss);
-//
-//    }
-
     private void setAddressInfo(GoogleMap googleMap, TextView addressText, LatLng latLng) {
         MarkerOptions markerOptions = new MarkerOptions();
         markerOptions.position(latLng);
-        addressString = getCompleteAddressString(latLng.latitude, latLng.longitude);
+        String addressString = getCompleteAddressString(latLng.latitude, latLng.longitude);
         markerOptions.title(addressString);
         addressText.setText(addressString);
         problem.setAddress(addressString);
         problem.setLatitude(latLng.latitude);
         problem.setLongitude(latLng.longitude);
         googleMap.clear();
+
         googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
                 latLng, 15
-        ));
+        ),1000, null);
 
         googleMap.addMarker(markerOptions);
     }
