@@ -9,12 +9,14 @@ import org.junit.runner.RunWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase
 import org.springframework.boot.test.autoconfigure.orm.jpa.{DataJpaTest, TestEntityManager}
+import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.junit4.SpringRunner
 
 
 @RunWith(classOf[SpringRunner])
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @DataJpaTest
+@ActiveProfiles(Array("test"))
 class SubscriberTest {
 
     @Autowired
@@ -26,13 +28,13 @@ class SubscriberTest {
     @Test
     def shouldReturnSubscriber(): Unit = {
         // given
-        val id: Int = 2
+        val id: Int = 1
 
         // when
         val subscriber: Subscriber = subscriberRepository.findById(id).orElseThrow(() => new NullPointerException)
 
         // then
-        Assert.assertEquals(2, subscriber.getId)
+        Assert.assertEquals(1, subscriber.getId)
         Assert.assertEquals("test", subscriber.getFname)
         Assert.assertEquals("test", subscriber.getLname)
     }

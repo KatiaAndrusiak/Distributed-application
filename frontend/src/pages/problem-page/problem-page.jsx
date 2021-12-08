@@ -42,6 +42,7 @@ const ProblemPage = () => {
 
     const [loading, setLoading] = useState(false);
     const [isModal, setIsModal] = useState(false);
+    const [isModalTemp, setIsModalTemp] = useState(false);
     const [modalError, setModalError] = useState(false);
     const [modalContent, setModalContent] = useState({});
 
@@ -53,8 +54,6 @@ const ProblemPage = () => {
 
 
     const handleSelectionModel = (ids) => {
-        // console.log("selekcja");
-        setModalError(false);
         const selectedIDs = new Set(ids);
         const selected = problemRows.filter((row) =>
           selectedIDs.has(row.id),
@@ -62,7 +61,7 @@ const ProblemPage = () => {
 
         if (selected.length !== 0) {
             setSelectedRows(selected);
-            // console.log("tutaj selekcja")
+            setModalError(false);
         }
     }
 
@@ -87,14 +86,12 @@ const ProblemPage = () => {
     }
 
     useEffect(() => {
-       // console.log("Fetching problems");
         fetchProblems();
         // eslint-disable-next-line
     }, [])
 
     useEffect(() => {
         const intervalId = setInterval(() => {
-           // console.log("Fetching problems timeout");
             fetchProblems();
         }, requestTime);
         return () => clearInterval(intervalId); //This is important
@@ -103,11 +100,14 @@ const ProblemPage = () => {
 
 
     useEffect(() => {
-        //console.log("akceptacja");
         const messages = [];
 
-        if (selectedRows.length !== 0 && isModal) {
-            setProblemRows(problemRows.filter(problem => problem.id !== selectedRows[0]['id']));
+        if (selectedRows.length !== 0 && isModalTemp) {
+            setTimeout(() => {
+                setProblemRows((prevRows) => prevRows.filter(problem => problem.id !== selectedRows[0]['id']));
+            })
+            
+            // setProblemRows(problemRows.filter(problem => problem.id !== selectedRows[0]['id']));
             const {address, category, date, description, problem} = selectedRows[0];
             const data = {
                 category,
@@ -127,30 +127,29 @@ const ProblemPage = () => {
                         const newArr = acceptedProblems.concat(selectedRows[0])
                         localStorage.setItem('acceptedRows', JSON.stringify(newArr))
                         setModalError(false);
+                        for (const key in selectedRows[0]) {
+                            if (key !== 'id') {
+                                 messages.push(selectedRows[0][key]);
+                            }
+                        }
+                        setModalContent(createModalContent("Problem został zaakceptowany", messages));
+                        setIsModal(true); 
+                        setIsModalTemp(false);
                     } else if (status === 400) {
                     //    setAcceptedRows(prevRows => [...prevRows])
                         setModalError(true);
+                        messages.push("Problem został zaakceptowany przez inego użytkownika, wybierz inny problem!");
+                        setModalContent(createModalContent("Info", messages));
+                        setIsModal(true);
+                        setIsModalTemp(false); 
                     }
                 })
         }
-
-        if(modalError) {
-            messages.push("Problem został zaakceptowany przez inego użytkownika, wybierz inny problem!");
-            setModalContent(createModalContent("Info", messages));
-        } else {
-            for (const key in selectedRows[0]) {
-                if (key !== 'id') {
-                    messages.push(selectedRows[0][key]);
-                }
-            }
-            setModalContent(createModalContent("Problem został zaakceptowany", messages));
-        } 
-            
         // eslint-disable-next-line
-    }, [selectedRows, modalError]);
+    }, [selectedRows]);
 
     const acceptProblem = () => {
-        setIsModal(true);  
+        setIsModalTemp(true);
     }
 
     const handleRequestTime = (event) => {
@@ -284,7 +283,7 @@ const ProblemPage = () => {
         { 
             field: 'problem', 
             headerName: 'Problem',
-            width: 247, 
+            width: 251, 
             headerClassName: 'column-header', 
             renderCell: RenderCellExpand,
             cellClassName: 'row-cell', 
@@ -294,7 +293,7 @@ const ProblemPage = () => {
             field: 'description', 
             headerName: 'Opis', 
             sortable: false, 
-            width: 204, 
+            width: 200, 
             headerClassName: 'column-header', 
             cellClassName: 'row-cell', 
             renderCell: RenderCellExpand, 

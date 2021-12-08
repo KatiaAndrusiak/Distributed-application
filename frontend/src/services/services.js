@@ -14,7 +14,6 @@ export const getResource = async (url) => {
     const res = await fetch(url);
 
     if (!res.ok) {
-        console.log(res)
         throw prompt(new Error(`Could not fetch ${url}, status: ${res.status}`));
     }
 
@@ -31,7 +30,6 @@ export const getWithAuthorization = async (url, clientToken) => {
     });
 
     if (!res.ok) {
-        console.log(res)
         throw prompt(new Error(`Could not fetch ${url}, status: ${res.status}`));
     }
 

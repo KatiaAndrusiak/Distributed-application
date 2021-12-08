@@ -7,12 +7,14 @@ import org.junit.runner.RunWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase
 import org.springframework.boot.test.autoconfigure.orm.jpa.{DataJpaTest, TestEntityManager}
+import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.junit4.SpringRunner
 
 
 @RunWith(classOf[SpringRunner])
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @DataJpaTest
+@ActiveProfiles(Array("test"))
 class ProblemTest {
 
     @Autowired
@@ -28,7 +30,6 @@ class ProblemTest {
 
         //when
         val problem: Problem = problemRepository.findById(id).orElseThrow(() => new NullPointerException)
-        println(problemRepository.findAll)
 
         //then
         Assert.assertEquals(1, problem.getId)

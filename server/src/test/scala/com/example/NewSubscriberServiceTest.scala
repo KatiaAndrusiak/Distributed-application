@@ -2,21 +2,18 @@ package com.example
 
 import com.example.exception.{EmailAlreadyExistException, NoSuchAddressException, NoSuchStreetException}
 import com.example.model.NewSubscriber
-import com.example.repository.{CategoryRepository, RoleRepository, SubscriberCategoryRepository, SubscriberDataRepository, SubscriberRepository}
-import com.example.service.{NewSubscriberService, ProblemService}
+import com.example.service.NewSubscriberService
 import org.junit.{Assert, Test}
 import org.junit.runner.RunWith
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase
-import org.springframework.boot.test.autoconfigure.orm.jpa.{DataJpaTest, TestEntityManager}
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.boot.test.mock.mockito.SpyBean
-import org.springframework.security.crypto.password.PasswordEncoder
+import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.junit4.SpringRunner
 
 
 @SpringBootTest
 @RunWith(classOf[SpringRunner])
+@ActiveProfiles(Array("test"))
 class NewSubscriberServiceTest {
 
     @Autowired

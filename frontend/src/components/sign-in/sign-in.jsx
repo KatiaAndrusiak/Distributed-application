@@ -62,7 +62,6 @@ const SignIn = () => {
         if (validateFields()) {
             postData(`${process.env.REACT_APP_API_ROOT_URL}/auth/signin`, JSON.stringify(data))
             .then(res => {
-                console.log(res);
                 const {status} = res;
                 if (status === 401) {
                     const messages = [];
@@ -71,9 +70,7 @@ const SignIn = () => {
 
                     setModalAndLoading(true, true, false, setIsModal, setModalError, setLoading);
                 } else {
-                    console.log(!user && !isLogged)
                     if (!user && !isLogged) {
-                        console.log("tutaj")
                         dispatch(setUser(res))
                         localStorage.setItem("user", JSON.stringify(res));
                     }
@@ -123,6 +120,7 @@ const SignIn = () => {
                     label="Hasło"
                     value={password}
                     required
+                    autoComplete="on"
                 />
                 {lastElement}
             </form>

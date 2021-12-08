@@ -1,6 +1,6 @@
 package com.example.service
 
-import com.example.exception.{EmptyFieldException, InjectionException, NoSuchProblemException, ProblemWasAcceptByAnotherSubscriberException}
+import com.example.exception.{EmptyFieldException, InjectionException, NoSuchCategoryException, NoSuchProblemException, ProblemWasAcceptByAnotherSubscriberException}
 
 import scala.collection.JavaConverters._
 import com.example.model.Problem
@@ -14,21 +14,11 @@ import org.springframework.stereotype.Service
 class ProblemService(@Autowired problemRepository: ProblemRepository,
                      @Autowired categoryRepository: CategoryRepository) {
 
-    var problems = List(
-            Problem("Woda", "Brak ciepłej wody", "help me please2!!!!!", "03.10.2021", "Reymonta, 17", 50.06588, 19.915247),
-            Problem("Woda", "Brak ciepłej wody", "help me please3!!!!!", "23.10.2021", "Reymonta, 17", 50.06588, 19.915247),
-            Problem("Woda", "Brak ciepłej wody", "help me please1!!!!!", "13.10.2021", "Reymonta, 17", 50.06588, 19.915247),
-            Problem("Woda", "Brak ciepłej wody", "help me please4!!!!!", "12.10.2021", "Reymonta, 17", 50.06588, 19.915247),
-            Problem("Woda", "Brak ciepłej wody", "help me please5!!!!!", "12.11.2021", "Reymonta, 17", 50.06588, 19.915247),
-            Problem("Woda", "Brak ciepłej wody", "help me please6!!!!!", "11.11.2021", "Reymonta, 17", 50.06588, 19.915247),
-            Problem("Woda", "Brak ciepłej wody", "help me please7!!!!!", "17.10.2021", "Reymonta, 17", 50.06588, 19.915247),
-            Problem("Woda", "Brak ciepłej wody", "help me please8!!!!!", "24.10.2021", "Reymonta, 17", 50.06588, 19.915247)
-            )
+    var problems:List[Problem] = List()
 
     def getAllProblems(categories: String): java.util.List[Problem] = {
         val splitedCategories: Array[String] = categories.split(",")
         val filtredProblems = problems.filter(p => splitedCategories.contains(p.getCategory))
-        println(filtredProblems)
         filtredProblems.toList.asJava
     }
 
@@ -37,7 +27,6 @@ class ProblemService(@Autowired problemRepository: ProblemRepository,
             throw ProblemWasAcceptByAnotherSubscriberException("Problem został zaakceptowany przez inego użytkownika, wybierz inny problem!")
         }
         problems = problems.filter(p => !checkIfProblemExist(p, problem))
-        println(problems)
         BuildOkResponse.createOkResponse
     }
 
@@ -55,12 +44,10 @@ class ProblemService(@Autowired problemRepository: ProblemRepository,
         if (!problemRepository.existsByName(problem.getProblem)) {
             throw NoSuchProblemException("Problem nie istnieje!")
         }
-
         if (!categoryRepository.existsByName(problem.getCategory)) {
-            throw NoSuchProblemException("Kategoria nie istnieje!")
+            throw NoSuchCategoryException("Kategoria nie istnieje!")
         }
         problems = problem :: problems
-        deleteProblemIfAccepted(problem)
     }
 
     def checkIfStringIsBlank(value: String): Boolean = {

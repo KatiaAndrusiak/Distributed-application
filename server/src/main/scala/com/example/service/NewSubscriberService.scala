@@ -40,9 +40,6 @@ class NewSubscriberService(@Autowired subscriberRepository: SubscriberRepository
 
         val lat = (jsonObject \ "results" \ "geometry" \ "location" \ "lat")(0).extract[Double]
         val lng = (jsonObject \ "results" \ "geometry" \ "location" \ "lng")(0).extract[Double]
-//        println(lat)
-//        println(lng)
-        println(newSubscriber)
         Map("latitude" -> lat, "longitude" -> lng)
     }
 
@@ -146,8 +143,6 @@ class NewSubscriberService(@Autowired subscriberRepository: SubscriberRepository
             .params(Seq("address" -> fullAddress, "key" -> apiKEy))
             .asString
 
-         println(response.body)
-
         parse(response.body)
     }
 
@@ -162,8 +157,6 @@ class NewSubscriberService(@Autowired subscriberRepository: SubscriberRepository
             throw  NoSuchAddressException("Nieprawidłowe dane: miasto oraz adres, proszę sprawdzić dane i spróbować jeszcze raz!")
         }
         val formattedAddress = (jsonObject \ "results" \ "formatted_address")(0).extract[String]
-//        println(results.children.length)
-//        println(formattedAddress)
         if (formattedAddress.split(",").length < 3) {
             throw  NoSuchStreetException("Nieprawidłowy adres, proszę sprawdzić dane i spróbować jeszcze raz!")
         }

@@ -6,8 +6,6 @@ const Modal = ({modalContent, close, modalError}) => {
 
     const {header, messages} = modalContent;
     useEffect(() => {
-        console.log(modalContent)
-        // console.log("render modal")
         const closeEsc = (e) => {
             if(e.keyCode === 27){
                 close();
@@ -19,7 +17,6 @@ const Modal = ({modalContent, close, modalError}) => {
     },[])
 
     useEffect(() => {
-        // console.log("render modal with timeout")
           let modalTimer = setTimeout(close, 7000);
           return () => {
             clearTimeout(modalTimer);

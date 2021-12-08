@@ -1,8 +1,5 @@
 package com.example.entity
 
-import org.springframework.format.annotation.DateTimeFormat
-
-import java.time.LocalDate
 import javax.persistence.{Column, Entity, Id, JoinColumn, MapsId, OneToOne, Table}
 import javax.validation.constraints.{NotBlank, NotNull, Pattern, Size}
 import scala.beans.BeanProperty

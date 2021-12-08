@@ -8,6 +8,7 @@ import SignInPage from '../../pages/sign-in-page/sign-in-page';
 import ProblemPage from '../../pages/problem-page/problem-page';
 import Profile from '../../pages/profile-page/profile-page';
 import EditPage from '../../pages/edit-page/edit-page';
+import Page404 from '../../pages/page-404/page-404';
 import Header from '../header/header';
 
 
@@ -28,14 +29,13 @@ function App() {
 					<Route exact path='/signup' render={()=> isLogged ?  (<Redirect to='/'/>) : (<SignUpPage/>)}/> 
 					<Route exact path='/signin' render={()=> isLogged ?  (<Redirect to='/'/>) : (<SignInPage/>)}/>
 					<Route exact path='/problems' render={()=> !isLogged ?  (<Redirect to='/'/>) : (<ProblemPage/>)}/>
+					<Route path="*">
+						<Page404/>
+					</Route>
 				</Switch>
-
 			</div>
-			
-			
 		</div>
 		</Router>
-
 	);
 }
 

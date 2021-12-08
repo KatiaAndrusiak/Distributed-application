@@ -1,4 +1,5 @@
 import './accepted-problem-list.scss';
+import Stack from '@mui/material/Stack';
 import { DataGrid } from '@mui/x-data-grid';
 
 const AcceptedProblemList = (props) => {
@@ -12,6 +13,13 @@ const AcceptedProblemList = (props) => {
                 pageSize={pageSize}
                 rowsPerPageOptions={[pageSize]}
                 {...otherProps}
+                components={{
+                    NoRowsOverlay: () => (
+                      <Stack height="100%" alignItems="center" justifyContent="center">
+                        Brak zaakceptowanych problemów
+                      </Stack>
+                    )
+                  }}
             />
         </div>
     )

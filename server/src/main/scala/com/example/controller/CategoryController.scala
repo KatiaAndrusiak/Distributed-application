@@ -3,7 +3,7 @@ package com.example.controller
 import com.example.entity.Category
 import com.example.repository.CategoryRepository
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.web.bind.annotation.{CrossOrigin, GetMapping, RequestMapping, ResponseBody, RestController}
+import org.springframework.web.bind.annotation.{CrossOrigin, GetMapping, RestController}
 
 
 @RestController

@@ -53,7 +53,6 @@ const EditPage = () => {
                 return { value: category, label: category }
             })
         })
-        console.log(`${process.env.REACT_APP_API_ROOT_URL}/categories`)
         getResource(`${process.env.REACT_APP_API_ROOT_URL}/categories`)
             .then(categories => setNewCategories(categories));
             // eslint-disable-next-line
@@ -91,7 +90,6 @@ const EditPage = () => {
     }
 
     const handleCategory = (selectedOptions) => {
-        console.log(selectedOptions)
         setNewCategory(selectedOptions);
     }
 
@@ -129,7 +127,6 @@ const EditPage = () => {
         event.preventDefault();
 
         const transformCategory = newCategory.map(({value}) => value)
-        console.log(transformCategory)
 
         const data = {
             firstName,
@@ -145,12 +142,9 @@ const EditPage = () => {
             role: ["user"]
         }
 
-        console.log(data)
-
         if (validateFields()) {
             fetchWithAuthorization(`${process.env.REACT_APP_API_ROOT_URL}/auth/edit`, JSON.stringify(data), accessToken, "PUT")
             .then(res => {
-                    console.log(res);
                     const {status} = res;
                     if (status === 200) {
                         setOkStatus(200);
@@ -183,7 +177,6 @@ const EditPage = () => {
 
                         setModalAndLoading(true, true, false, setIsModal, setModalError, setLoading);
                     }
-                    console.log(res)
             })
 
         }

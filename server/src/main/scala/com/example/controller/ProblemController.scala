@@ -8,11 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.{HttpStatus, MediaType, ResponseEntity}
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.{CrossOrigin, ExceptionHandler, PostMapping, RequestBody, RequestMapping, RequestParam, ResponseBody, RestController}
-import org.springframework.web.bind.annotation.RequestMethod.{DELETE, GET, values}
-
-import javax.validation.Valid
-
-
+import org.springframework.web.bind.annotation.RequestMethod.{DELETE, GET}
 
 @RestController
 @CrossOrigin
@@ -23,14 +19,12 @@ class ProblemController(@Autowired val problemService: ProblemService) {
     @ResponseBody
     @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
     def getAllProblems(@RequestParam("category") category: String): java.util.List[Problem] = {
-        println(category)
         problemService.getAllProblems(category)
     }
 
     @RequestMapping(value = Array("/problems"), method = Array(DELETE))
     @ResponseBody
-    //@PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
-    @PreAuthorize("permitAll()")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
     def deleteProblem(@RequestBody problem: Problem): ResponseEntity[_] = {
         problemService.deleteProblemIfAccepted(problem)
     }
@@ -38,7 +32,6 @@ class ProblemController(@Autowired val problemService: ProblemService) {
     @PostMapping(path = Array("/problems"), produces = Array(MediaType.APPLICATION_JSON_VALUE))
     @PreAuthorize("permitAll()")
     def addProblem(@RequestBody problem: Problem) : ResponseEntity[_] = {
-        println(problem)
         problemService.addProblem(problem)
         BuildOkResponse.createOkResponse
     }

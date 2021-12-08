@@ -141,7 +141,6 @@ const SignUp = () => {
         setLoading(true);
 
         const transformCategory = category.map(({value}) => value)
-        console.log(transformCategory)
 
         const data = {
             firstName,
@@ -156,12 +155,9 @@ const SignUp = () => {
             role: ["user"]
         }
 
-        console.log(data)
-
         if (validateFields()) {
             postData(`${process.env.REACT_APP_API_ROOT_URL}/auth/signup`, JSON.stringify(data))
             .then(res => {
-                console.log(res);
                 const {status} = res;
                 if (status === 200) {
                     const messages = [];
@@ -188,7 +184,6 @@ const SignUp = () => {
 
                     setModalAndLoading(true, true, false, setIsModal, setModalError, setLoading);
                 }
-                console.log(res)
             })
             .catch(e => console.log(e));
         } else {
