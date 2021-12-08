@@ -10,5 +10,7 @@
     <string name="zakoncz">Zakończ</string>
     <string name="nowe_zgloszenie">Nowe zgłoszenie</string>
     <string name="category_pick">WYBIERZ KATEGORIĘ ODPOWIEDNIĄ DLA TWOJEGO PROBLEMU</string>
+    <string name="lokalizacja">Lokalizacja:</string>
+    <string name="kategoria">Kategoria</string>
 
 </resources>

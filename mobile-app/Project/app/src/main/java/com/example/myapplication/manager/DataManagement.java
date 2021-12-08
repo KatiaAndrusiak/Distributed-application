@@ -11,20 +11,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.SocketTimeoutException;
 import java.net.URL;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -43,7 +34,7 @@ public class DataManagement {
     }
 
     public static JSONArray getJSONObjectFromURL(String urlString) throws IOException, JSONException {
-        HttpURLConnection urlConnection = null;
+        HttpURLConnection urlConnection;
         URL url = new URL(urlString);
         urlConnection = (HttpURLConnection) url.openConnection();
         urlConnection.setRequestMethod("GET");
@@ -57,7 +48,7 @@ public class DataManagement {
 
         String line;
         while ((line = br.readLine()) != null) {
-            sb.append(line + "\n");
+            sb.append(line).append("\n");
         }
         br.close();
 
@@ -117,27 +108,5 @@ public class DataManagement {
         );
         return categories;
     }
-
-//    public static HashMap<String, List<String>> parseJsonToProblemsByCategory(JSONArray arr, List<String> categories){
-//       problemsByCategories = new HashMap<>(categories.size());
-//        categories.forEach(
-//                c -> {
-//                    List<String> problems = new ArrayList<>();
-//                    for (int i = 0; i < arr.length(); i++) {
-//                        try {
-//                            JSONObject obj = ((JSONObject)arr.get(i));
-//                            if(c.equals(obj.getJSONObject("category").getString("name"))){
-//                                problems.add(obj.getString("name"));
-//                            }
-//                        } catch (JSONException e) {
-//                            e.printStackTrace();
-//                        }
-//                    }
-//                    problemsByCategories.put(c, problems);
-//                }
-//        );
-//        return  problemsByCategories;
-//    }
-
 
 }

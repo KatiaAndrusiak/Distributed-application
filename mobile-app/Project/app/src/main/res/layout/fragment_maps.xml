@@ -31,13 +31,15 @@
 
             />
 
+
         <TextView
             android:id="@+id/addressText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:autoSizeTextType="uniform"
             android:background="@color/default_background"
-            android:padding="10sp"
+
+            android:padding="15sp"
             android:text=""
             android:textAlignment="center"
             android:textColor="@color/black"
@@ -47,8 +49,11 @@
             android:id="@+id/sv_location"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:autoSizeTextType="uniform"
             android:iconifiedByDefault="false"
-            android:queryHint="Search..."
+            android:layout_margin="5dp"
+            android:queryHint="Wyszukaj..."
+            android:background="@drawable/bg_round"
             >
         </SearchView>
     </LinearLayout>

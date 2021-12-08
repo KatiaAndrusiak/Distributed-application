@@ -36,7 +36,6 @@ import java.util.List;
  */
 public class ProblemsFragment extends Fragment {
     List<String> problems = new ArrayList<>();
-//    List<String> problems = new ArrayList<>(Arrays.asList("Woda", "Ogień", "Zniszczenia", "Śmiecie i segregacja", "Komunikacja publiczna", "Sąsiad"));
     private static final String ARG_PARAM1 = "selectedProblem";
 
     private static String selectedProblem;
@@ -104,7 +103,7 @@ public class ProblemsFragment extends Fragment {
 
         int mar = (((getResources().getDisplayMetrics().heightPixels)/(problems.size()+2))* 20)/100;
         int width = (int)(getResources().getDisplayMetrics().widthPixels * 0.9);
-        int height = (int)((getResources().getDisplayMetrics().heightPixels * 0.7) / problems.size() + 1)-mar;
+        int height = (int)((getResources().getDisplayMetrics().heightPixels * 0.75) / problems.size() + 1)-mar;
         TextView textView = view.findViewById(R.id.select_text);
         for( String button: problems){
             LinearLayout ll = view.findViewById(R.id.problems_layout);

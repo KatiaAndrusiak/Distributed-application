@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:textSize="18sp"
         android:textColor="@color/black"
-        android:paddingTop="15dp"
+        android:paddingTop="25dp"
         android:paddingBottom="15dp"
         android:fontFamily="sans-serif"
         android:textFontWeight="500"
