@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/default_background"
-    tools:context=".ProblemsFragment">
+    tools:context="com.example.jabeda.fragments.ProblemsFragment">
 
     <TextView
         android:id="@+id/select_text"
