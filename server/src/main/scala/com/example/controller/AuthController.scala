@@ -6,7 +6,7 @@ import com.example.payload.response.{BuildOkResponse, JwtResponse}
 import com.example.repository.{RoleRepository, SubscriberDataRepository, SubscriberRepository}
 import com.example.security.jwt.JwtUtils
 import com.example.security.services.UserDetailsImpl
-import com.example.service.{NewSubscriberService, SignInService}
+import com.example.service.NewSubscriberService
 import org.json4s.NoTypeHints
 import org.json4s.jackson.Serialization
 import org.springframework.beans.factory.annotation.Autowired
@@ -29,8 +29,6 @@ class AuthController {
 
     @Autowired val newSubscriberService: NewSubscriberService = null
 
-    @Autowired val signInService: SignInService = null
-
     @Autowired val userRepository: SubscriberDataRepository = null
 
     @Autowired val subscriberRepository: SubscriberRepository = null
@@ -47,7 +45,7 @@ class AuthController {
         SecurityContextHolder.getContext.setAuthentication(authentication)
         val jwt = jwtUtils.generateJwtToken(authentication)
         val userDetails = authentication.getPrincipal.asInstanceOf[UserDetailsImpl]
-        val userCategories = signInService.getUserCategory(userDetails.getSubscriber)
+        val userCategories = newSubscriberService.getUserCategory(userDetails.getSubscriber)
         ResponseEntity.ok(new JwtResponse(
             jwt,
             userDetails.getId,

@@ -1,7 +1,9 @@
 package com.example
 
+import com.example.entity.Subscriber
 import com.example.exception.{EmailAlreadyExistException, NoSuchAddressException, NoSuchStreetException}
 import com.example.model.NewSubscriber
+import com.example.repository.SubscriberRepository
 import com.example.service.NewSubscriberService
 import org.junit.{Assert, Test}
 import org.junit.runner.RunWith
@@ -18,6 +20,9 @@ class NewSubscriberServiceTest {
 
     @Autowired
     val newSubscriberService: NewSubscriberService = null
+
+    @Autowired
+    val subscriberRepository: SubscriberRepository = null
 
 
     @Test
@@ -81,6 +86,20 @@ class NewSubscriberServiceTest {
 
         //then
         Assert.assertEquals(true, isMailExist)
+    }
+
+    @Test
+    def shouldReturnUserCategories: Unit = {
+        // given
+        val subscriberId: Int = 6
+        val subscriber: Subscriber = subscriberRepository.findById(subscriberId).orElseThrow(() => new NullPointerException)
+
+        //when
+        val subscriberCategories = newSubscriberService.getUserCategory(subscriber)
+
+        //then
+        Assert.assertEquals("Woda", subscriberCategories.get(0))
+        Assert.assertEquals("Zniszczenia", subscriberCategories.get(1))
     }
 
 }

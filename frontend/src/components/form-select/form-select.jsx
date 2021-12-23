@@ -21,7 +21,6 @@ const FormSelect = (props) => {
             }
 
         }
-        // eslint-disable-next-line
     }, [error])
     
    

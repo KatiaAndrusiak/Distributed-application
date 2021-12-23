@@ -143,7 +143,16 @@ class NewSubscriberService(@Autowired subscriberRepository: SubscriberRepository
             .params(Seq("address" -> fullAddress, "key" -> apiKEy))
             .asString
 
+        println(response.body)
         parse(response.body)
+    }
+
+    def getUserCategory(subscriber: Subscriber): util.List[String] = {
+        val userCategories = new util.ArrayList[String]
+        subscriberCategoryRepository.findAllBySubscriber(subscriber).forEach(category => {
+            userCategories.add(category.getCategory.getName)
+        })
+        userCategories
     }
 
     def checkIfEmailExistInDataBase(email: String): Boolean = {
