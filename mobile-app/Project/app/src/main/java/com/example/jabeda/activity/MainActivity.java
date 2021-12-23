@@ -24,15 +24,14 @@ import com.example.jabeda.R;
 import com.sdsmdg.tastytoast.TastyToast;
 
 public class MainActivity extends AppCompatActivity {
-    ActivityResultLauncher<String[]> locationPermissionRequest;
-
 
     @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         setContentView(R.layout.activity_main);
+
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         getSupportActionBar().hide();
 
         if (ContextCompat.checkSelfPermission(this,
@@ -101,7 +100,6 @@ public class MainActivity extends AppCompatActivity {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Dostęp do położenia");
         builder.setMessage("Nie możesz kontynuować bez dostępu");
-        // add the buttons
         builder.setPositiveButton("Przydziel dostęp", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -117,7 +115,6 @@ public class MainActivity extends AppCompatActivity {
                 ((ActivityManager) getSystemService(ACTIVITY_SERVICE)).clearApplicationUserData();
             }
         });
-        // create and show the alert dialog
         AlertDialog dialog = builder.create();
         dialog.show();
     }
