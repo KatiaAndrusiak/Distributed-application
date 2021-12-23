@@ -13,7 +13,6 @@ const Modal = ({modalContent, close, modalError}) => {
         }
         window.addEventListener('keydown', closeEsc)
         return () => window.removeEventListener('keydown', closeEsc)
-      // eslint-disable-next-line
     },[])
 
     useEffect(() => {
@@ -21,7 +20,6 @@ const Modal = ({modalContent, close, modalError}) => {
           return () => {
             clearTimeout(modalTimer);
           };
-          // eslint-disable-next-line
     }, []);
     
 

@@ -29,7 +29,6 @@ const EditPage = () => {
     const [newPhone, setNewPhone] = useState(phone);
     const [oldPassword, setOldPassword] = useState('');
     const [newPassword, setNewPassword] = useState('');
-    // eslint-disable-next-line
     const [country, setCountry] = useState('Polska');
     const [newCity, setNewCity] = useState(city);
     const [newAddress, setNewAddress] = useState(`${street}, ${buildingNumber}`);
@@ -55,14 +54,12 @@ const EditPage = () => {
         })
         getResource(`${process.env.REACT_APP_API_ROOT_URL}/categories`)
             .then(categories => setNewCategories(categories));
-            // eslint-disable-next-line
     }, []);
 
     useEffect(() => {
         if (!isModal && !modalError && okStatus === 200) {
             dispatch(logout());
         }
-        // eslint-disable-next-line
     }, [isModal, modalError])
 
     

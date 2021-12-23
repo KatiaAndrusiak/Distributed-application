@@ -49,7 +49,6 @@ const ProblemPage = () => {
 
     const [selectedRows, setSelectedRows] = useState([]);
     const [problemRows, setProblemRows] = useState([]);
-    //const [acceptedRows, setAcceptedRows] = useState([]);
     const [requestTime, setRequestTime] = useState(60000);
 
 
@@ -87,7 +86,6 @@ const ProblemPage = () => {
 
     useEffect(() => {
         fetchProblems();
-        // eslint-disable-next-line
     }, [])
 
     useEffect(() => {
@@ -95,7 +93,6 @@ const ProblemPage = () => {
             fetchProblems();
         }, requestTime);
         return () => clearInterval(intervalId); //This is important
-        // eslint-disable-next-line
     }, [problemRows])
 
 
@@ -122,7 +119,6 @@ const ProblemPage = () => {
                 .then(res => {
                     const {status} = res;
                     if (status === 200) {
-                        //setAcceptedRows(prevRows => [...prevRows, selectedRows[0]])
                         dispatch(updateProblems(selectedRows[0]))
                         const newArr = acceptedProblems.concat(selectedRows[0])
                         localStorage.setItem('acceptedRows', JSON.stringify(newArr))
@@ -136,7 +132,6 @@ const ProblemPage = () => {
                         setIsModal(true); 
                         setIsModalTemp(false);
                     } else if (status === 400) {
-                    //    setAcceptedRows(prevRows => [...prevRows])
                         setModalError(true);
                         messages.push("Problem został zaakceptowany przez inego użytkownika, wybierz inny problem!");
                         setModalContent(createModalContent("Info", messages));
@@ -145,7 +140,6 @@ const ProblemPage = () => {
                     }
                 })
         }
-        // eslint-disable-next-line
     }, [selectedRows]);
 
     const acceptProblem = () => {
