@@ -1,14 +1,12 @@
 package com.example.jabeda.fragments;
 
-import static java.net.HttpURLConnection.HTTP_OK;
-
 import android.graphics.Color;
 import android.os.Bundle;
-import android.os.CountDownTimer;
 
 
 import androidx.fragment.app.Fragment;
 
+import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -21,18 +19,20 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.example.jabeda.data.DiModule;
 import com.example.jabeda.entity.Problem;
 import com.example.jabeda.R;
-import com.example.jabeda.manager.DataManagement;
+import com.example.jabeda.data.ProblemRepository;
 import com.sdsmdg.tastytoast.TastyToast;
-
-import org.apache.http.client.HttpResponseException;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 
 /**
@@ -42,7 +42,11 @@ public class FormFragment extends Fragment {
 
     private static final String PROBLEM_DATA = "param1";
     private static final String SELECTED_PROBLEM = "selectedProblem";
+
+    private final ProblemRepository problemRepository = DiModule.getRepository();
     TextView addressTextView;
+
+
     public FormFragment() {
         // Required empty public constructor
     }
@@ -68,23 +72,24 @@ public class FormFragment extends Fragment {
         changeBtn.setOnClickListener(
                 v -> {
                     Fragment fragment = new MapsFragment();
-                    getFragmentManager()
+                    getParentFragmentManager()
                             .beginTransaction()
                             .replace(R.id.frame_layout, fragment)
                             .commit();
                 }
         );
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(
-                getActivity(), R.layout.spinner_item, DataManagement.categories);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(
+                getActivity(), R.layout.spinner_item, problemRepository.getCategories());
         adapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
 
         dynamicSpinner.setAdapter(adapter);
         String selectedProblem = ProblemsFragment.newInstance().getArguments().getString(SELECTED_PROBLEM);
         Spinner dynamicSpinner2 = view.findViewById(R.id.problem_spinner);
 
-        ArrayAdapter<String> adapter2 = new ArrayAdapter<String>(
-                getActivity(), R.layout.spinner_item, DataManagement.problemsByCategories.get(selectedProblem));
+        List<String> problemsForCategory = problemRepository.getProblemsFor(selectedProblem);
+        ArrayAdapter<String> adapter2 = new ArrayAdapter<>(
+                getActivity(), R.layout.spinner_item, problemsForCategory);
         adapter2.setDropDownViewResource(R.layout.spinner_dropdown_item);
 
         dynamicSpinner2.setAdapter(adapter2);
@@ -103,7 +108,7 @@ public class FormFragment extends Fragment {
                 // TODO Auto-generated method stub
             }
         });
-        dynamicSpinner.setSelection(getPositionByValue(DataManagement.categories, selectedProblem));
+        dynamicSpinner.setSelection(getPositionByValue(problemRepository.getCategories(), selectedProblem));
         dynamicSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view,
@@ -111,8 +116,8 @@ public class FormFragment extends Fragment {
                 Log.v("item", (String) parent.getItemAtPosition(position));
                 String selItem = (String) parent.getSelectedItem();
                 problem.setCategory(selItem);
-                ArrayAdapter<String> adapter3 = new ArrayAdapter<String>(
-                        getActivity(), R.layout.spinner_item, DataManagement.problemsByCategories.get(selItem));
+                ArrayAdapter<String> adapter3 = new ArrayAdapter<>(
+                        getActivity(), R.layout.spinner_item, problemRepository.getProblemsFor(selItem));
                 adapter3.setDropDownViewResource(R.layout.spinner_dropdown_item);
 
                 dynamicSpinner2.setAdapter(adapter3);
@@ -159,74 +164,56 @@ public class FormFragment extends Fragment {
                     problem.setDescription(String.valueOf(description.getText()));
                     problem.setDate(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
                     System.out.println(problem.toString());
-                    Thread thread = new Thread(new Runnable() {
-                        int output = 0;
 
+                    problemRepository.sendProblem(problem, new Callback<Void>() {
                         @Override
-                        public void run() {
-                            try {
-                                output = DataManagement.sendProblemPostRequest(DataManagement.URL + DataManagement.REQUEST_PROBLEMS_PATH, problem);
-                                if (output == HTTP_OK) {
-                                    getActivity().runOnUiThread(new Runnable() {
-                                        public void run() {
-                                            sendButton.setEnabled(false);
-                                            sendButton.setBackgroundColor(Color.parseColor("#b8b8b8"));
-                                            Toast toast = TastyToast.makeText(
-                                                    getContext(),
-                                                    "Zgłoszenie zostało wysłane!",
-                                                    50,
-                                                    TastyToast.SUCCESS
-                                            );
-                                            new CountDownTimer(2000, 1000) {
+                        public void onResponse(Call<Void> call, Response<Void> response) {
+                            if(response.isSuccessful()) {
+                                sendButton.setEnabled(false);
+                                sendButton.setBackgroundColor(Color.parseColor("#b8b8b8"));
+                                showToast(
+                                        "Zgłoszenie zostało wysłane!",
+                                        50,
+                                        TastyToast.SUCCESS
+                                );
 
-                                                public void onTick(long millisUntilFinished) {
-
-                                                }
-
-                                                public void onFinish() {
-
-                                                    getFragmentManager()
-                                                            .beginTransaction()
-                                                            .replace(R.id.frame_layout, new CompleteFragment())
-                                                            .commit();
-                                                }
-                                            }.start();
-
-                                        }
-                                        });
-                                    DataManagement.responseOK = true;
-
-                                }
-                                else{
-                                    throw new HttpResponseException(output, "Nie udało się wysłać zgłoszenia. Strawdź poprawność danych lub sprobuj póżniej");
-                                }
-                            } catch (HttpResponseException e) {
-                                getActivity().runOnUiThread(new Runnable() {
-                                    public void run() {
-                                        TastyToast.makeText(
-                                                getContext(),
-                                                e.getMessage(),
-                                                TastyToast.LENGTH_LONG,
-                                                TastyToast.ERROR
-                                        );
-
-                                    }
-                                });
-                                System.out.println(e.toString());
-                            }catch (Exception e){
-                                e.printStackTrace();
+                                new Handler().postDelayed(() -> getParentFragmentManager()
+                                        .beginTransaction()
+                                        .replace(R.id.frame_layout, new CompleteFragment())
+                                        .commit(), 2000);
+                            } else {
+                                showToast(
+                                        "Nie udało się wysłać zgłoszenia. Strawdź poprawność danych lub sprobuj póżniej",
+                                        TastyToast.LENGTH_LONG,
+                                        TastyToast.ERROR
+                                );
                             }
 
                         }
+
+                        @Override
+                        public void onFailure(Call<Void> call, Throwable t) {
+                            showToast(
+                                    t.getMessage(),
+                                    TastyToast.LENGTH_LONG,
+                                    TastyToast.ERROR
+                            );
+                        }
                     });
 
-                    thread.start();
                 }
         );
 
         return view;
     }
 
+    private void showToast(String message, int duration, int type) {
+        TastyToast.makeText(getContext(),
+                message,
+                duration,
+                type
+        );
+    }
     public static int getPositionByValue(List<String> strList, String value) {
         for (int i = 0; i < strList.size(); i++) {
             if (strList.get(i).equals(value)) {

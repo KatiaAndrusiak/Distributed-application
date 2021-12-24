@@ -1,11 +1,11 @@
-package com.example.jabeda.entity;
+package com.example.jabeda.data;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 
 import java.util.regex.Pattern;
 
-public class Problem implements Parcelable {
+public class ProblemRequest implements Parcelable {
     String category;
     String problem;
     String description;
@@ -18,7 +18,7 @@ public class Problem implements Parcelable {
         return address;
     }
 
-    public Problem() {
+    public ProblemRequest() {
         this.category = "";
         this.problem = "";
         this.description = "";
@@ -29,7 +29,7 @@ public class Problem implements Parcelable {
     }
 
 
-    public Problem(String category, String problem, String description, String date, String address, Double latitude, Double longitude) {
+    public ProblemRequest(String category, String problem, String description, String date, String address, Double latitude, Double longitude) {
         this.category = category;
         this.problem = problem;
         this.description = description;
@@ -39,7 +39,7 @@ public class Problem implements Parcelable {
         this.longitude = longitude;
     }
 
-    protected Problem(Parcel in) {
+    protected ProblemRequest(Parcel in) {
         category = in.readString();
         problem = in.readString();
         description = in.readString();
@@ -57,15 +57,15 @@ public class Problem implements Parcelable {
         }
     }
 
-    public static final Creator<Problem> CREATOR = new Creator<Problem>() {
+    public static final Creator<ProblemRequest> CREATOR = new Creator<ProblemRequest>() {
         @Override
-        public Problem createFromParcel(Parcel in) {
-            return new Problem(in);
+        public ProblemRequest createFromParcel(Parcel in) {
+            return new ProblemRequest(in);
         }
 
         @Override
-        public Problem[] newArray(int size) {
-            return new Problem[size];
+        public ProblemRequest[] newArray(int size) {
+            return new ProblemRequest[size];
         }
     };
 
@@ -99,6 +99,7 @@ public class Problem implements Parcelable {
     public void setLongitude(Double longitude) {
         this.longitude = longitude;
     }
+
 
 
     @Override

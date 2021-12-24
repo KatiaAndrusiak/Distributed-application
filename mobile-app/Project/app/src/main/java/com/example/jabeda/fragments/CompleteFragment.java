@@ -27,7 +27,7 @@ public class CompleteFragment extends Fragment {
         Button newProblemBtn = view.findViewById(R.id.new_problem_button);
         completeBtn.setOnClickListener(
                 v -> {
-                    getActivity().finishAndRemoveTask();
+                    getActivity().finish();
 
                 }
         );
@@ -35,7 +35,7 @@ public class CompleteFragment extends Fragment {
         newProblemBtn.setOnClickListener(
                 v -> {
                     Fragment fragment = new MapsFragment();
-                    getFragmentManager()
+                    getParentFragmentManager()
                             .beginTransaction()
                             .replace(R.id.frame_layout, fragment)
                             .commit();

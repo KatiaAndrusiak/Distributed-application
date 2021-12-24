@@ -10,6 +10,8 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.view.View;
+import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
@@ -19,11 +21,23 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
+import com.example.jabeda.data.DiModule;
+import com.example.jabeda.data.ProblemRepository;
+import com.example.jabeda.data.ProblemResponse;
 import com.example.jabeda.fragments.MapsFragment;
 import com.example.jabeda.R;
 import com.sdsmdg.tastytoast.TastyToast;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class MainActivity extends AppCompatActivity {
+
+    ProblemRepository repository = DiModule.getRepository();
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -59,8 +73,7 @@ public class MainActivity extends AppCompatActivity {
                     .replace(R.id.frame_layout, fragment)
                     .commit();
         }
-
-
+        prefetchCategories();
     }
 
 
@@ -86,6 +99,20 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
+    }
+
+    private void prefetchCategories() {
+        repository.getProblems(new Callback<List<ProblemResponse>>() {
+            @Override
+            public void onResponse(Call<List<ProblemResponse>> call, Response<List<ProblemResponse>> response) {
+
+            }
+
+            @Override
+            public void onFailure(Call<List<ProblemResponse>> call, Throwable t) {
+                Toast.makeText(MainActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
 
